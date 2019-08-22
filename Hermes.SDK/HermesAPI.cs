@@ -120,7 +120,7 @@ namespace Hermes.SDK
         /// <returns></returns>
         public async Task DeleteExecution(Guid id)
         {
-            await httpService.DeleteAsync<dynamic>(URL_EXECUTION + "/{id}", null, Utils.GetSegment(id.ToString()));
+            await httpService.DeleteAsync<dynamic>(URL_EXECUTION + "/{id}", Utils.GetSegment(id.ToString()), null);
         }
 
         /// <summary>

@@ -14,6 +14,8 @@ namespace Hermes.SDK.Model
 
     public enum ExecutionErrorCode
     {
-        INVALID_CREDENTIALS
+        INVALID_CREDENTIALS,
+        ALREADY_LOGGED_IN,
+        UNEXPECTED_ERROR
     }
 }

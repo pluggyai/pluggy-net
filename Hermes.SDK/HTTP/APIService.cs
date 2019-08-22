@@ -219,7 +219,7 @@ namespace Hermes.SDK.HTTP
             var requestMessage = new HttpRequestMessage(httpMethod, BuildRequestUri(resource, urlSegments, queryStrings));
 
             // Get the message content
-            if (httpMethod != HttpMethod.Get)
+            if (httpMethod != HttpMethod.Get && (body != null || parameters != null))
                 requestMessage.Content = BuildMessageContent(body, parameters);
 
             // Apply the headers

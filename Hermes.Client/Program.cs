@@ -43,6 +43,8 @@ namespace Hermes.Client
             if (execution == null) return;
             Console.WriteLine("Execution {0} started", execution.Id);
 
+
+            // 5 - Reviews execution status and collects response
             ExecutionResponse response = await WaitAndCollectResponse(sdk, execution);
             Console.WriteLine("Execution has been completed");
 
@@ -57,6 +59,7 @@ namespace Hermes.Client
                 WriteJson(response.Data);
             }
 
+            // 6 - If needed, delete the execution result from the cache.
             Console.WriteLine("Do you want to delete the results? (y/n)");
             bool delete = Console.ReadLine() == "y";
             if (delete)
