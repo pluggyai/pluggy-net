@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hermes.SDK.Errors;
 using Hermes.SDK.HTTP;
 using Hermes.SDK.Model;
 
@@ -9,8 +10,12 @@ namespace Hermes.SDK
     public class HermesAPI
     {
         protected readonly APIService httpService;
+
         protected static readonly string URL_ROBOT = "/robots";
         protected static readonly string URL_EXECUTION = "/executions";
+        protected static readonly string URL_VALIDATE = "/validations";
+
+        public static readonly int STATUS_POLL_INTERVAL = 3000;
 
         public HermesAPI(string _apiKey, string _baseUrl = "https://api.hermesapi.com/v1")
         {
@@ -23,15 +28,7 @@ namespace Hermes.SDK
         /// <returns>An array of robots</returns>
         public async Task<List<Robot>> FetchRobots()
         {
-            ApiResponse<List<Robot>> apiResponse = await httpService.GetAsync<ApiResponse<List<Robot>>>(URL_ROBOT,
-                                                                                                        null,
-                                                                                                        null,
-                                                                                                        null);
-            if (!apiResponse.Ok)
-            {
-                throw new APIServiceException();
-            }
-            return apiResponse.Data;
+            return await httpService.GetAsync<List<Robot>>(URL_ROBOT);
         }
 
         /// <summary>
@@ -41,15 +38,7 @@ namespace Hermes.SDK
         /// <returns>A robot object</returns>
         public async Task<Robot> FetchRobot(long id)
         {
-            ApiResponse<Robot> apiResponse = await httpService.GetAsync<ApiResponse<Robot>>(URL_ROBOT + "/{id}",
-                                                                                            Utils.GetSegment(id.ToString()),
-                                                                                            null,
-                                                                                            null);
-            if (!apiResponse.Ok)
-            {
-                throw new APIServiceException();
-            }
-            return apiResponse.Data;
+            return await httpService.GetAsync<Robot>(URL_ROBOT + "/{id}", Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -60,17 +49,58 @@ namespace Hermes.SDK
         /// <returns>an object with the info to retrieve the data when the execution is ready</returns>
         public async Task<Execution> Execute(long robotId, ExecutionParameters request)
         {
-            ApiResponse<Execution> apiResponse = await httpService.PostAsync<ApiResponse<Execution>>(URL_EXECUTION + "/{robotId}",
-                                                                                                     request,
-                                                                                                     null,
-                                                                                                     Utils.GetSegment(robotId.ToString(), "robotId"),
-                                                                                                     null,
-                                                                                                     null);
-            if (!apiResponse.Ok)
+            try
             {
-                throw new APIServiceException();
+                return await httpService.PostAsync<Execution>(URL_EXECUTION, request.ToBody(), null, null, null,
+                    Utils.GetSegment(robotId.ToString(), "robot_id"));
+
             }
-            return apiResponse.Data;
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+        }
+
+
+        /// <summary>
+        /// Creates a new execution of a robot, and polls for status until
+        /// it recovers the final response (Error or Result).
+        /// </summary>
+        /// <param name="robotId">the ID of the robot to be executed</param>
+        /// <param name="request">The executions parameters</param>
+        /// <returns>an object with the info to retrieve the data when the execution is ready</returns>
+        public async Task<ExecutionResponse> ExecuteAndWait(long robotId, ExecutionParameters request)
+        {
+            try
+            {
+                Execution execution = await httpService.PostAsync<Execution>(URL_EXECUTION, request.ToBody(), null, null, null,
+                    Utils.GetSegment(robotId.ToString(), "robot_id"));
+
+                ExecutionResponse executionResponse;
+
+                do
+                {
+                    executionResponse = await FetchExecution(execution.Id);
+                    if (!executionResponse.Finished)
+                    {
+                        await Task.Delay(STATUS_POLL_INTERVAL);
+                    }
+                }
+                while (!executionResponse.Finished);
+
+                return executionResponse;
+
+            }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
         }
 
         /// <summary>
@@ -80,15 +110,7 @@ namespace Hermes.SDK
         /// <returns></returns>
         public async Task<ExecutionResponse> FetchExecution(Guid id)
         {
-            ApiResponse<ExecutionResponse> apiResponse = await httpService.GetAsync<ApiResponse<ExecutionResponse>>(URL_EXECUTION + "/{id}",
-                                                                                                                    Utils.GetSegment(id.ToString()),
-                                                                                                                    null,
-                                                                                                                    null);
-            if (!apiResponse.Ok)
-            {
-                throw new APIServiceException();
-            }
-            return apiResponse.Data;
+            return await httpService.GetAsync<ExecutionResponse>(URL_EXECUTION + "/{id}", Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -98,14 +120,32 @@ namespace Hermes.SDK
         /// <returns></returns>
         public async Task DeleteExecution(Guid id)
         {
-            ApiResponse<object> apiResponse = await httpService.DeleteAsync<ApiResponse<object>>(URL_EXECUTION + "/{id}",
-                                                                                                 null,
-                                                                                                 Utils.GetSegment(id.ToString()),
-                                                                                                 null);
-            if (!apiResponse.Ok)
+            await httpService.DeleteAsync<dynamic>(URL_EXECUTION + "/{id}", null, Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Validate the executions parameters for a specific robot
+        /// </summary>
+        /// <param name="robotId">the ID of the robot to be executed</param>
+        /// <param name="request">The executions parameters</param>
+        /// <returns>an object with the info to retrieve the data when the execution is ready</returns>
+        public async Task<Execution> Validate(long robotId, ExecutionParameters request)
+        {
+            try
             {
-                throw new APIServiceException();
+                return await httpService.PostAsync<Execution>(URL_VALIDATE + "/{robotId}",
+                                                            request,
+                                                            null,
+                                                            Utils.GetSegment(robotId.ToString(), "robotId"));
             }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+
         }
     } 
 }

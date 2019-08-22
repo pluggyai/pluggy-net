@@ -7,8 +7,13 @@
   <ItemGroup>
     <Folder Include="HTTP\" />
     <Folder Include="Model\" />
+    <Folder Include="Errors\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Model\ApiResponse.cs" />
   </ItemGroup>
 </Project>

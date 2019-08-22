@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Hermes.SDK.Errors;
 using Newtonsoft.Json;
 
 namespace Hermes.SDK.HTTP
@@ -52,10 +54,13 @@ namespace Hermes.SDK.HTTP
                     new FormUrlEncodedContent(
                         parameters.Select(
                             kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value?.ToString() ?? string.Empty)));
-            return new StringContent(JsonConvert.SerializeObject(body, new JsonSerializerSettings
+
+            string serializedBody = JsonConvert.SerializeObject(body, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
-            }), Encoding.UTF8, "application/json");
+            });
+
+            return new StringContent(serializedBody, Encoding.UTF8, "application/json");
         }
 
         private Uri BuildRequestUri(string resource, IDictionary<string, string> urlSegments,
@@ -113,8 +118,8 @@ namespace Hermes.SDK.HTTP
         /// <param name="queryStrings">The query strings.</param>
         /// <param name="headers">The headers.</param>
         /// <returns>Task&lt;T&gt;.</returns>
-        internal async Task<T> GetAsync<T>(string resource, IDictionary<string, string> urlSegments,
-            IDictionary<string, string> queryStrings, IDictionary<string, object> headers) where T : class
+        internal async Task<T> GetAsync<T>(string resource, IDictionary<string, string> urlSegments = null,
+            IDictionary<string, string> queryStrings = null, IDictionary<string, object> headers = null) where T : class
         {
             return await RunAsync<T>(resource,
                 HttpMethod.Get,
@@ -157,8 +162,8 @@ namespace Hermes.SDK.HTTP
         /// <param name="queryStrings">The query strings.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the asynchronous Post operation.</returns>
         internal async Task<T> PostAsync<T>(string resource, object body, IDictionary<string, object> parameters,
-            IDictionary<string, string> urlSegments, IDictionary<string, object> headers,
-            IDictionary<string, string> queryStrings) where T : class
+            IDictionary<string, string> urlSegments = null, IDictionary<string, object> headers = null,
+            IDictionary<string, string> queryStrings = null) where T : class
         {
             return await RunAsync<T>(resource,
                 HttpMethod.Post,
@@ -224,15 +229,54 @@ namespace Hermes.SDK.HTTP
             var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
 
             // Handle API errors
-            // TODO await HandleErrors(response).ConfigureAwait(false);
+            await HandleErrors(response).ConfigureAwait(false);
 
             // Deserialize the content
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
             if (typeof(T) == typeof(string)) // Let string content pass through
                 return (T)(object)content;
 
             return JsonConvert.DeserializeObject<T>(content);
+        }
+
+
+        private async Task HandleErrors(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                ApiError apiError = null;
+
+                // Grab the content
+                if (response.Content != null)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    if (!string.IsNullOrEmpty(responseContent))
+                        try
+                        {
+                            apiError = JsonConvert.DeserializeObject<ApiError>(responseContent);
+                            if (apiError.StatusCode == 0)
+                                apiError.StatusCode = (int)response.StatusCode;
+                        }
+                        catch (Exception)
+                        {
+                            apiError = new ApiError
+                            {
+                                Error = responseContent,
+                                Message = responseContent,
+                                StatusCode = (int)response.StatusCode
+                            };
+                        }
+                }
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        throw new NotFoundException(response.StatusCode, apiError);
+                    default:
+                        throw new ApiException(response.StatusCode, apiError);
+                }
+            }
         }
 
         /// <summary>
