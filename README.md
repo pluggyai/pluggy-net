@@ -1,21 +1,21 @@
-# .NET client library for the Hermes API
+# .NET client library for the Pluggy API
 
-__Welcome to Hermes Dotnet SDK__. This repository contains Hermes's Dotnet SDK and samples to execute all the endpoints available for aggregation.
+__Welcome to Pluggy Dotnet SDK__. This repository contains Pluggy's Dotnet SDK and samples to execute all the endpoints available for aggregation.
 Also there is a small Client created to review the flow to get the execution result of a specific robot.
 
 ### Installation
 
 ```powershell
-Install-Package Hermes.SDK
+Install-Package Pluggy.SDK
 ```
 
 ### Usage
 
 Request a API KEY token that will be used for all API calls you wish to make. 
-Create an instance of the `HermesAPI` class with the token and the API URL:
+Create an instance of the `PluggyAPI` class with the token and the API URL:
 
 ```csharp
-var client = new HermesAPI("your api token", "https://api.hermesapi.com/v1");
+var client = new PluggyAPI("your api token", "https://api.pluggy.ai/v1");
 ```
 
 All api calls are under the same client, and respect the same behaviour.
