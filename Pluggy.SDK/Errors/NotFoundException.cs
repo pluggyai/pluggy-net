@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Hermes.SDK.Errors
+namespace Pluggy.SDK.Errors
 {
     public class NotFoundException : ApiException
     {

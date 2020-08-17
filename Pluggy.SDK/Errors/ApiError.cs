@@ -2,7 +2,7 @@
 using System.Net;
 using Newtonsoft.Json;
 
-namespace Hermes.SDK.Errors
+namespace Pluggy.SDK.Errors
 {
     /// <summary>
     /// Contains information about an error returned from the API.

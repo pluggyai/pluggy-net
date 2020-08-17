@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Hermes.SDK.Errors
+namespace Pluggy.SDK.Errors
 {
     public class ParameterError
     {

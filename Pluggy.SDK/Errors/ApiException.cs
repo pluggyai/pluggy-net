@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Hermes.SDK.Errors
+namespace Pluggy.SDK.Errors
 {
     /// <summary>
     /// Represents errors that occur when making API calls.

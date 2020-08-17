@@ -5,10 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Hermes.SDK.Errors;
+using Pluggy.SDK.Errors;
 using Newtonsoft.Json;
 
-namespace Hermes.SDK.HTTP
+namespace Pluggy.SDK.HTTP
 {
     /// <summary>
     /// The communication layer between the SDK and the HTTP REST backend.
@@ -23,7 +23,7 @@ namespace Hermes.SDK.HTTP
         /// <summary>
         /// Creates a ne w instance of HttpService using a provided <see cref="HttpClient"/>.
         /// </summary>
-        /// <param name="apiKey">A API KEY provided by Hermes to access the resources</param>
+        /// <param name="apiKey">A API KEY provided by Pluggy to access the resources</param>
         /// <param name="baseUrl">The URL of the API</param>
         internal APIService(string apiKey, string baseUrl)
         {

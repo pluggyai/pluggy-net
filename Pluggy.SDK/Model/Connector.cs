@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Hermes.SDK.Model
+namespace Pluggy.SDK.Model
 {
-    public class Robot
+    public class Connector
     {
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -15,12 +15,10 @@ namespace Hermes.SDK.Model
         [JsonProperty("url")]
         public string Url { get; set; }
 
+        [JsonProperty("imageUrl")]
+        public string ImageUrl { get; set; }
+
         [JsonProperty("credentials")]
-        public IList<RobotParameter> Credentials { get; set; }
-
-        public Robot()
-        {
-
-        }
+        public IList<ConnectorParameter> Credentials { get; set; }
     }
 }

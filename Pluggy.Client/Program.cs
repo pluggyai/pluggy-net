@@ -1,51 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hermes.SDK;
-using Hermes.SDK.Model;
+using Pluggy.SDK;
+using Pluggy.SDK.Model;
 using Newtonsoft.Json;
-using Hermes.SDK.Errors;
+using Pluggy.SDK.Errors;
 
-namespace Hermes.Client
+namespace Pluggy.Client
 {
     class Program
     {
+
+        static string CLIENT_ID = "";
+        static string CLIENT_SECRET = "";
+
         /// <summary>
-        /// This application is intended to explain a basic flow of the Hermes API
+        /// This application is intended to explain a basic flow of the Pluggy API
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
         static async Task Main(string[] args)
         {
-            var sdk = new HermesAPI("MY_API_KEY");
+            var sdk = await PluggyAPI.GetClient(CLIENT_ID, CLIENT_SECRET);
 
-            // 1 - Let's list all available robots
-            var robots = await sdk.FetchRobots();
-            WriteRobotList(robots);
+            // 1 - Let's list all available connectors
+            var connectors = await sdk.FetchConnectors();
+            WriteConnectorList(connectors);
 
-            // 2 - Select a robot
-            Console.WriteLine("Which robot do you want to execute?");
-            string robotNumberResponse = Console.ReadLine();
-            long robotId = long.Parse(robotNumberResponse);
+            // 2 - Select a connector
+            Console.WriteLine("Which connector do you want to execute?");
+            string connectorNumberResponse = Console.ReadLine();
+            long connectorId = long.Parse(connectorNumberResponse);
 
-            // Fetch that robot and display
-            Robot robot = await FetchRobot(sdk, robotId);
-            if (robot == null) return;
+            // Fetch that connector and display
+            Connector connector = await FetchConnector(sdk, connectorId);
+            if (connector == null) return;
 
-            Console.WriteLine("Executing {0}", robot.Name);
+            Console.WriteLine("Executing {0}", connector.Name);
 
-            // 3 - Ask for credentials to execute this robot
-            ExecutionParameters request = AskCredentials(robot);
+            // 3 - Ask for credentials to execute this connector
+            ItemParameters request = AskCredentials(connector);
 
-            // 4 - Starts & retrieves the execution metadata
+            // 4 - Starts & retrieves the item metadata
             Console.WriteLine("Starting your execution based on the information provided");
-            Execution execution = await StartExecution(sdk, robot, request);
+            DateTime started = DateTime.Now;
+            Item execution = await CreateItem(sdk, request);
             if (execution == null) return;
             Console.WriteLine("Execution {0} started", execution.Id);
 
 
             // 5 - Reviews execution status and collects response
-            ExecutionResponse response = await WaitAndCollectResponse(sdk, execution);
+            Item response = await WaitAndCollectResponse(sdk, execution);
             Console.WriteLine("Execution has been completed");
 
             if (response.Error != null)
@@ -55,8 +60,10 @@ namespace Hermes.Client
             else
             {
                 Console.WriteLine("Execution was completed successfully in {0}s",
-                    (response.EndTime.Value - response.StartTime).TotalSeconds);
-                WriteJson(response.Data);
+                    (DateTime.Now - started).TotalSeconds);
+
+                // TODO: Write accounts and transactions
+                // WriteJson(response.Data);
             }
 
             // 6 - If needed, delete the execution result from the cache.
@@ -65,7 +72,7 @@ namespace Hermes.Client
             if (delete)
             {
                 // Although this will be deleted in 30', we are forcing clean up
-                await sdk.DeleteExecution(execution.Id);
+                await sdk.DeleteItem(execution.Id);
                 Console.WriteLine("Deleted response successfully");
             }
         }
@@ -75,25 +82,21 @@ namespace Hermes.Client
         /// Poll for the execution status, in an interval
         /// </summary>
         /// <param name="sdk"></param>
-        /// <param name="execution"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
-        private static async Task<ExecutionResponse> WaitAndCollectResponse(HermesAPI sdk, Execution execution)
+        private static async Task<Item> WaitAndCollectResponse(PluggyAPI sdk, Item item)
         {
-            ExecutionResponse executionResponse;
+            Item itemResponse;
 
             do
             {
+                await Task.Delay(PluggyAPI.STATUS_POLL_INTERVAL);
                 Console.WriteLine("Checking execution status");
-                executionResponse = await sdk.FetchExecution(execution.Id);
-                if (!executionResponse.Finished)
-                {
-                    Console.WriteLine("Execution has not finished, will check again.");
-                    await Task.Delay(HermesAPI.STATUS_POLL_INTERVAL);
-                }
+                itemResponse = await sdk.FetchItem(item.Id);
             }
-            while (!executionResponse.Finished);
+            while (!item.HasFinished());
 
-            return executionResponse;
+            return itemResponse;
         }
 
 
@@ -103,21 +106,21 @@ namespace Hermes.Client
         #region Execution Steps
 
         /// <summary>
-        /// Using the SDK we retrieve a robot by its Id
+        /// Using the SDK we retrieve a connector by its Id
         /// Different exceptions are provided to use on the flow
         /// </summary>
         /// <param name="sdk"></param>
-        /// <param name="robotId"></param>
+        /// <param name="connectorId"></param>
         /// <returns></returns>
-        private static async Task<Robot> FetchRobot(HermesAPI sdk, long robotId)
+        private static async Task<Connector> FetchConnector(PluggyAPI sdk, long connectorId)
         {
             try
             {
-                return await sdk.FetchRobot(robotId);
+                return await sdk.FetchConnector(connectorId);
             }
             catch (NotFoundException)
             {
-                Console.WriteLine("The connector with Id {0} was not found.", robotId);
+                Console.WriteLine("The connector with Id {0} was not found.", connectorId);
                 Console.ReadLine();
                 return null;
             }
@@ -135,35 +138,34 @@ namespace Hermes.Client
         /// Iterates over each parameter needed to execute the Connector.
         /// Parameters have the information required to build Forms.
         /// </summary>
-        /// <param name="robot">Robot information</param>
+        /// <param name="connector">Connector information</param>
         /// <returns>An execution request</returns>
-        private static ExecutionParameters AskCredentials(Robot robot)
+        private static ItemParameters AskCredentials(Connector connector)
         {
             Console.WriteLine("Please provide the following credentials to retrieve the data");
-            List<ExecuteParameter> credentials = new List<ExecuteParameter>();
-            foreach (var credential in robot.Credentials)
+            List<ItemParameter> credentials = new List<ItemParameter>();
+            foreach (var credential in connector.Credentials)
             {
                 Console.WriteLine("What is your {0}?", credential.Label);
                 string response = Console.ReadLine();
-                credentials.Add(new ExecuteParameter(credential.Name, response));
+                credentials.Add(new ItemParameter(credential.Name, response));
             }
 
             // Create an execution request to retrieve the last 15 days of transactions
-            return new ExecutionParameters(credentials, DateTime.Now.AddDays(-15), DateTime.Now);
+            return new ItemParameters(connector.Id, credentials);
         }
 
         /// <summary>
         /// Starts the execution of a Connector based on the parameters
         /// </summary>
         /// <param name="sdk"></param>
-        /// <param name="robot"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        private static async Task<Execution> StartExecution(HermesAPI sdk, Robot robot, ExecutionParameters request)
+        private static async Task<Item> CreateItem(PluggyAPI sdk, ItemParameters request)
         {
             try
             {
-                return await sdk.Execute(robot.Id, request);
+                return await sdk.CreateItem(request);
             }
             catch (ValidationException e)
             {
@@ -198,11 +200,11 @@ namespace Hermes.Client
             Console.WriteLine(JsonConvert.SerializeObject(data, Formatting.Indented));
         }
 
-        static void WriteRobotList(IList<Robot> robots)
+        static void WriteConnectorList(IList<Connector> connectors)
         {
-            foreach(var robot in robots)
+            foreach(var connector in connectors)
             {
-                Console.WriteLine("[{0}] Robot for {1}.", robot.Id, robot.Name);
+                Console.WriteLine("[{0}] Connector for {1}.", connector.Id, connector.Name);
             }
         }
         #endregion

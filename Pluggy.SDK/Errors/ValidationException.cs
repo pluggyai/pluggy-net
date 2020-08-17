@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net;
 
-namespace Hermes.SDK.Errors
+namespace Pluggy.SDK.Errors
 {
     public class ValidationException : ApiException
     {

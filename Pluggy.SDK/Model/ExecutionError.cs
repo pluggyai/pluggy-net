@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Hermes.SDK.Model
+namespace Pluggy.SDK.Model
 {
     public class ExecutionError
     {
