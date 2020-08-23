@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Pluggy.SDK;
-using Pluggy.SDK.Model;
 using Newtonsoft.Json;
+using Pluggy.SDK;
 using Pluggy.SDK.Errors;
+using Pluggy.SDK.Model;
 
 namespace Pluggy.Client
 {
     class Program
     {
 
-        static string CLIENT_ID = "";
-        static string CLIENT_SECRET = "";
+        static string CLIENT_ID = "YOUR_CLIENT_ID";
+        static string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
 
         /// <summary>
         /// This application is intended to explain a basic flow of the Pluggy API
@@ -25,7 +25,7 @@ namespace Pluggy.Client
 
             // 1 - Let's list all available connectors
             var connectors = await sdk.FetchConnectors();
-            WriteConnectorList(connectors);
+            WriteConnectorList(connectors.Results);
 
             // 2 - Select a connector
             Console.WriteLine("Which connector do you want to execute?");
@@ -42,39 +42,57 @@ namespace Pluggy.Client
             ItemParameters request = AskCredentials(connector);
 
             // 4 - Starts & retrieves the item metadata
-            Console.WriteLine("Starting your execution based on the information provided");
+            Console.WriteLine("Starting your connection based on the information provided");
             DateTime started = DateTime.Now;
-            Item execution = await CreateItem(sdk, request);
-            if (execution == null) return;
-            Console.WriteLine("Execution {0} started", execution.Id);
+            Item item = await CreateItem(sdk, request);
+
+            if (item == null) return;
+            Console.WriteLine("Connection to Item {0} started", item.Id);
 
 
-            // 5 - Reviews execution status and collects response
-            Item response = await WaitAndCollectResponse(sdk, execution);
-            Console.WriteLine("Execution has been completed");
+            // 5 - Reviews connection status and collects response
+            Item response = await WaitAndCollectResponse(sdk, item);
+            Console.WriteLine("Connection has been completed");
 
             if (response.Error != null)
             {
-                Console.WriteLine("Execution encoutered errors, {0}", response.Error.Message);
+                Console.WriteLine("Connection encoutered errors, {0}", response.Error.Message);
+                return;
             }
             else
             {
-                Console.WriteLine("Execution was completed successfully in {0}s",
+                Console.WriteLine("Connection was completed successfully in {0}s",
                     (DateTime.Now - started).TotalSeconds);
-
-                // TODO: Write accounts and transactions
-                // WriteJson(response.Data);
             }
 
-            // 6 - If needed, delete the execution result from the cache.
-            Console.WriteLine("Do you want to delete the results? (y/n)");
-            bool delete = Console.ReadLine() == "y";
-            if (delete)
+
+            // 6 - List connected accounts with their transactions
+            var accounts = await sdk.FetchAccounts(item.Id);
+
+            foreach (var account in accounts.Results)
             {
-                // Although this will be deleted in 30', we are forcing clean up
-                await sdk.DeleteItem(execution.Id);
-                Console.WriteLine("Deleted response successfully");
+                Console.WriteLine("Account # {0}, Number {1} has a balance of ${2}", account.Id, account.Number, account.Balance);
+                var transactions = await sdk.FetchTransactions(account.Id);
+                foreach (var tx in transactions.Results)
+                {
+                    Console.WriteLine("  Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
+                }
             }
+
+            //// 9 - Expore what else you can do.
+            //Console.WriteLine("Expore what else you can do:");
+            //WriteOptionalRequests();
+
+            //// 10 - If needed, delete the execution result from the cache.
+            //Console.WriteLine("Do you want to delete the Connection? (y/n)");
+            //bool delete = Console.ReadLine() == "y";
+            //if (delete)
+            //{
+            //    // Although this will be deleted in 30', we are forcing clean up
+            //    await sdk.DeleteItem(item.Id);
+            //    Console.WriteLine("Deleted response successfully");
+            //}
+
         }
 
         /// <summary>
@@ -91,10 +109,10 @@ namespace Pluggy.Client
             do
             {
                 await Task.Delay(PluggyAPI.STATUS_POLL_INTERVAL);
-                Console.WriteLine("Checking execution status");
+                Console.WriteLine("Checking Connection status...");
                 itemResponse = await sdk.FetchItem(item.Id);
             }
-            while (!item.HasFinished());
+            while (!itemResponse.HasFinished());
 
             return itemResponse;
         }
@@ -202,11 +220,16 @@ namespace Pluggy.Client
 
         static void WriteConnectorList(IList<Connector> connectors)
         {
-            foreach(var connector in connectors)
+            foreach (var connector in connectors)
             {
-                Console.WriteLine("[{0}] Connector for {1}.", connector.Id, connector.Name);
+                Console.WriteLine("[{0}] Connector for {1}.", connector.Id.ToString("000"), connector.Name);
             }
         }
-        #endregion
+
+        static void WriteOptionalRequests()
+        {
+            Console.WriteLine("001 - Fetch Accounts");
+        }
     }
+    #endregion
 }

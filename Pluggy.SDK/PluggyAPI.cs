@@ -13,7 +13,9 @@ namespace Pluggy.SDK
 
         protected static readonly string URL_AUTH = "/auth";
         protected static readonly string URL_CONNECTORS = "/connectors";
-        protected static readonly string URL_ITEMS = "/executions";
+        protected static readonly string URL_ITEMS = "/items";
+        protected static readonly string URL_ACCOUNTS = "/accounts";
+        protected static readonly string URL_TRANSACTIONS = "/transactions";
 
         public string ClientId;
         public string ClientSecret;
@@ -48,9 +50,9 @@ namespace Pluggy.SDK
         /// Fetch all available connectors
         /// </summary>
         /// <returns>An array of connectors</returns>
-        public async Task<List<Connector>> FetchConnectors()
+        public async Task<PageResults<Connector>> FetchConnectors()
         {
-            return await httpService.GetAsync<List<Connector>>(URL_CONNECTORS);
+            return await httpService.GetAsync<PageResults<Connector>>(URL_CONNECTORS);
         }
 
         /// <summary>
@@ -132,5 +134,25 @@ namespace Pluggy.SDK
         {
             await httpService.DeleteAsync<dynamic>(URL_ITEMS + "/{id}", Utils.GetSegment(id.ToString()), null);
         }
-    } 
+
+        /// <summary>
+        /// Fetch the list of accounts
+        /// </summary>
+        /// <param name="id">Item Id</param>
+        /// <returns>Account results list</returns>
+        public async Task<PageResults<Account>> FetchAccounts(Guid id)
+        {
+            return await httpService.GetAsync<PageResults<Account>>(URL_ACCOUNTS, null, Utils.GetSegment(id.ToString(), "itemId"));
+        }
+
+        /// <summary>
+        /// Fetch the list of transactions
+        /// </summary>
+        /// <param name="id">Account Id</param>
+        /// <returns>Transacion results list</returns>
+        public async Task<PageResults<Transaction>> FetchTransactions(Guid id)
+        {
+            return await httpService.GetAsync<PageResults<Transaction>>(URL_TRANSACTIONS, null, Utils.GetSegment(id.ToString(), "accountId"));
+        }
+    }
 }

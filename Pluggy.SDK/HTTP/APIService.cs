@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Pluggy.SDK.Errors;
 using Newtonsoft.Json;
+using Pluggy.SDK.Errors;
 
 namespace Pluggy.SDK.HTTP
 {
@@ -35,10 +35,10 @@ namespace Pluggy.SDK.HTTP
         private void ApplyHeaders(HttpRequestMessage message, IDictionary<string, object> headers)
         {
             // Set the authorization header
-            if (headers == null || !headers.ContainsKey("Authorization"))
+            if (headers == null || !headers.ContainsKey("X-API-KEY"))
                 // Auth header can be overridden by passing custom value in headers dictionary
                 if (!string.IsNullOrEmpty(_apiKey))
-                    message.Headers.Add("Authorization", $"Bearer {_apiKey}");
+                    message.Headers.Add("X-API-KEY", _apiKey);
 
             // Apply other headers
             if (headers != null)

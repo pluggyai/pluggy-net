@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
 {
@@ -9,14 +8,14 @@ namespace Pluggy.SDK.Model
         public string Name { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public object Value { get; set; }
 
         public ItemParameter()
         {
 
         }
 
-        public ItemParameter(string name, string value)
+        public ItemParameter(string name, object value)
         {
             Name = name;
             Value = value;

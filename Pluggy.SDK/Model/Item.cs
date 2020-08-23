@@ -20,7 +20,7 @@ namespace Pluggy.SDK.Model
 
         public Boolean HasFinished ()
         {
-            return this.Status != ItemStatus.OUTDATED || this.Status != ItemStatus.OUTDATED;
+            return this.Status == ItemStatus.UPDATED || this.Status == ItemStatus.OUTDATED || this.Status == ItemStatus.LOGIN_ERROR;
         }
     }
 }
