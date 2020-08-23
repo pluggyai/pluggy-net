@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -27,12 +26,13 @@ namespace Pluggy.SDK.Model
             this.ConnectorId = connectorId;
         }
 
-        public IDictionary<string, string> ToBody()
+        public IDictionary<string, object> ToBody()
         {
-            return new Dictionary<string, string>(Parameters.ToDictionary(x => x.Name, x => x.Value))
+            return new Dictionary<string, object>()
             {
                 { "webhookUrl", WebhookUrl },
-                { "connectorId", ConnectorId.ToString() }
+                { "connectorId", ConnectorId },
+                { "parameters", Parameters.ToDictionary(x => x.Name, x => x.Value) },
             };
         }
     }
