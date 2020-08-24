@@ -11,8 +11,8 @@ namespace Pluggy.Client
     class Program
     {
 
-        static string CLIENT_ID = "ccd5b9be-3be6-45fe-9512-5907f1619db0";
-        static string CLIENT_SECRET = "5RwpsF9QJUfoNUvkDZoGrmAioZBaAYuwo4KB";
+        static string CLIENT_ID = "YOUR_CLIENT_ID";
+        static string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
 
         /// <summary>
         /// This application is intended to explain a basic flow of the Pluggy API
@@ -57,12 +57,14 @@ namespace Pluggy.Client
             if (response.Error != null)
             {
                 Console.WriteLine("Connection encoutered errors, {0}", response.Error.Message);
+                return;
             }
             else
             {
                 Console.WriteLine("Connection was completed successfully in {0}s",
                     (DateTime.Now - started).TotalSeconds);
             }
+
 
             // 6 - List connected accounts with their transactions
             var accounts = await sdk.FetchAccounts(item.Id);
@@ -110,7 +112,7 @@ namespace Pluggy.Client
                 Console.WriteLine("Checking Connection status...");
                 itemResponse = await sdk.FetchItem(item.Id);
             }
-            while (!item.HasFinished());
+            while (!itemResponse.HasFinished());
 
             return itemResponse;
         }
