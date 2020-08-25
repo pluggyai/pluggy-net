@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Pluggy.SDK.Errors;
 using Pluggy.SDK.HTTP;
@@ -11,39 +10,17 @@ namespace Pluggy.SDK
     {
         protected readonly APIService httpService;
 
-        protected static readonly string URL_AUTH = "/auth";
         protected static readonly string URL_CONNECTORS = "/connectors";
         protected static readonly string URL_ITEMS = "/items";
         protected static readonly string URL_ACCOUNTS = "/accounts";
         protected static readonly string URL_TRANSACTIONS = "/transactions";
 
-        public string ClientId;
-        public string ClientSecret;
-
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
-        public PluggyAPI(string _apiKey, string _baseUrl = "https://api.pluggy.ai/")
-        {
-            httpService = new APIService(_apiKey, _baseUrl);
-        }
 
-
-        /// <summary>
-        /// Get a new PluggyAPI instance using clientId and clientSecret
-        /// </summary>
-        /// <param name="clientId"></param>
-        /// <param name="clientSecret"></param>
-        /// <param name="_baseUrl"></param>
-        /// <returns></returns>
-        public static async Task<PluggyAPI> GetClient(string clientId, string clientSecret, string _baseUrl = "https://api.pluggy.ai/")
+        public PluggyAPI(string _clientId, string _clientSecret, string _baseUrl = "https://api.pluggy.ai/")
         {
-            var body = new Dictionary<string, string>()
-            {
-                { "clientId", clientId },
-                { "clientSecret", clientSecret }
-            };
-            var response = await new APIService("", _baseUrl).PostAsync<AuthResponse>(URL_AUTH, body, null, null, null, null);
-            return new PluggyAPI(response.ApiKey, _baseUrl);
+            httpService = new APIService(_clientId, _clientSecret, _baseUrl);
         }
 
         /// <summary>
@@ -95,7 +72,7 @@ namespace Pluggy.SDK
         {
             try
             {
-                Item item = await this.CreateItem(request);
+                Item item = await CreateItem(request);
 
                 do
                 {

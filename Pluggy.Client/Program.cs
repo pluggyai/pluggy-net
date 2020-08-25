@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Pluggy.SDK;
 using Pluggy.SDK.Errors;
@@ -10,10 +11,6 @@ namespace Pluggy.Client
 {
     class Program
     {
-
-        static string CLIENT_ID = "YOUR_CLIENT_ID";
-        static string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-
         /// <summary>
         /// This application is intended to explain a basic flow of the Pluggy API
         /// </summary>
@@ -21,7 +18,10 @@ namespace Pluggy.Client
         /// <returns></returns>
         static async Task Main(string[] args)
         {
-            var sdk = await PluggyAPI.GetClient(CLIENT_ID, CLIENT_SECRET, "https://dev-pluggy-api.herokuapp.com/");
+            // Fetching keys from appsettings.json
+            var (CLIENT_ID, CLIENT_SECRET, URL_BASE) = Configuration();
+
+            var sdk = new PluggyAPI(CLIENT_ID, CLIENT_SECRET, URL_BASE);
 
             // 1 - Let's list all available connectors
             var connectors = await sdk.FetchConnectors();
@@ -61,13 +61,11 @@ namespace Pluggy.Client
             }
             else
             {
-                Console.WriteLine("Connection was completed successfully in {0}s",
-                    (DateTime.Now - started).TotalSeconds);
+                Console.WriteLine("Connection was completed successfully in {0}s", (DateTime.Now - started).TotalSeconds);
             }
 
-
             // 6 - List connected accounts with their transactions
-            var accounts = await sdk.FetchAccounts(item.Id);
+            var accounts = await sdk.FetchAccounts(response.Id);
 
             foreach (var account in accounts.Results)
             {
@@ -79,20 +77,22 @@ namespace Pluggy.Client
                 }
             }
 
-            //// 9 - Expore what else you can do.
-            //Console.WriteLine("Expore what else you can do:");
-            //WriteOptionalRequests();
+            // 7 - If needed, delete the connection result from the cache.
+            Console.WriteLine("Do you want to delete the Connection? (y/n)");
+            bool delete = Console.ReadLine() == "y";
+            if (delete)
+            {
+                // Although this will be deleted in 30', we are forcing clean up
+                await sdk.DeleteItem(item.Id);
+                Console.WriteLine("Deleted response successfully");
+            }
 
-            //// 10 - If needed, delete the execution result from the cache.
-            //Console.WriteLine("Do you want to delete the Connection? (y/n)");
-            //bool delete = Console.ReadLine() == "y";
-            //if (delete)
-            //{
-            //    // Although this will be deleted in 30', we are forcing clean up
-            //    await sdk.DeleteItem(item.Id);
-            //    Console.WriteLine("Deleted response successfully");
-            //}
+        }
 
+        private static (string, string, string) Configuration()
+        {
+            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json", true, true).Build();
+            return (config["CLIENT_ID"], config["CLIENT_SECRET"], config["URL_BASE"]);
         }
 
         /// <summary>
