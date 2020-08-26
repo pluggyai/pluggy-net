@@ -111,6 +111,6 @@ namespace Pluggy.SDK.HTTP
                 { key , value }
             };
         }
-        
+
     }
 }

@@ -13,7 +13,7 @@ namespace Pluggy.SDK.Model
         public string Description { get; set; }
 
         [JsonProperty("currencyCode")]
-        public string CurrencyCode { get; set; }
+        public CurrencyCode CurrencyCode { get; set; }
 
         [JsonProperty("amount")]
         public double Amount { get; set; }

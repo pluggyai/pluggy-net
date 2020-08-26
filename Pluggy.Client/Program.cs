@@ -69,6 +69,7 @@ namespace Pluggy.Client
 
             foreach (var account in accounts.Results)
             {
+
                 Console.WriteLine("Account # {0}, Number {1} has a balance of ${2}", account.Id, account.Number, account.Balance);
                 var transactions = await sdk.FetchTransactions(account.Id);
                 foreach (var tx in transactions.Results)
@@ -86,6 +87,9 @@ namespace Pluggy.Client
                 await sdk.DeleteItem(item.Id);
                 Console.WriteLine("Deleted response successfully");
             }
+
+            Console.WriteLine("Explore our SDK to know what else you can do!");
+            Console.ReadLine();
 
         }
 

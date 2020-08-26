@@ -159,21 +159,25 @@ namespace Pluggy.SDK.HTTP
         /// <summary>
         /// Performs an HTTP PATCH operation.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="resource">The resource.</param>
         /// <param name="body">The body.</param>
+        /// <param name="parameters">The parameters.</param>
         /// <param name="urlSegments">The URL segments.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="queryStrings">The query strings.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the asynchronous Patch operation.</returns>
-        internal async Task<T> PatchAsync<T>(string resource, object body, Dictionary<string, string> urlSegments)
-            where T : class
+        internal async Task<T> PatchAsync<T>(string resource, object body, IDictionary<string, object> parameters = null,
+            IDictionary<string, string> urlSegments = null, IDictionary<string, object> headers = null,
+            IDictionary<string, string> queryStrings = null) where T : class
         {
             return await RunAsync<T>(resource,
                 new HttpMethod("PATCH"),
                 body,
                 urlSegments,
-                null,
-                null,
-                null).ConfigureAwait(false);
+                queryStrings,
+                parameters,
+                headers
+                ).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -187,7 +191,7 @@ namespace Pluggy.SDK.HTTP
         /// <param name="headers">The headers.</param>
         /// <param name="queryStrings">The query strings.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the asynchronous Post operation.</returns>
-        internal async Task<T> PostAsync<T>(string resource, object body, IDictionary<string, object> parameters,
+        internal async Task<T> PostAsync<T>(string resource, object body, IDictionary<string, object> parameters = null,
             IDictionary<string, string> urlSegments = null, IDictionary<string, object> headers = null,
             IDictionary<string, string> queryStrings = null) where T : class
         {
@@ -224,7 +228,7 @@ namespace Pluggy.SDK.HTTP
                 headers).ConfigureAwait(false);
         }
 
-        internal bool isPrivate(string resource)
+        internal bool IsPrivate(string resource)
         {
             return resource != URL_AUTH;
         }
@@ -254,7 +258,7 @@ namespace Pluggy.SDK.HTTP
                 requestMessage.Content = BuildMessageContent(body, parameters);
 
             // Load apiKey
-            if (isPrivate(resource)) await LoadApiKey();
+            if (IsPrivate(resource)) await LoadApiKey();
 
             // Apply the headers
             ApplyHeaders(requestMessage, headers);
