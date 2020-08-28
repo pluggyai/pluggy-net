@@ -15,13 +15,13 @@ Request a API KEY token that will be used for all API calls you wish to make.
 Create an instance of the `PluggyAPI` class with the token and the API URL:
 
 ```csharp
-var client = new PluggyAPI("your api token", "https://api.pluggy.ai/v1");
+var client = new PluggyAPI("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET");
 ```
 
 All api calls are under the same client, and respect the same behaviour.
 
 ```csharp
-var robots = await client.FetchRobots();
+var connectors = await client.FetchConnectors();
 ```
 
 ## Building
@@ -30,4 +30,4 @@ This project can be built on Windows, Linux or macOS. Ensure you have the [.NET 
 
 ## Documentation
 
-For most up-to-date and accurate documentation, please see our [API Reference](https://docs.hermesapi.com) page.
+For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.

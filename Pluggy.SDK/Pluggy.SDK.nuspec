@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Pluggy.SDK</id>
+    <version>0.1.0</version>
+    <title>Pluggy's SDK</title>
+    <authors>Pluggy</authors>
+    <owners>Pluggy</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://docs.pluggy.ai/</projectUrl>
+    <description>Pluggy SDK to connect with our service API</description>
+    <releaseNotes>First release of the package</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>OpenBanking Banking API</tags>
+  </metadata>
+</package>

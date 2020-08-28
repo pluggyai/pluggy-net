@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageVersion>0.1</PackageVersion>
+    <Authors>Pluggy</Authors>
+    <Description>Pluggy SDK to connect with our service API</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Owners>Pluggy</Owners>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://docs.pluggy.ai</PackageProjectUrl>
+    <PackageTags>open-banking bank api</PackageTags>
+    <Title>Pluggy's SDK </Title>
+    <Copyright>Copyright 2020</Copyright>
+    <PackageReleaseNotes>First version of Pluggy SDK connection</PackageReleaseNotes>
+    <Summary>Pluggy SDK to connect with our service API</Summary>
   </PropertyGroup>
 
   <ItemGroup>
