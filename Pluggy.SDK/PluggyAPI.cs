@@ -31,16 +31,9 @@ namespace Pluggy.SDK
         /// Fetch all available connectors
         /// </summary>
         /// <returns>An array of connectors</returns>
-        public async Task<PageResults<Connector>> FetchConnectors(string name = null, string countries = null, string types = null)
+        public async Task<PageResults<Connector>> FetchConnectors(ConnectorParameters requestParams = null)
         {
-            var queryStrings = new Dictionary<string, string>
-            {
-                { "name", name },
-                { "countries", countries },
-                { "types", types }
-
-            };
-            return await httpService.GetAsync<PageResults<Connector>>(URL_CONNECTORS, null, queryStrings);
+            return await httpService.GetAsync<PageResults<Connector>>(URL_CONNECTORS, null, requestParams?.ToQueryStrings());
         }
 
         /// <summary>
@@ -173,14 +166,13 @@ namespace Pluggy.SDK
         /// </summary>
         /// <param name="id">Account Id</param>
         /// <returns>Transacion results list</returns>
-        public async Task<PageResults<Transaction>> FetchTransactions(Guid id)
+        public async Task<PageResults<Transaction>> FetchTransactions(Guid accountId, TransactionParameters pageParams = null)
         {
-            var queryStrings = new Dictionary<string, string>
-            {
-                { "accountId", id.ToString() },
-            };
+            var queryStrings = pageParams != null ? pageParams.ToQueryStrings() : new Dictionary<string, string>();
+            queryStrings.Add("accountId", accountId.ToString());
             return await httpService.GetAsync<PageResults<Transaction>>(URL_TRANSACTIONS, null, queryStrings);
         }
+
 
         /// <summary>
         /// Fetch the list of transactions
@@ -261,14 +253,14 @@ namespace Pluggy.SDK
         /// <param name="url">Webhook url</param>
         /// <param name="event">Webhook event</param>
         /// <returns></returns>
-        public async Task<Webhook> CreateWebhook(string url, string _event)
+        public async Task<Webhook> CreateWebhook(string url, WebhookEvent _event)
         {
             try
             {
                 var body = new Dictionary<string, string>
                 {
                     { "url", url },
-                    { "event", _event }
+                    { "event", _event.Value }
                 };
                 return await httpService.PostAsync<Webhook>(URL_WEBHOOKS, body);
             }
@@ -288,14 +280,14 @@ namespace Pluggy.SDK
         /// <param name="url">Webhook url</param>
         /// <param name="event">Webhook event</param>
         /// <returns></returns>
-        public async Task<Webhook> UpdateWebhook(Guid id, string url, string _event)
+        public async Task<Webhook> UpdateWebhook(Guid id, string url, WebhookEvent _event)
         {
             try
             {
                 var body = new Dictionary<string, string>
                 {
                     { "url", url },
-                    { "event", _event }
+                    { "event", _event.Value }
                 };
                 return await httpService.PatchAsync<Webhook>(URL_WEBHOOKS + "/{id}", body, null, Utils.GetSegment(id.ToString()));
             }

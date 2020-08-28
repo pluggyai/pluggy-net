@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
 {
-    public class ConnectorFilters
+    public class ConnectorParameters
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -12,15 +12,15 @@ namespace Pluggy.SDK.Model
         public List<string> Countries { get; set; }
 
         [JsonProperty("types")]
-        public string Types { get; set; }
+        public List<string> Types { get; set; }
 
         public IDictionary<string, string> ToQueryStrings()
         {
             return new Dictionary<string, string>()
             {
                 { "name", Name },
-                { "countries", string.Join(",", Countries)},
-                { "types", Types },
+                { "countries", string.Join(",", Countries) },
+                { "types", string.Join(",", Types) },
             };
         }
     }

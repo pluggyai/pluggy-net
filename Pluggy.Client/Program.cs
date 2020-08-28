@@ -24,7 +24,13 @@ namespace Pluggy.Client
             var sdk = new PluggyAPI(CLIENT_ID, CLIENT_SECRET, URL_BASE);
 
             // 1 - Let's list all available connectors
-            var connectors = await sdk.FetchConnectors();
+            var reqParams = new ConnectorParameters
+            {
+                Countries = new List<string> { "AR", "BR" },
+                Types = new List<string> { "PERSONAL_BANK", "BUSINESS_BANK", "INVESTMENT" },
+                Name = ""
+            };
+            var connectors = await sdk.FetchConnectors(reqParams);
             WriteConnectorList(connectors.Results);
 
             // 2 - Select a connector
@@ -71,6 +77,7 @@ namespace Pluggy.Client
             {
 
                 Console.WriteLine("Account # {0}, Number {1} has a balance of ${2}", account.Id, account.Number, account.Balance);
+                //var txParams = new TransactionParameters() { DateFrom = "1990-01-01", DateTo = "2020-05-26" };
                 var transactions = await sdk.FetchTransactions(account.Id);
                 foreach (var tx in transactions.Results)
                 {
