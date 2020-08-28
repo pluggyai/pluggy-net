@@ -5,40 +5,66 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Hermes.SDK.Errors;
 using Newtonsoft.Json;
+using Pluggy.SDK.Errors;
+using Pluggy.SDK.Model;
 
-namespace Hermes.SDK.HTTP
+namespace Pluggy.SDK.HTTP
 {
     /// <summary>
     /// The communication layer between the SDK and the HTTP REST backend.
     /// </summary>
     public class APIService : IDisposable
     {
-        private readonly string _apiKey;
+        private static readonly string URL_AUTH = "/auth";
+        private readonly string _clientId;
+        private readonly string _clientSecret;
         private readonly string _baseUrl;
+        private string _apiKey;
         private readonly HttpClient _httpClient;
         private bool _disposeHttpClient;
 
         /// <summary>
         /// Creates a ne w instance of HttpService using a provided <see cref="HttpClient"/>.
         /// </summary>
-        /// <param name="apiKey">A API KEY provided by Hermes to access the resources</param>
+        /// <param name="apiKey">A API KEY provided by Pluggy to access the resources</param>
         /// <param name="baseUrl">The URL of the API</param>
-        internal APIService(string apiKey, string baseUrl)
+        internal APIService(string clientId, string clientSecret, string baseUrl)
         {
-            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey), "API Key is required to execute");
+            _clientId = clientId ?? throw new ArgumentNullException(nameof(clientId), "ClientId is required to execute");
+            _clientSecret = clientSecret ?? throw new ArgumentNullException(nameof(clientSecret), "ClientSecret is required to execute");
             _baseUrl = baseUrl;
             _httpClient = new HttpClient(new HttpClientHandler());
+        }
+
+
+        private async Task<string> LoadApiKey()
+        {
+            if (_apiKey == null)
+            {
+                await FetchApiKey();
+            }
+            return _apiKey;
+        }
+
+        private async Task FetchApiKey()
+        {
+            var body = new Dictionary<string, string>()
+            {
+                { "clientId", _clientId },
+                { "clientSecret", _clientSecret }
+            };
+            var response = await PostAsync<AuthResponse>(URL_AUTH, body, null, null, null, null);
+            _apiKey = response.ApiKey;
         }
 
         private void ApplyHeaders(HttpRequestMessage message, IDictionary<string, object> headers)
         {
             // Set the authorization header
-            if (headers == null || !headers.ContainsKey("Authorization"))
+            if (headers == null || !headers.ContainsKey("X-API-KEY"))
                 // Auth header can be overridden by passing custom value in headers dictionary
                 if (!string.IsNullOrEmpty(_apiKey))
-                    message.Headers.Add("Authorization", $"Bearer {_apiKey}");
+                    message.Headers.Add("X-API-KEY", _apiKey);
 
             // Apply other headers
             if (headers != null)
@@ -133,21 +159,25 @@ namespace Hermes.SDK.HTTP
         /// <summary>
         /// Performs an HTTP PATCH operation.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="resource">The resource.</param>
         /// <param name="body">The body.</param>
+        /// <param name="parameters">The parameters.</param>
         /// <param name="urlSegments">The URL segments.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="queryStrings">The query strings.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the asynchronous Patch operation.</returns>
-        internal async Task<T> PatchAsync<T>(string resource, object body, Dictionary<string, string> urlSegments)
-            where T : class
+        internal async Task<T> PatchAsync<T>(string resource, object body, IDictionary<string, object> parameters = null,
+            IDictionary<string, string> urlSegments = null, IDictionary<string, object> headers = null,
+            IDictionary<string, string> queryStrings = null) where T : class
         {
             return await RunAsync<T>(resource,
                 new HttpMethod("PATCH"),
                 body,
                 urlSegments,
-                null,
-                null,
-                null).ConfigureAwait(false);
+                queryStrings,
+                parameters,
+                headers
+                ).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -161,7 +191,7 @@ namespace Hermes.SDK.HTTP
         /// <param name="headers">The headers.</param>
         /// <param name="queryStrings">The query strings.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the asynchronous Post operation.</returns>
-        internal async Task<T> PostAsync<T>(string resource, object body, IDictionary<string, object> parameters,
+        internal async Task<T> PostAsync<T>(string resource, object body, IDictionary<string, object> parameters = null,
             IDictionary<string, string> urlSegments = null, IDictionary<string, object> headers = null,
             IDictionary<string, string> queryStrings = null) where T : class
         {
@@ -198,6 +228,11 @@ namespace Hermes.SDK.HTTP
                 headers).ConfigureAwait(false);
         }
 
+        internal bool IsPrivate(string resource)
+        {
+            return resource != URL_AUTH;
+        }
+
         /// <summary>
         /// Executes the request. All requests will pass through this method as it will apply the headers, do the JSON
         /// formatting, check for errors on return, etc.
@@ -221,6 +256,9 @@ namespace Hermes.SDK.HTTP
             // Get the message content
             if (httpMethod != HttpMethod.Get && (body != null || parameters != null))
                 requestMessage.Content = BuildMessageContent(body, parameters);
+
+            // Load apiKey
+            if (IsPrivate(resource)) await LoadApiKey();
 
             // Apply the headers
             ApplyHeaders(requestMessage, headers);

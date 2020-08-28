@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Hermes.SDK.HTTP
+namespace Pluggy.SDK.HTTP
 {
     internal static class Utils
     {
@@ -111,6 +111,6 @@ namespace Hermes.SDK.HTTP
                 { key , value }
             };
         }
-        
+
     }
 }

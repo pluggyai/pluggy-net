@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="HTTP\" />
-    <Folder Include="Model\" />
     <Folder Include="Errors\" />
   </ItemGroup>
   <ItemGroup>
