@@ -213,9 +213,9 @@ namespace Pluggy.SDK
         /// Fetch the list of categories
         /// </summary
         /// <returns>Categories results list</returns>
-        public async Task<PageResults<Category>> FetchCategories(Guid? parentId = null)
+        public async Task<PageResults<Category>> FetchCategories(string parentId = "")
         {
-            var queryStrings = new Dictionary<string, string>() { { "parentId", parentId?.ToString() } };
+            var queryStrings = new Dictionary<string, string>() { { "parentId", parentId } };
             return await httpService.GetAsync<PageResults<Category>>(URL_CATEGORIES, null, queryStrings);
         }
 

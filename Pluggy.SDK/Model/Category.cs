@@ -5,7 +5,7 @@ namespace Pluggy.SDK.Model
     public class Category
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
