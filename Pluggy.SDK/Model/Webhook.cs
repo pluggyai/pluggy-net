@@ -26,7 +26,7 @@ namespace Pluggy.SDK.Model
         public Guid Id { get; set; }
 
         [JsonProperty("event")]
-        private string _event;
+        private readonly string _event;
 
         public WebhookEvent Event
         {
