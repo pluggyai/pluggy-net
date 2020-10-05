@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -28,7 +29,8 @@ namespace Pluggy.Client
             {
                 Countries = new List<string> { "AR", "BR" },
                 Types = new List<string> { "PERSONAL_BANK", "BUSINESS_BANK", "INVESTMENT" },
-                Name = ""
+                Name = "",
+                Sandbox = true
             };
             var connectors = await sdk.FetchConnectors(reqParams);
             WriteConnectorList(connectors.Results);
@@ -57,12 +59,12 @@ namespace Pluggy.Client
 
 
             // 5 - Reviews connection status and collects response
-            Item response = await WaitAndCollectResponse(sdk, item);
+            item = await WaitAndCollectResponse(sdk, item);
             Console.WriteLine("Connection has been completed");
 
-            if (response.Error != null)
+            if (item.Error != null)
             {
-                Console.WriteLine("Connection encoutered errors, {0}", response.Error.Message);
+                Console.WriteLine("Connection encoutered errors, {0}", item.Error.Message);
                 return;
             }
             else
@@ -71,7 +73,7 @@ namespace Pluggy.Client
             }
 
             // 6 - List connected accounts with their transactions
-            var accounts = await sdk.FetchAccounts(response.Id);
+            var accounts = await sdk.FetchAccounts(item.Id);
 
             foreach (var account in accounts.Results)
             {
@@ -85,7 +87,11 @@ namespace Pluggy.Client
                 }
             }
 
-            // 7 - If needed, delete the connection result from the cache.
+            // 7 - Review the identity of the user
+            var identity = await sdk.FetchIdentityByItemId(item.Id);
+            Console.WriteLine("The name of the user is {0} and his email is {1}.", identity.FullName, identity.Emails.First().Value);
+
+            // 8 - If needed, delete the connection result from the cache.
             Console.WriteLine("Do you want to delete the Connection? (y/n)");
             bool delete = Console.ReadLine() == "y";
             if (delete)
