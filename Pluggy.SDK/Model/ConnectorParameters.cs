@@ -14,6 +14,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("types")]
         public List<string> Types { get; set; }
 
+        [JsonProperty("sandbox")]
+        public bool Sandbox { get; set; }
+
         public IDictionary<string, string> ToQueryStrings()
         {
             return new Dictionary<string, string>()
@@ -21,6 +24,7 @@ namespace Pluggy.SDK.Model
                 { "name", Name },
                 { "countries", string.Join(",", Countries) },
                 { "types", string.Join(",", Types) },
+                { "sandbox", this.Sandbox.ToString().ToLower() }
             };
         }
     }
