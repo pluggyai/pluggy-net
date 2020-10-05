@@ -18,6 +18,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_INVESTMENTS = "/investments";
         protected static readonly string URL_CATEGORIES = "/categories";
         protected static readonly string URL_WEBHOOKS = "/webhooks";
+        protected static readonly string URL_IDENTITY = "/identity";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -207,6 +208,31 @@ namespace Pluggy.SDK
         public async Task<Investment> FetchInvestment(Guid id)
         {
             return await httpService.GetAsync<Investment>(URL_INVESTMENTS + "/{id}", Utils.GetSegment(id.ToString()));
+        }
+
+
+        /// <summary>
+        /// Fetch the Identity
+        /// </summary>
+        /// <param name="id">Identity resource id</param>
+        /// <returns>Identity details</returns>
+        public async Task<Identity> FetchIdentity(Guid id)
+        {
+            return await httpService.GetAsync<Identity>(URL_IDENTITY + "/{id}", Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch the Identity by the Item's ID
+        /// </summary>
+        /// <param name="id">Item resource id</param>
+        /// <returns>Identity details</returns>
+        public async Task<Identity> FetchIdentityByItemId(Guid id)
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "itemId", id.ToString() }
+            };
+            return await httpService.GetAsync<Identity>(URL_IDENTITY, null, queryStrings);
         }
 
         /// <summary>
