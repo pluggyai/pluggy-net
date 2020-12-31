@@ -21,7 +21,7 @@ namespace Pluggy.SDK.Model
         public string PrimaryColor { get; set; }
 
         [JsonProperty("type")]
-        public string Type { get; set; }
+        public ConnectorType Type { get; set; }
 
         [JsonProperty("country")]
         public string Country { get; set; }

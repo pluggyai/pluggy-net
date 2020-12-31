@@ -12,7 +12,7 @@ namespace Pluggy.SDK.Model
         public List<string> Countries { get; set; }
 
         [JsonProperty("types")]
-        public List<string> Types { get; set; }
+        public List<ConnectorType> Types { get; set; }
 
         [JsonProperty("sandbox")]
         public bool Sandbox { get; set; }
