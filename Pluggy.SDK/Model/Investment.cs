@@ -23,6 +23,12 @@ namespace Pluggy.SDK.Model
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("lastMonthRate")]
+        public double? LastMonthRate { get; set; }
+
+        [JsonProperty("lastTwelveMonthsRate")]
+        public double? LastTwelveMonthsRate { get; set; }
+
         [JsonProperty("annualRate")]
         public double? AnnualRate { get; set; }
 
@@ -50,6 +56,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("date")]
         public DateTime Date { get; set; }
 
+        [JsonProperty("dueDate")]
+        public DateTime? DueDate { get; set; }
+
         [JsonProperty("owner")]
         public string Owner { get; set; }
 
@@ -58,5 +67,24 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("amountProfit")]
         public double? AmountProfit { get; set; }
+
+        [JsonProperty("amountOriginal")]
+        public double? AmountOriginal { get; set; }
+
+        [JsonProperty("issueDate")]
+        public DateTime? IssueDate { get; set; }
+
+        [JsonProperty("issuer")]
+        public string Issuer { get; set; }
+
+        [JsonProperty("rate")]
+        public string Rate { get; set; }
+
+        [JsonProperty("rateType")]
+        public string RateType { get; set; }
+
+        [JsonProperty("status")]
+        public InvestmentStatus Status { get; set; }
+
     }
 }

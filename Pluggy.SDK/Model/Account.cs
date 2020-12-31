@@ -74,8 +74,11 @@ namespace Pluggy.SDK.Model
         [JsonProperty("balanceDueDate")]
         public DateTime? BalanceDueDate { get; set; }
 
-        [JsonProperty("AvailableCreditLimit")]
+        [JsonProperty("availableCreditLimit")]
         public double? AvailableCreditLimit { get; set; }
+
+        [JsonProperty("creditLimit")]
+        public double? CreditLimit { get; set; }
 
         [JsonProperty("balanceForeignCurrency")]
         public double? BalanceForeignCurrency { get; set; }

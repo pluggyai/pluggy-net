@@ -5,6 +5,8 @@
         MUTUAL_FUND,
         SECURITY,
         EQUITY,
-        FIXED_INCOME
+        FIXED_INCOME,
+        ETF,
+        OTHER
     }
 }
