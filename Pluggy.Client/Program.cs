@@ -28,7 +28,11 @@ namespace Pluggy.Client
             var reqParams = new ConnectorParameters
             {
                 Countries = new List<string> { "AR", "BR" },
-                Types = new List<string> { "PERSONAL_BANK", "BUSINESS_BANK", "INVESTMENT" },
+                Types = new List<ConnectorType> {
+                    ConnectorType.PERSONAL_BANK,
+                    ConnectorType.BUSINESS_BANK,
+                    ConnectorType.INVESTMENT
+                },
                 Name = "",
                 Sandbox = true
             };
@@ -72,7 +76,7 @@ namespace Pluggy.Client
                 Console.WriteLine("Connection was completed successfully in {0}s", (DateTime.Now - started).TotalSeconds);
             }
 
-            // 6 - List connected accounts with their transactions
+            // 6 - List connected products
             var accounts = await sdk.FetchAccounts(item.Id);
 
             foreach (var account in accounts.Results)
@@ -85,6 +89,13 @@ namespace Pluggy.Client
                 {
                     Console.WriteLine("  Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
                 }
+            }
+
+            var investments = await sdk.FetchInvestments(item.Id);
+            foreach (var investment in investments.Results)
+            {
+                Console.WriteLine("Investment #{0}, Code {1} has a balance of ${2}", investment.Id, investment.Code, investment.Balance);
+                WriteJson(investment);
             }
 
             // 7 - Review the identity of the user
