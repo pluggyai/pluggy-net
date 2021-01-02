@@ -16,9 +16,8 @@ namespace Pluggy.SDK.Model
         {
             Value = value;
         }
-
-
     }
+
     public class Webhook
     {
 

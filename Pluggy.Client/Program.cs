@@ -139,6 +139,16 @@ namespace Pluggy.Client
                 await Task.Delay(PluggyAPI.STATUS_POLL_INTERVAL);
                 Console.WriteLine("Checking Connection status...");
                 itemResponse = await sdk.FetchItem(item.Id);
+
+                // For MFA connections, we require to provide an extra credential
+                if (itemResponse.Status == ItemStatus.WAITING_USER_INPUT)
+                {
+                    var credential = itemResponse.Parameter;
+                    Console.WriteLine("What is your {0}?", credential.Label);
+                    string response = Console.ReadLine();
+                    var parameter = new ItemParameter(credential.Name, response);
+                    itemResponse = await sdk.SendMFA(item.Id, new List<ItemParameter> { parameter });
+                }
             }
             while (!itemResponse.HasFinished());
 

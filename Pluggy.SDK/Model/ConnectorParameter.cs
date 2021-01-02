@@ -14,8 +14,19 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public string Type { get; set; }
 
+        [JsonProperty("validation")]
+        public string Validation { get; set; }
+
+        [JsonProperty("validationMessage")]
+        public string ValidationMessage { get; set; }
+
+        [JsonProperty("placeholder")]
+        public string Placeholder { get; set; }
+
         [JsonProperty("mfa")]
         public Boolean Mfa { get; set; }
 
+        [JsonProperty("data")]
+        public string Data { get; set; }
     }
 }

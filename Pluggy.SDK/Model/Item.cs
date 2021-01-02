@@ -24,18 +24,21 @@ namespace Pluggy.SDK.Model
         public DateTime? CreatedAt { get; set; }
 
         [JsonProperty("updatedAt")]
-        public DateTime? updatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [JsonProperty("lastUpdatedAt")]
-        public DateTime? lastUpdatedAt { get; set; }
+        public DateTime? LastUpdatedAt { get; set; }
 
         [JsonProperty("error")]
         public ExecutionError Error { get; set; }
 
+        [JsonProperty("parameter")]
+        public ConnectorParameter Parameter { get; set; }
 
-        public Boolean HasFinished()
+
+        public bool HasFinished()
         {
-            return this.Status == ItemStatus.UPDATED || this.Status == ItemStatus.OUTDATED || this.Status == ItemStatus.LOGIN_ERROR;
+            return Status == ItemStatus.UPDATED || Status == ItemStatus.OUTDATED || Status == ItemStatus.LOGIN_ERROR;
         }
     }
 }

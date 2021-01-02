@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Pluggy.SDK.Errors;
 using Pluggy.SDK.HTTP;
@@ -19,6 +20,8 @@ namespace Pluggy.SDK
         protected static readonly string URL_CATEGORIES = "/categories";
         protected static readonly string URL_WEBHOOKS = "/webhooks";
         protected static readonly string URL_IDENTITY = "/identity";
+        protected static readonly string URL_ITEMS_MFA = "/items/{id}/mfa";
+        protected static readonly string URL_CONNECT_TOKEN = "/connecttokens";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -67,36 +70,6 @@ namespace Pluggy.SDK
             }
         }
 
-
-        /// <summary>
-        /// Creates a new item for a connector and starts reviewing the status until completition
-        /// </summary>
-        /// <param name="request">The item parameters</param>
-        /// <returns>an object with the info to retrieve the data when the execution is ready</returns>
-        public async Task<Item> ExecuteAndWait(ItemParameters request)
-        {
-            try
-            {
-                Item item = await CreateItem(request);
-
-                do
-                {
-                    await Task.Delay(STATUS_POLL_INTERVAL);
-                    item = await FetchItem(item.Id);
-                }
-                while (!item.HasFinished());
-
-                return item;
-            }
-            catch (ApiException e)
-            {
-                if (e.ApiError != null && e.ApiError.Errors != null)
-                    throw new ValidationException(e.StatusCode, e.ApiError);
-
-                throw e;
-            }
-        }
-
         /// <summary>
         /// Fetch a single item
         /// </summary>
@@ -108,10 +81,10 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
-        /// Fetch a single item
+        /// Update an item connection with/without credentials forcing a sync
         /// </summary>
         /// <param name="id">Item id</param>
-        /// <returns></returns>
+        /// <returns>An item object with the status of the connection</returns>
         public async Task<Item> UpdateItem(ItemParameters request)
         {
             try
@@ -126,6 +99,30 @@ namespace Pluggy.SDK
                 throw e;
             }
         }
+
+
+
+        /// <summary>
+        /// Sends multi-factor authentication parameter to item that is requesting it. 
+        /// </summary>
+        /// <param name="id">The item ID</param>
+        /// <param name="parameters">Key-value pairs of requested parameters</param>
+        /// <returns>An item object with the status of the connection</returns>
+        public async Task<Item> SendMFA(Guid id, List<ItemParameter> parameters)
+        {
+            try
+            {
+                return await httpService.PostAsync<Item>(URL_ITEMS_MFA, parameters.ToDictionary(x => x.Name, x => x.Value), null, Utils.GetSegment(id.ToString()));
+            }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+        }
+
 
         /// <summary>
         /// Deletes an Item by it's primary identifier
@@ -337,5 +334,57 @@ namespace Pluggy.SDK
             await httpService.DeleteAsync<dynamic>(URL_WEBHOOKS + "/{id}", Utils.GetSegment(id.ToString()), null);
         }
 
+        /// <summary>
+        /// Creates a "ConnectToken" that provides an "AccessToken" for client-side communication.
+        /// </summary>
+        /// <returns>An object containing an accessToken</returns>
+        public async Task<ConnectTokenResponse> CreateConnectToken()
+        {
+            try
+            {
+                return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, null);
+            }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+        }
+
+        
+        /*
+         * Execution Helpers
+         */
+
+        /// <summary>
+        /// Creates a new item for a connector and starts reviewing the status until completition
+        /// </summary>
+        /// <param name="request">The item parameters</param>
+        /// <returns>an object with the info to retrieve the data when the execution is ready</returns>
+        public async Task<Item> ExecuteAndWait(ItemParameters request)
+        {
+            try
+            {
+                Item item = await CreateItem(request);
+
+                do
+                {
+                    await Task.Delay(STATUS_POLL_INTERVAL);
+                    item = await FetchItem(item.Id);
+                }
+                while (!item.HasFinished());
+
+                return item;
+            }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+        }
     }
 }
