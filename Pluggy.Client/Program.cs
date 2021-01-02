@@ -147,7 +147,7 @@ namespace Pluggy.Client
                     Console.WriteLine("What is your {0}?", credential.Label);
                     string response = Console.ReadLine();
                     var parameter = new ItemParameter(credential.Name, response);
-                    itemResponse = await sdk.SendMFA(item.Id, new List<ItemParameter> { parameter });
+                    itemResponse = await sdk.UpdateItemMFA(item.Id, new List<ItemParameter> { parameter });
                 }
             }
             while (!itemResponse.HasFinished());

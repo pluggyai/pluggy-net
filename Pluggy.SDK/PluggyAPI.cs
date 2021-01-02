@@ -108,7 +108,7 @@ namespace Pluggy.SDK
         /// <param name="id">The item ID</param>
         /// <param name="parameters">Key-value pairs of requested parameters</param>
         /// <returns>An item object with the status of the connection</returns>
-        public async Task<Item> SendMFA(Guid id, List<ItemParameter> parameters)
+        public async Task<Item> UpdateItemMFA(Guid id, List<ItemParameter> parameters)
         {
             try
             {
