@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace Pluggy.SDK.Model
 {
@@ -9,13 +10,13 @@ namespace Pluggy.SDK.Model
         {
         }
 
-        /// <summary>Transaction date from, format: yyyy-mm-dd</summary>
+        /// <summary>Transaction date from</summary>
         [JsonProperty("from")]
-        public string DateFrom { get; set; }
+        public DateTime DateFrom { get; set; }
 
-        /// <summary>Transaction date to, format: yyyy-mm-dd</summary>
+        /// <summary>Transaction date to</summary>
         [JsonProperty("to")]
-        public string DateTo { get; set; }
+        public DateTime DateTo { get; set; }
 
         [JsonProperty("page")]
         public double? Page { get; set; }
@@ -27,8 +28,8 @@ namespace Pluggy.SDK.Model
         {
             return new Dictionary<string, string>()
             {
-                { "to", DateTo },
-                { "from", DateFrom },
+                { "to", DateTo.ToString("yyyy-MM-dd") },
+                { "from", DateFrom.ToString("yyyy-MM-dd") },
                 { "page", Page?.ToString() },
                 { "size", Size?.ToString() },
             };

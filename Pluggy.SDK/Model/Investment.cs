@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -86,5 +87,7 @@ namespace Pluggy.SDK.Model
         [JsonProperty("status")]
         public InvestmentStatus Status { get; set; }
 
+        [JsonProperty("transactions")]
+        public List<InvestmentTransaction> Transactions { get; set; }
     }
 }
