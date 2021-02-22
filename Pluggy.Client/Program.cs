@@ -83,8 +83,8 @@ namespace Pluggy.Client
             {
 
                 Console.WriteLine("Account # {0}, Number {1} has a balance of ${2}", account.Id, account.Number, account.Balance);
-                //var txParams = new TransactionParameters() { DateFrom = "1990-01-01", DateTo = "2020-05-26" };
-                var transactions = await sdk.FetchTransactions(account.Id);
+                var txSearchParams = new TransactionParameters() { DateFrom = DateTime.Now.AddYears(-1), DateTo = DateTime.Now };
+                var transactions = await sdk.FetchTransactions(account.Id, txSearchParams);
                 foreach (var tx in transactions.Results)
                 {
                     Console.WriteLine("  Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
