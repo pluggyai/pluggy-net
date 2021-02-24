@@ -32,7 +32,7 @@ namespace Pluggy.SDK.Model
             {
                 { "webhookUrl", WebhookUrl },
                 { "connectorId", ConnectorId },
-                { "parameters", Parameters.ToDictionary(x => x.Name, x => x.Value) },
+                { "parameters", Parameters?.ToDictionary(x => x.Name, x => x.Value) },
             };
         }
     }

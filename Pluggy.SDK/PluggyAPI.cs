@@ -85,11 +85,11 @@ namespace Pluggy.SDK
         /// </summary>
         /// <param name="id">Item id</param>
         /// <returns>An item object with the status of the connection</returns>
-        public async Task<Item> UpdateItem(ItemParameters request)
+        public async Task<Item> UpdateItem(Guid id, ItemParameters request)
         {
             try
             {
-                return await httpService.PatchAsync<Item>(URL_ITEMS, request.ToBody());
+                return await httpService.PatchAsync<Item>(URL_ITEMS + "/{id}", request.ToBody(), null, Utils.GetSegment(id.ToString()));
             }
             catch (ApiException e)
             {
