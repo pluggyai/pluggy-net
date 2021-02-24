@@ -15,7 +15,10 @@ namespace Pluggy.SDK.Model
     public enum ExecutionErrorCode
     {
         INVALID_CREDENTIALS,
+        INVALID_CREDENTIALS_MFA,
         ALREADY_LOGGED_IN,
+        ACCOUNT_LOCKED,
+        SITE_NOT_AVAILABLE,
         UNEXPECTED_ERROR
     }
 }
