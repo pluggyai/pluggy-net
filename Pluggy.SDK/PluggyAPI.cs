@@ -21,7 +21,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_WEBHOOKS = "/webhooks";
         protected static readonly string URL_IDENTITY = "/identity";
         protected static readonly string URL_ITEMS_MFA = "/items/{id}/mfa";
-        protected static readonly string URL_CONNECT_TOKEN = "/connecttokens";
+        protected static readonly string URL_CONNECT_TOKEN = "/connect_token";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -338,11 +338,15 @@ namespace Pluggy.SDK
         /// Creates a "ConnectToken" that provides an "AccessToken" for client-side communication.
         /// </summary>
         /// <returns>An object containing an accessToken</returns>
-        public async Task<ConnectTokenResponse> CreateConnectToken()
+        public async Task<ConnectTokenResponse> CreateConnectToken(Guid? itemId = null)
         {
             try
             {
-                return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, null);
+                var body = new Dictionary<string, string>
+                {
+                    { "itemId", itemId?.ToString() }
+                };
+                return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
             }
             catch (ApiException e)
             {
