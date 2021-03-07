@@ -27,6 +27,7 @@ namespace Pluggy.Client
             Console.WriteLine("Please select an operation to walkthrough");
             Console.WriteLine("1. Create an Item");
             Console.WriteLine("2. Update an Item");
+            Console.WriteLine("3. Create a ConnectToekn for Widget");
 
             string action = Console.ReadLine();
 
@@ -37,6 +38,9 @@ namespace Pluggy.Client
                     break;
                 case "2":
                     await UpdateItem(sdk);
+                    break;
+                case "3":
+                    await CreateConnectToken(sdk);
                     break;
             }
 
@@ -176,6 +180,31 @@ namespace Pluggy.Client
             await Helpers.PrintResults(sdk, item);
         }
 
+        /// <summary>
+        /// This is a walkthrough on how to create a Connect Token
+        /// </summary>
+        /// <param name="sdk">Pluggy's api client</param>
+        /// <returns></returns>
+        private static async Task CreateConnectToken(SDK.PluggyAPI sdk)
+        {
+            // 1 - Get the ItemId if its an update
+            Console.WriteLine("You can use the Connect Token for an new or an existing Connection (item).");
+            Console.WriteLine("Do you have an ItemId to Update? (y/n)");
+            bool isUpdate = Console.ReadLine().ToLower() == "y";
+
+            Guid? itemIdToUpdate = null;
+            if (isUpdate)
+            {
+                Console.WriteLine("Please provide the itemId you want to update.");
+                string itemIdStr = Console.ReadLine();
+                if (!Guid.TryParse(itemIdStr, out Guid itemId)) return;
+                itemIdToUpdate = itemId;
+            }
+
+            ConnectTokenResponse response = await sdk.CreateConnectToken(itemIdToUpdate);
+            Console.WriteLine("You can use the following token to create a Connect Widget with it!");
+            Console.WriteLine(response.AccessToken);
+        }
 
         private static (string, string, string) Configuration()
         {
