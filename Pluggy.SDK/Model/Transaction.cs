@@ -29,5 +29,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("providerCode")]
         public string ProviderCode { get; set; }
+
+        [JsonProperty("paymentData")]
+        public TransactionPaymentData PaymentData { get; set; }
     }
 }
