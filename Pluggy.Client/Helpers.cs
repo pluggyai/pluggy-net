@@ -107,8 +107,13 @@ namespace Pluggy.Client
                 credentials.Add(new ItemParameter(credential.Name, response));
             }
 
+            var options = new ItemOptions()
+            {
+                ClientUserId = "sdk-net"
+            };
+
             // Create an execution request to retrieve the last 15 days of transactions
-            return new ItemParameters(connectorId, credentials);
+            return new ItemParameters(connectorId, credentials, options);
         }
 
 
@@ -159,6 +164,10 @@ namespace Pluggy.Client
                 foreach (var tx in transactions.Results)
                 {
                     Console.WriteLine("  Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
+                    if (tx.PaymentData != null)
+                    {
+                        Console.WriteLine("    PaymentData, method used ¨{0}¨, executed by {1} to {2} with Reason / Motive: {3}", tx.PaymentData.PaymentMethod, tx.PaymentData.Payer?.Name, tx.PaymentData.Receiver?.Name, tx.PaymentData.Reason);
+                    }
                 }
             }
 

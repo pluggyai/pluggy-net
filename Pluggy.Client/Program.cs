@@ -201,7 +201,12 @@ namespace Pluggy.Client
                 itemIdToUpdate = itemId;
             }
 
-            ConnectTokenResponse response = await sdk.CreateConnectToken(itemIdToUpdate);
+            var connectTokenOptions = new ItemOptions()
+            {
+                ClientUserId = "sdk-net"
+            };
+
+            ConnectTokenResponse response = await sdk.CreateConnectToken(itemIdToUpdate, connectTokenOptions);
             Console.WriteLine("You can use the following token to create a Connect Widget with it!");
             Console.WriteLine(response.AccessToken);
         }
