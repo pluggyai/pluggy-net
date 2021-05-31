@@ -338,13 +338,14 @@ namespace Pluggy.SDK
         /// Creates a "ConnectToken" that provides an "AccessToken" for client-side communication.
         /// </summary>
         /// <returns>An object containing an accessToken</returns>
-        public async Task<ConnectTokenResponse> CreateConnectToken(Guid? itemId = null)
+        public async Task<ConnectTokenResponse> CreateConnectToken(Guid? itemId = null, ItemOptions options = null)
         {
             try
             {
-                var body = new Dictionary<string, string>
+                var body = new Dictionary<string, object>
                 {
-                    { "itemId", itemId?.ToString() }
+                    { "itemId", itemId?.ToString() },
+                    { "options", options }
                 };
                 return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
             }

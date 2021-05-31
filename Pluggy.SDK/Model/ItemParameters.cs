@@ -15,15 +15,22 @@ namespace Pluggy.SDK.Model
         [JsonProperty("webhookUrl")]
         public string WebhookUrl { get; set; }
 
+        [JsonProperty("clientUserId")]
+        public string ClientUserId { get; set; }
+
         public ItemParameters()
         {
         }
 
-        public ItemParameters(long connectorId, List<ItemParameter> credentials, string webhookUrl = "")
+        public ItemParameters(long connectorId, List<ItemParameter> credentials, ItemOptions options = null)
         {
             this.Parameters = credentials;
-            this.WebhookUrl = webhookUrl;
             this.ConnectorId = connectorId;
+            if (options != null)
+            {
+                this.WebhookUrl = options.WebhookUrl;
+                this.ClientUserId = options.ClientUserId;
+            }
         }
 
         public IDictionary<string, object> ToBody()
@@ -31,6 +38,7 @@ namespace Pluggy.SDK.Model
             return new Dictionary<string, object>()
             {
                 { "webhookUrl", WebhookUrl },
+                { "clientUserId", ClientUserId },
                 { "connectorId", ConnectorId },
                 { "parameters", Parameters?.ToDictionary(x => x.Name, x => x.Value) },
             };
