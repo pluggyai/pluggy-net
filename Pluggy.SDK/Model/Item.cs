@@ -20,6 +20,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("webhookUrl")]
         public string WebhookUrl { get; set; }
 
+        [JsonProperty("clientUserId")]
+        public string ClientUserId { get; set; }
+
         [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
 
