@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>0.7.1</PackageVersion>
+    <PackageVersion>0.8.0</PackageVersion>
     <Authors>Pluggy</Authors>
     <Description>Pluggy SDK to connect with our aggregation service API</Description>
     <NeutralLanguage>en-US</NeutralLanguage>

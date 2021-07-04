@@ -84,6 +84,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("rateType")]
         public string RateType { get; set; }
 
+        [JsonProperty("fixedAnnualRate")]
+        public double? FixedAnnualRate { get; set; }
+
         [JsonProperty("status")]
         public InvestmentStatus Status { get; set; }
 
