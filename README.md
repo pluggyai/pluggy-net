@@ -24,6 +24,14 @@ All api calls are under the same client, and respect the same behaviour.
 var connectors = await client.FetchConnectors();
 ```
 
+#### Security at transit
+
+At Pluggy we enforce the use of TLSv1.2 or higher. If you are using .NET < 4.7.2, this won't be the default communication for http clients, and you will need to set it.
+
+```csharp
+System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+```
+
 ## Building
 
 This project can be built on Windows, Linux or macOS. Ensure you have the [.NET Core SDK](https://www.microsoft.com/net/download) installed.
