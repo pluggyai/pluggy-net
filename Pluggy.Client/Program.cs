@@ -88,6 +88,10 @@ namespace Pluggy.Client
             // 4 - Starts & retrieves the item metadata
             Console.WriteLine("Starting your connection based on the information provided");
             DateTime started = DateTime.Now;
+
+            ValidationResult validationResult = await sdk.ValidateCredentials(connector.Id, request.Parameters);
+            Console.WriteLine("Validation result errors: {0}", validationResult.Errors);
+
             Item item = await Helpers.CreateItem(sdk, request);
 
             if (item == null) return;
