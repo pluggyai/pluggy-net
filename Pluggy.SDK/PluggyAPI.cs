@@ -51,6 +51,27 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Check that connector parameters are valid
+        /// </summary>
+        /// <param name="id">The connector ID</param>
+        /// <param name="request">The connector parameters</param>
+        /// <returns>an object with the info of which parameters are wrong</returns>
+        public async Task<ValidationResult> ValidateCredentials(long id, List<ItemParameter> credentials)
+        {
+            try
+            {
+                return await httpService.PostAsync<ValidationResult>(URL_CONNECTORS + "/{id}/validate", credentials.ToBody());
+            }
+            catch (ApiException e)
+            {
+                if (e.ApiError != null && e.ApiError.Errors != null)
+                    throw new ValidationException(e.StatusCode, e.ApiError);
+
+                throw e;
+            }
+        }
+
+        /// <summary>
         /// Creates a new item for an specific connector
         /// </summary>
         /// <param name="request">The item parameters</param>
