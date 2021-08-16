@@ -85,12 +85,20 @@ namespace Pluggy.Client
             // 3 - Ask for credentials to execute this connector
             ItemParameters request = Helpers.AskCredentials(connector.Id, connector.Credentials);
 
-            // 4 - Starts & retrieves the item metadata
+
+            // 4 - Validate credentials input if its valid
+            // This step is not mandatory, the CreateItem request will do it for you.
+            ValidationResult validationResult = await sdk.ValidateCredentials(connector.Id, request.Parameters);
+            if (validationResult.Errors.Count > 0)
+            {
+                Console.WriteLine("There were validation errors:");
+                Helpers.WriteJson(validationResult.Errors);
+                return;
+            }
+
+            // 5 - Starts & retrieves the item metadata
             Console.WriteLine("Starting your connection based on the information provided");
             DateTime started = DateTime.Now;
-
-            ValidationResult validationResult = await sdk.ValidateCredentials(connector.Id, request.Parameters);
-            Console.WriteLine("Validation result errors: {0}", validationResult.Errors);
 
             Item item = await Helpers.CreateItem(sdk, request);
 
@@ -98,7 +106,7 @@ namespace Pluggy.Client
             Console.WriteLine("Connection to Item {0} started", item.Id);
 
 
-            // 5 - Reviews connection status and collects response
+            // 6 - Reviews connection status and collects response
             item = await Helpers.WaitAndCollectResponse(sdk, item);
             Console.WriteLine("Connection has been completed");
 
@@ -114,7 +122,7 @@ namespace Pluggy.Client
 
             await Helpers.PrintResults(sdk, item);
 
-            // 8 - If needed, delete the connection result from the cache.
+            // 7 - If needed, delete the connection result from the cache.
             Console.WriteLine("Do you want to delete the Connection? (y/n)");
             bool delete = Console.ReadLine() == "y";
             if (delete)
