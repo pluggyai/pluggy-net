@@ -60,7 +60,12 @@ namespace Pluggy.SDK
         {
             try
             {
-                return await httpService.PostAsync<ValidationResult>(URL_CONNECTORS + "/{id}/validate", credentials.ToBody());
+                return await httpService.PostAsync<ValidationResult>(
+                    URL_CONNECTORS + "/{id}/validate",
+                    credentials?.ToDictionary(x => x.Name, x => x.Value),
+                    null,
+                    Utils.GetSegment(id.ToString())
+                );
             }
             catch (ApiException e)
             {
