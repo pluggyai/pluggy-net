@@ -6,19 +6,21 @@ namespace Pluggy.SDK.Model
     public class ExecutionError
     {
         [JsonProperty("code")]
-        public ExecutionErrorCode Code { get; set; }
+        public string Code { get; set; }
 
         [JsonProperty("message")]
         public string Message { get; set; }
     }
-
-    public enum ExecutionErrorCode
+    
+	public static class ExecutionErrorCode
     {
-        INVALID_CREDENTIALS,
-        INVALID_CREDENTIALS_MFA,
-        ALREADY_LOGGED_IN,
-        ACCOUNT_LOCKED,
-        SITE_NOT_AVAILABLE,
-        UNEXPECTED_ERROR
+        public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+        public const string INVALID_CREDENTIALS_MFA = "INVALID_CREDENTIALS_MFA";
+        public const string ALREADY_LOGGED_IN = "ALREADY_LOGGED_IN";
+        public const string ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
+        public const string SITE_NOT_AVAILABLE = "SITE_NOT_AVAILABLE";
+        public const string UNEXPECTED_ERROR = "UNEXPECTED_ERROR";
+        public const string ACCOUNT_NEEDS_ACTION = "ACCOUNT_NEEDS_ACTION";
+        public const string CONNECTION_ERROR = "CONNECTION_ERROR";
     }
 }

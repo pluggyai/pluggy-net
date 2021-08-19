@@ -112,7 +112,18 @@ namespace Pluggy.Client
 
             if (item.Error != null)
             {
-                Console.WriteLine("Connection encoutered errors, {0}", item.Error.Message);
+                switch (item.Error.Code)
+                {
+                    case ExecutionErrorCode.INVALID_CREDENTIALS:
+                        Console.WriteLine("The credentials sent where invalid");
+                        break;
+                    case ExecutionErrorCode.INVALID_CREDENTIALS_MFA:
+                        Console.WriteLine("The introduced MFA was invalid");
+                        break;
+                    default:
+                        Console.WriteLine("Connection encoutered errors, {0}", item.Error.Message);
+                        break;
+                }
                 return;
             }
             else
