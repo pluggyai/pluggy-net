@@ -90,6 +90,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("status")]
         public InvestmentStatus Status { get; set; }
 
+        [JsonProperty("institution")]
+        public InvestmentInstitution Institution { get; set; }
+
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }
     }
