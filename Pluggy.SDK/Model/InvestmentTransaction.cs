@@ -21,7 +21,7 @@ namespace Pluggy.SDK.Model
         public double? Value { get; set; }
 
         [JsonProperty("amount")]
-        public double Amount { get; set; }
+        public double? Amount { get; set; }
 
         [JsonProperty("date")]
         public DateTime Date { get; set; }

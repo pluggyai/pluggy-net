@@ -40,13 +40,13 @@ namespace Pluggy.SDK.Model
         public string Code { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public double? Value { get; set; }
 
         [JsonProperty("quantity")]
-        public string Quantity { get; set; }
+        public double? Quantity { get; set; }
 
         [JsonProperty("amount")]
-        public string Amount { get; set; }
+        public double? Amount { get; set; }
 
         [JsonProperty("taxes")]
         public double? Taxes { get; set; }
