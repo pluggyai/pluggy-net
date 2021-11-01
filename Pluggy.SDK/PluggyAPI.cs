@@ -47,7 +47,7 @@ namespace Pluggy.SDK
         /// <returns>A connector object</returns>
         public async Task<Connector> FetchConnector(long id)
         {
-            return await httpService.GetAsync<Connector>(URL_CONNECTORS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Connector>(URL_CONNECTORS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Pluggy.SDK
                     URL_CONNECTORS + "/{id}/validate",
                     credentials?.ToDictionary(x => x.Name, x => x.Value),
                     null,
-                    Utils.GetSegment(id.ToString())
+                    HTTP.Utils.GetSegment(id.ToString())
                 );
             }
             catch (ApiException e)
@@ -103,7 +103,7 @@ namespace Pluggy.SDK
         /// <returns></returns>
         public async Task<Item> FetchItem(Guid id)
         {
-            return await httpService.GetAsync<Item>(URL_ITEMS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Item>(URL_ITEMS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Pluggy.SDK
         {
             try
             {
-                return await httpService.PatchAsync<Item>(URL_ITEMS + "/{id}", request.ToBody(), null, Utils.GetSegment(id.ToString()));
+                return await httpService.PatchAsync<Item>(URL_ITEMS + "/{id}", request.ToBody(), null, HTTP.Utils.GetSegment(id.ToString()));
             }
             catch (ApiException e)
             {
@@ -138,7 +138,7 @@ namespace Pluggy.SDK
         {
             try
             {
-                return await httpService.PostAsync<Item>(URL_ITEMS_MFA, parameters.ToDictionary(x => x.Name, x => x.Value), null, Utils.GetSegment(id.ToString()));
+                return await httpService.PostAsync<Item>(URL_ITEMS_MFA, parameters.ToDictionary(x => x.Name, x => x.Value), null, HTTP.Utils.GetSegment(id.ToString()));
             }
             catch (ApiException e)
             {
@@ -157,7 +157,7 @@ namespace Pluggy.SDK
         /// <returns></returns>
         public async Task DeleteItem(Guid id)
         {
-            await httpService.DeleteAsync<dynamic>(URL_ITEMS + "/{id}", Utils.GetSegment(id.ToString()), null);
+            await httpService.DeleteAsync<dynamic>(URL_ITEMS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Pluggy.SDK
         /// <returns>Account details</returns>
         public async Task<Account> FetchAccount(Guid id)
         {
-            return await httpService.GetAsync<Account>(URL_ACCOUNTS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Account>(URL_ACCOUNTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Pluggy.SDK
         /// <returns>Transacion results list</returns>
         public async Task<Transaction> FetchTransaction(Guid id)
         {
-            return await httpService.GetAsync<Transaction>(URL_TRANSACTIONS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Transaction>(URL_TRANSACTIONS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Pluggy.SDK
         /// <returns>Investment details</returns>
         public async Task<Investment> FetchInvestment(Guid id)
         {
-            return await httpService.GetAsync<Investment>(URL_INVESTMENTS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Investment>(URL_INVESTMENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
 
@@ -241,7 +241,7 @@ namespace Pluggy.SDK
         /// <returns>Identity details</returns>
         public async Task<Identity> FetchIdentity(Guid id)
         {
-            return await httpService.GetAsync<Identity>(URL_IDENTITY + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Identity>(URL_IDENTITY + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Pluggy.SDK
         /// <returns>Investment details</returns>
         public async Task<Category> FetchCategory(Guid id)
         {
-            return await httpService.GetAsync<Category>(URL_CATEGORIES + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Category>(URL_CATEGORIES + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace Pluggy.SDK
         /// <returns>Webhook details</returns>
         public async Task<Webhook> FetchWebhook(Guid id)
         {
-            return await httpService.GetAsync<Webhook>(URL_WEBHOOKS + "/{id}", Utils.GetSegment(id.ToString()));
+            return await httpService.GetAsync<Webhook>(URL_WEBHOOKS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Pluggy.SDK
                     { "url", url },
                     { "event", _event.Value }
                 };
-                return await httpService.PatchAsync<Webhook>(URL_WEBHOOKS + "/{id}", body, null, Utils.GetSegment(id.ToString()));
+                return await httpService.PatchAsync<Webhook>(URL_WEBHOOKS + "/{id}", body, null, HTTP.Utils.GetSegment(id.ToString()));
             }
             catch (ApiException e)
             {
@@ -357,7 +357,7 @@ namespace Pluggy.SDK
         /// <returns></returns>
         public async Task DeleteWebhook(Guid id)
         {
-            await httpService.DeleteAsync<dynamic>(URL_WEBHOOKS + "/{id}", Utils.GetSegment(id.ToString()), null);
+            await httpService.DeleteAsync<dynamic>(URL_WEBHOOKS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
         }
 
         /// <summary>

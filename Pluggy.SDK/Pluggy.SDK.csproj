@@ -20,6 +20,7 @@
   <ItemGroup>
     <Folder Include="HTTP\" />
     <Folder Include="Errors\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
@@ -27,5 +28,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Model\ApiResponse.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Utils\" />
   </ItemGroup>
 </Project>

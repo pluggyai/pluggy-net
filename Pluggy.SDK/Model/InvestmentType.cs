@@ -1,5 +1,9 @@
-﻿namespace Pluggy.SDK.Model
+﻿using Newtonsoft.Json;
+using Pluggy.SDK.Utils;
+
+namespace Pluggy.SDK.Model
 {
+    [JsonConverter(typeof(TolerantEnumConverter))]
     public enum InvestmentType
     {
         MUTUAL_FUND,
@@ -7,6 +11,7 @@
         EQUITY,
         FIXED_INCOME,
         ETF,
-        OTHER
+        OTHER,
+        REAL_ESTATE_FUND
     }
 }
