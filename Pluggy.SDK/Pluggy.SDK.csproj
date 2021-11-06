@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>0.11.0</PackageVersion>
+    <PackageVersion>0.12.0</PackageVersion>
     <Authors>Pluggy</Authors>
     <Description>Pluggy SDK to connect with our aggregation service API</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -12,8 +12,8 @@
     <PackageProjectUrl>https://docs.pluggy.ai</PackageProjectUrl>
     <PackageTags>open-banking bank api open finances</PackageTags>
     <Title>Pluggy's SDK </Title>
-    <Copyright>Copyright 2020</Copyright>
-    <Summary>Pluggy SDK to connect with our service API</Summary>
+    <Copyright>Copyright 2020-2022</Copyright>
+    <Summary>Pluggy SDK to connect with our API services</Summary>
     <PackageIconUrl>https://raw.githubusercontent.com/pluggyai/pluggy-net/master/logo.png</PackageIconUrl>
   </PropertyGroup>
 
