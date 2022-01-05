@@ -15,6 +15,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public InvestmentType Type { get; set; }
 
+        [JsonProperty("subtype")]
+        public InvestmentSubtype? Subtype { get; set; }
+
         [JsonProperty("number")]
         public string Number { get; set; }
 
