@@ -32,12 +32,12 @@ namespace Pluggy.Tests
         {
             string json = @"
             {
-                ""NonNullableTypeWithValidStringValue"" : ""REAL_ESTATE_FUND"",
+                ""NonNullableTypeWithValidStringValue"" : ""SECURITY"",
                 ""NonNullableTypeWithValidIntValue"" : 3,
                 ""NonNullableTypeWithInvalidStringValue"" : ""Blah"",
                 ""NonNullableTypeWithInvalidIntValue"" : 9,
                 ""NonNullableTypeWithNullValue"" : null,
-                ""NullableTypeWithValidStringValue"" : ""REAL_ESTATE_FUND"",
+                ""NullableTypeWithValidStringValue"" : ""SECURITY"",
                 ""NullableTypeWithValidIntValue"" : 3,
                 ""NullableTypeWithNullValue"" : null,
                 ""NullableTypeWithInvalidStringValue"" : ""Blah"",
@@ -50,12 +50,12 @@ namespace Pluggy.Tests
             Assert.AreEqual(result.NonNullableTypeWithInvalidStringValue, InvestmentType.MUTUAL_FUND);
             Assert.AreEqual(result.NonNullableTypeWithNullValue, InvestmentType.MUTUAL_FUND);
             Assert.AreEqual(result.NonNullableTypeWithValidIntValue, InvestmentType.FIXED_INCOME);
-            Assert.AreEqual(result.NonNullableTypeWithValidStringValue, InvestmentType.REAL_ESTATE_FUND);
+            Assert.AreEqual(result.NonNullableTypeWithValidStringValue, InvestmentType.SECURITY);
             Assert.AreEqual(result.NullableTypeWithInvalidIntValue, null);
             Assert.AreEqual(result.NullableTypeWithInvalidStringValue, null);
             Assert.AreEqual(result.NullableTypeWithNullValue, null);
             Assert.AreEqual(result.NullableTypeWithValidIntValue, InvestmentType.FIXED_INCOME);
-            Assert.AreEqual(result.NullableTypeWithValidStringValue, InvestmentType.REAL_ESTATE_FUND);
+            Assert.AreEqual(result.NullableTypeWithValidStringValue, InvestmentType.SECURITY);
 
         }
     }
