@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -65,6 +66,12 @@ namespace Pluggy.SDK.HTTP
                 // Auth header can be overridden by passing custom value in headers dictionary
                 if (!string.IsNullOrEmpty(_apiKey))
                     message.Headers.Add("X-API-KEY", _apiKey);
+
+            // Set the user-agent header
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            message.Headers.Add("User-Agent", string.Format("Pluggy.NET/{0}", version));
+
 
             // Apply other headers
             if (headers != null)
