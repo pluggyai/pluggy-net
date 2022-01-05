@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -23,10 +24,28 @@ namespace Pluggy.SDK.Model
         [JsonProperty("placeholder")]
         public string Placeholder { get; set; }
 
+        [JsonProperty("assistiveText")]
+        public string AssistiveText { get; set; }
+
         [JsonProperty("mfa")]
         public Boolean Mfa { get; set; }
 
         [JsonProperty("data")]
         public string Data { get; set; }
+
+        [JsonProperty("optional")]
+        public Boolean? Optional { get; set; }
+
+        [JsonProperty("options")]
+        public List<ConnectorParameterOption> Options { get; set; }
+    }
+
+    public class ConnectorParameterOption
+    {
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
     }
 }
