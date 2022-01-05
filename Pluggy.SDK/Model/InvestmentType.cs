@@ -11,7 +11,7 @@ namespace Pluggy.SDK.Model
         EQUITY,
         FIXED_INCOME,
         ETF,
+        COE,
         OTHER,
-        REAL_ESTATE_FUND
     }
 }
