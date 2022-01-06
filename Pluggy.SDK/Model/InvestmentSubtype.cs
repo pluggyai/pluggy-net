@@ -18,7 +18,7 @@ namespace Pluggy.SDK.Model
         /*! EQUITY */
         STOCK,
         ETF,
-        REAL_STATE_FUND,
+        REAL_ESTATE_FUND,
         /*! BRAZILIAN_DEPOSITARY_RECEIPT */
         BDR,
         DERIVATIVES,
@@ -31,7 +31,7 @@ namespace Pluggy.SDK.Model
         LCA,
         /*! CERTIFICATE_OF_DEPOSIT */
         CDB,
-        /*! REAL_STATE_RECEIVABLE_CERTIFICATE */
+        /*! REAL_ESTATE_RECEIVABLE_CERTIFICATE */
         CRI,
         /*! AGRICULTURAL_RECEIVABLE_CERTIFICATE */
         CRA,
