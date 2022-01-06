@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Pluggy.SDK.Errors;
 using Pluggy.SDK.HTTP;
@@ -26,9 +27,14 @@ namespace Pluggy.SDK
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
 
-        public PluggyAPI(string _clientId, string _clientSecret, string _baseUrl = "https://api.pluggy.ai/")
+        public PluggyAPI(string _clientId, string _clientSecret, HttpClient _httpClient = null, string _baseUrl = "https://api.pluggy.ai/")
         {
-            httpService = new APIService(_clientId, _clientSecret, _baseUrl);
+            httpService = new APIService(_clientId, _clientSecret, _baseUrl, _httpClient);
+        }
+
+        public PluggyAPI(string _clientId, string _clientSecret, string _baseUrl)
+            : this(_clientId, _clientSecret, null, _baseUrl)
+        {
         }
 
         /// <summary>

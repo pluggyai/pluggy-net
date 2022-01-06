@@ -24,18 +24,20 @@ namespace Pluggy.SDK.HTTP
         private string _apiKey;
         private readonly HttpClient _httpClient;
         private bool _disposeHttpClient;
+        private bool _ownHttpClient;
 
         /// <summary>
         /// Creates a ne w instance of HttpService using a provided <see cref="HttpClient"/>.
         /// </summary>
         /// <param name="apiKey">A API KEY provided by Pluggy to access the resources</param>
         /// <param name="baseUrl">The URL of the API</param>
-        internal APIService(string clientId, string clientSecret, string baseUrl)
+        internal APIService(string clientId, string clientSecret, string baseUrl, HttpClient httpClient = null)
         {
             _clientId = clientId ?? throw new ArgumentNullException(nameof(clientId), "ClientId is required to execute");
             _clientSecret = clientSecret ?? throw new ArgumentNullException(nameof(clientSecret), "ClientSecret is required to execute");
             _baseUrl = baseUrl;
-            _httpClient = new HttpClient(new HttpClientHandler());
+            _httpClient = httpClient ?? new HttpClient(new HttpClientHandler());
+            _ownHttpClient = httpClient == null;
         }
 
 
@@ -329,7 +331,7 @@ namespace Pluggy.SDK.HTTP
         /// </summary>
         public void Dispose()
         {
-            if (_disposeHttpClient)
+            if (_disposeHttpClient && _ownHttpClient)
             {
                 _httpClient.Dispose();
                 _disposeHttpClient = false;
