@@ -19,13 +19,31 @@ namespace Pluggy.SDK.Model
 
         public IDictionary<string, string> ToQueryStrings()
         {
-            return new Dictionary<string, string>()
+            var queryStrings = new Dictionary<string, string>()
             {
                 { "name", Name },
-                { "countries", string.Join(",", Countries) },
-                { "types", string.Join(",", Types) },
                 { "sandbox", this.Sandbox.ToString().ToLower() }
             };
+
+            // Add each type as a separate querystring
+            if (Types != null)
+            {
+                for (var i = 0; i < Types.Count; i++)
+                {
+                    queryStrings.Add($"types[{i}]", Types[i].ToString());
+                }
+            }
+
+            // Add each country as a separate querystring
+            if (Countries != null)
+            {
+                for (var i = 0; i < Countries.Count; i++)
+                {
+                    queryStrings.Add($"countries[{i}]", Countries[i].ToString());
+                }
+            }
+
+            return queryStrings;
         }
     }
 }
