@@ -33,6 +33,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public TransactionType Type { get; set; }
 
+        [JsonProperty("category")]
+        public string Category { get; set; }
+
         [JsonProperty("paymentData")]
         public TransactionPaymentData PaymentData { get; set; }
     }

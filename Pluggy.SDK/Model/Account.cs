@@ -34,7 +34,7 @@ namespace Pluggy.SDK.Model
         [JsonProperty("currencyCode")]
         public CurrencyCode CurrencyCode { get; set; }
 
-        [JsonProperty("accountType")]
+        [JsonProperty("type")]
         public AccountType Type { get; set; }
 
         [JsonProperty("accountSubtype")]
