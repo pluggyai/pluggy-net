@@ -11,6 +11,13 @@ namespace Pluggy.SDK.Model
 
         /*! MUTUAL_FUND */
         INVESTMENT_FUND,
+        MULTIMARKET_FUND,
+        FIXED_INCOME_FUND,
+        STOCK_FUND,
+        ETF_FUND,
+        OFFSHORE_FUND,
+        FIP_FUND,
+        EXCHANGE_FUND,
 
         /*! SECURITY */
         RETIREMENT,
@@ -22,6 +29,7 @@ namespace Pluggy.SDK.Model
         /*! BRAZILIAN_DEPOSITARY_RECEIPT */
         BDR,
         DERIVATIVES,
+        OPTION,
 
         /*! FIXED_INCOME */
         TREASURY,
