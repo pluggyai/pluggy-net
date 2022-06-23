@@ -38,6 +38,8 @@ namespace Pluggy.SDK.Model
         [JsonProperty("parameter")]
         public ConnectorParameter Parameter { get; set; }
 
+        [JsonProperty("statusDetail")]
+        public ItemStatusDetail StatusDetail { get; set; }
 
         public bool HasFinished()
         {
