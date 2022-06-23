@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
 {
@@ -22,5 +21,8 @@ namespace Pluggy.SDK.Model
         public const string UNEXPECTED_ERROR = "UNEXPECTED_ERROR";
         public const string ACCOUNT_NEEDS_ACTION = "ACCOUNT_NEEDS_ACTION";
         public const string CONNECTION_ERROR = "CONNECTION_ERROR";
+        public const string USER_AUTHORIZATION_PENDING = "USER_AUTHORIZATION_PENDING";
+        public const string USER_AUTHORIZATION_NOT_GRANTED = "USER_AUTHORIZATION_NOT_GRANTED";
+        public const string USER_INPUT_TIMEOUT = "USER_INPUT_TIMEOUT";
     }
 }
