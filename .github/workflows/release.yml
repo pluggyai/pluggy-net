@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 env:
   PROJECT_PATH: 'Pluggy.SDK/Pluggy.SDK.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
