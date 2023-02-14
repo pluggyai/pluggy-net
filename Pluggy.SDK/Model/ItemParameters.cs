@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Pluggy.SDK.Helpers;
 
 namespace Pluggy.SDK.Model
 {
@@ -41,7 +42,7 @@ namespace Pluggy.SDK.Model
                 { "clientUserId", ClientUserId },
                 { "connectorId", ConnectorId },
                 { "parameters", Parameters?.ToDictionary(x => x.Name, x => x.Value) },
-            };
+            }.RemoveNulls();
         }
     }
 }

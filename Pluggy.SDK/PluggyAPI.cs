@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Pluggy.SDK.Errors;
+using Pluggy.SDK.Helpers;
 using Pluggy.SDK.HTTP;
 using Pluggy.SDK.Model;
 
@@ -374,9 +375,11 @@ namespace Pluggy.SDK
         {
             try
             {
-                var body = new Dictionary<string, object>();
-                if (itemId != null) body.Add("itemId", itemId);
-                if (options != null) body.Add("options", options);
+                var body = new Dictionary<string, object>
+                {
+                    { "itemId", itemId?.ToString() },
+                    { "options", options }
+                }.RemoveNulls();
                 return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
             }
             catch (ApiException e)
