@@ -4,6 +4,13 @@
     {
         USD,
         ARS,
-        BRL
+        BRL,
+        EUR,
+        MXN,
+        COP,
+        CLP,
+        UYU,
+        PYG,
+        PEN,
     }
 }
