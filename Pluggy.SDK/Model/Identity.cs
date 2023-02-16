@@ -16,34 +16,34 @@ namespace Pluggy.SDK.Model
         public DateTime? BirthDate { get; set; }
 
         [JsonProperty("taxNumber")]
-        public string? TaxNumber { get; set; }
+        public string TaxNumber { get; set; }
 
         [JsonProperty("document")]
-        public string? Document { get; set; }
+        public string Document { get; set; }
 
         [JsonProperty("documentType")]
-        public string? DocumentType { get; set; }
+        public string DocumentType { get; set; }
 
         [JsonProperty("jobTitle")]
-        public string? JobTitle { get; set; }
+        public string JobTitle { get; set; }
 
         [JsonProperty("companyName")]
         public string? CompanyName { get; set; }
 
         [JsonProperty("fullName")]
-        public string? FullName { get; set; }
+        public string FullName { get; set; }
 
         [JsonProperty("phoneNumbers")]
-        public List<PhoneNumber>? PhoneNumbers { get; set; }
+        public List<PhoneNumber> PhoneNumbers { get; set; }
 
         [JsonProperty("relations")]
-        public List<IdentityRelation>? Relations { get; set; }
+        public List<IdentityRelation> Relations { get; set; }
 
         [JsonProperty("emails")]
-        public List<Email>? Emails { get; set; }
+        public List<Email> Emails { get; set; }
 
         [JsonProperty("addresses")]
-        public List<Address>? Addresses { get; set; }
+        public List<Address> Addresses { get; set; }
 
         [JsonProperty("investorProfile")]
         public InvestorProfile? InvestorProfile { get; set; }

@@ -5,25 +5,25 @@ namespace Pluggy.SDK.Model
     public class Address
     {
         [JsonProperty("type")]
-        public AddressType? Type { get; set; }
+        public AddressType Type { get; set; }
 
         [JsonProperty("fullAddress")]
-        public string? FullAddress { get; set; }
+        public string FullAddress { get; set; }
 
         [JsonProperty("primaryAddress")]
-        public string? PrimaryAddress { get; set; }
+        public string PrimaryAddress { get; set; }
 
         [JsonProperty("city")]
-        public string? City { get; set; }
+        public string City { get; set; }
 
         [JsonProperty("state")]
-        public string? State { get; set; }
+        public string State { get; set; }
 
         [JsonProperty("country")]
-        public string? Country { get; set; }
+        public string Country { get; set; }
 
         [JsonProperty("postalCode")]
-        public string? PostalCode { get; set; }
+        public string PostalCode { get; set; }
     }
 
     public enum AddressType

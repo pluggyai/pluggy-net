@@ -25,7 +25,7 @@ namespace Pluggy.SDK.Model
         public string Number { get; set; }
 
         [JsonProperty("balance")]
-        public double Balance { get; set; }
+        public double? Balance { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -79,13 +79,13 @@ namespace Pluggy.SDK.Model
         public double? AmountOriginal { get; set; }
 
         [JsonProperty("issueDate")]
-        public DateTime? IssueDate { get; set; }
+        public DateTime IssueDate { get; set; }
 
         [JsonProperty("issuer")]
-        public string? Issuer { get; set; }
+        public string Issuer { get; set; }
 
         [JsonProperty("rate")]
-        public double Rate { get; set; }
+        public string Rate { get; set; }
 
         [JsonProperty("rateType")]
         public string RateType { get; set; }
@@ -94,10 +94,10 @@ namespace Pluggy.SDK.Model
         public double? FixedAnnualRate { get; set; }
 
         [JsonProperty("status")]
-        public InvestmentStatus? Status { get; set; }
+        public InvestmentStatus Status { get; set; }
 
         [JsonProperty("institution")]
-        public InvestmentInstitution? Institution { get; set; }
+        public InvestmentInstitution Institution { get; set; }
 
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }

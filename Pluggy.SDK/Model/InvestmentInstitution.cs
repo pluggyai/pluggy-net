@@ -5,9 +5,9 @@ namespace Pluggy.SDK.Model
     public class InvestmentInstitution
     {
         [JsonProperty("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("number")]
-        public string? Number { get; set; }
+        public string Number { get; set; }
     }
 }
