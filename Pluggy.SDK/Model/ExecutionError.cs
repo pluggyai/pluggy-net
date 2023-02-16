@@ -17,7 +17,7 @@ namespace Pluggy.SDK.Model
         public string ProviderMessage { get; set; }
 
         [JsonProperty("metadata")]
-        public Metadata Metadata { get; set; }
+        public ExecutionErrorMetadata Metadata { get; set; }
 
         // Unstructured properties that provide additional context/information of the error.
         // Used for some specific cases only, such as Caixa PF & PJ.
@@ -40,24 +40,5 @@ namespace Pluggy.SDK.Model
         public const string USER_AUTHORIZATION_PENDING = "USER_AUTHORIZATION_PENDING";
         public const string USER_AUTHORIZATION_NOT_GRANTED = "USER_AUTHORIZATION_NOT_GRANTED";
         public const string USER_INPUT_TIMEOUT = "USER_INPUT_TIMEOUT";
-    }
-
-    public static class Metadata
-    {
-        // A provider id to relate the execution with an item, for example 'user_id'. useful to match webhook notifications with items.
-        [JsonProperty("providerId")]
-        public string ProviderId { get; set; }
-
-        // If the connector is MFA, this indicates if MFA credentials are required or not to continue the current execution.
-        [JsonProperty("hasMFA")]
-        public bool HasMFA { get; set; }
-
-        // Credentials to be used in future executions. May differ or expand from the current execution credentials.
-        [JsonProperty("credentials")]
-        public object Credentials { get; set; }
-
-        // Device nickname used when device authorization is pending.
-        [JsonProperty("deviceNickname")]
-        public string DeviceNickname { get; set; }
     }
 }
