@@ -30,6 +30,7 @@ namespace Pluggy.SDK.Model
     {
         public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
         public const string INVALID_CREDENTIALS_MFA = "INVALID_CREDENTIALS_MFA";
+        public const string ACCOUNT_CREDENTIALS_RESET = "ACCOUNT_CREDENTIALS_RESET";
         public const string ALREADY_LOGGED_IN = "ALREADY_LOGGED_IN";
         public const string ACCOUNT_LOCKED = "ACCOUNT_LOCKED";
         public const string SITE_NOT_AVAILABLE = "SITE_NOT_AVAILABLE";
