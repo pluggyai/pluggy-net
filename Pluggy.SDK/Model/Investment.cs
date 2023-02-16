@@ -12,6 +12,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("itemId")]
         public Guid ItemId { get; set; }
 
+        [JsonProperty("isin")]
+        public string? Isin { get; set; }
+
         [JsonProperty("type")]
         public InvestmentType Type { get; set; }
 
@@ -22,7 +25,7 @@ namespace Pluggy.SDK.Model
         public string Number { get; set; }
 
         [JsonProperty("balance")]
-        public double? Balance { get; set; }
+        public double Balance { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -58,7 +61,7 @@ namespace Pluggy.SDK.Model
         public double? Taxes2 { get; set; }
 
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [JsonProperty("dueDate")]
         public DateTime? DueDate { get; set; }
@@ -79,10 +82,10 @@ namespace Pluggy.SDK.Model
         public DateTime? IssueDate { get; set; }
 
         [JsonProperty("issuer")]
-        public string Issuer { get; set; }
+        public string? Issuer { get; set; }
 
         [JsonProperty("rate")]
-        public string Rate { get; set; }
+        public double Rate { get; set; }
 
         [JsonProperty("rateType")]
         public string RateType { get; set; }
@@ -91,12 +94,18 @@ namespace Pluggy.SDK.Model
         public double? FixedAnnualRate { get; set; }
 
         [JsonProperty("status")]
-        public InvestmentStatus Status { get; set; }
+        public InvestmentStatus? Status { get; set; }
 
         [JsonProperty("institution")]
-        public InvestmentInstitution Institution { get; set; }
+        public InvestmentInstitution? Institution { get; set; }
 
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }
+
+        [JsonProperty("metadata")]
+        public InvestmentMetadata? Metadata { get; set; }
+
+        [JsonProperty("providerId")]
+        public string? ProviderId { get; set; }
     }
 }

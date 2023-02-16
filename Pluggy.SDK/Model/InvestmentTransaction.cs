@@ -9,10 +9,16 @@ namespace Pluggy.SDK.Model
         public Guid Id { get; set; }
 
         [JsonProperty("type")]
-        public InvestmentTransactionType Type { get; set; }
+        public InvestmentTransactionType? Type { get; set; }
+
+        [JsonProperty("operationId")]
+        public string? OperationId { get; set; }
 
         [JsonProperty("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
+
+        [JsonProperty("investmentId")]
+        public string? InvestmentId { get; set; }
 
         [JsonProperty("quantity")]
         public double? Quantity { get; set; }
@@ -27,6 +33,15 @@ namespace Pluggy.SDK.Model
         public DateTime Date { get; set; }
 
         [JsonProperty("tradeDate")]
-        public DateTime TradeDate { get; set; }
+        public DateTime? TradeDate { get; set; }
+
+        [JsonProperty("brokerageNumber")]
+        public string? BrokerageNumber { get; set; }
+
+        [JsonProperty("netAmount")]
+        public double? NetAmount { get; set; }
+
+        [JsonProperty("expenses")]
+        public InvestmentTransactionExpenses? Expenses { get; set; }
     }
 }
