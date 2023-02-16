@@ -61,7 +61,7 @@ namespace Pluggy.SDK.Model
         public double? Taxes2 { get; set; }
 
         [JsonProperty("date")]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         [JsonProperty("dueDate")]
         public DateTime? DueDate { get; set; }
@@ -79,7 +79,7 @@ namespace Pluggy.SDK.Model
         public double? AmountOriginal { get; set; }
 
         [JsonProperty("issueDate")]
-        public DateTime IssueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
 
         [JsonProperty("issuer")]
         public string Issuer { get; set; }
