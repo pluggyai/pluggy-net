@@ -11,9 +11,9 @@ namespace Pluggy.SDK.Model
         public string Description { get; set; }
 
         [JsonProperty("parentId")]
-        public string ParentId { get; set; }
+        public string? ParentId { get; set; }
 
         [JsonProperty("parentDescription")]
-        public string ParentDescription { get; set; }
+        public string? ParentDescription { get; set; }
     }
 }
