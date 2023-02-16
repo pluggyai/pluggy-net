@@ -14,9 +14,9 @@ namespace Pluggy.SDK.Model
         public string Cnpj { get; set; }
 
         [JsonProperty("cnae")]
-        public string? Cnae { get; set; }
+        public string Cnae { get; set; }
 
         [JsonProperty("category")]
-        public string? Category { get; set; }
+        public string Category { get; set; }
     }
 }

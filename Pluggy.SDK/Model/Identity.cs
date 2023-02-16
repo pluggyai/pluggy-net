@@ -28,7 +28,7 @@ namespace Pluggy.SDK.Model
         public string JobTitle { get; set; }
 
         [JsonProperty("companyName")]
-        public string? CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
         [JsonProperty("fullName")]
         public string FullName { get; set; }

@@ -42,6 +42,6 @@ namespace Pluggy.SDK.Model
         public TransactionStatus? Status { get; set; }
 
         [JsonProperty("merchant")]
-        public TransactionMerchant? Merchant { get; set; }
+        public TransactionMerchant Merchant { get; set; }
     }
 }

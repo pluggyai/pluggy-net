@@ -39,7 +39,7 @@ namespace Pluggy.SDK.Model
         public string Name { get; set; }
 
         [JsonProperty("description")]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [JsonProperty("date")]
         public DateTime Date { get; set; }

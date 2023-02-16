@@ -5,12 +5,12 @@ namespace Pluggy.SDK.Model
     public class InvestmentMetadata
     {
         [JsonProperty("taxRegime")]
-        public string? TaxRegime { get; set; }
+        public string TaxRegime { get; set; }
 
         [JsonProperty("proposalNumber")]
-        public string? ProposalNumber { get; set; }
+        public string ProposalNumber { get; set; }
 
         [JsonProperty("processNumber")]
-        public string? ProcessNumber { get; set; }
+        public string ProcessNumber { get; set; }
     }
 }
