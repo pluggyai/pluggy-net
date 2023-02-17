@@ -11,19 +11,6 @@ namespace Pluggy.SDK.Model
         // A human-readable, short description of the error
         [JsonProperty("message")]
         public string Message { get; set; }
-
-        // The exact error message returned by the institution, if any was provided.
-        [JsonProperty("providerMessage")]
-        public string ProviderMessage { get; set; }
-
-        [JsonProperty("metadata")]
-        public ExecutionErrorMetadata Metadata { get; set; }
-
-        // Unstructured properties that provide additional context/information of the error.
-        // Used for some specific cases only, such as Caixa PF & PJ.
-        // see https://docs.pluggy.ai/docs/errors-validations for more info.
-        [JsonProperty("attributes")]
-        public object Attributes { get; set; }
     }
     
 	public static class ExecutionErrorCode
