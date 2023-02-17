@@ -47,11 +47,5 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("investorProfile")]
         public InvestorProfile? InvestorProfile { get; set; }
-
-        [JsonProperty("createdAt")]
-        public DateTime CreatedAt { get; set; }
-
-        [JsonProperty("updatedAt")]
-        public DateTime UpdatedAt { get; set; }
     }
 }
