@@ -13,7 +13,7 @@ namespace Pluggy.SDK.Model
         public Guid ItemId { get; set; }
 
         [JsonProperty("isin")]
-        public string Isin { get; set; }
+        public string ISIN { get; set; }
 
         [JsonProperty("type")]
         public InvestmentType Type { get; set; }
