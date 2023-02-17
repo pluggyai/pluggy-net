@@ -104,8 +104,5 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("metadata")]
         public InvestmentMetadata Metadata { get; set; }
-
-        [JsonProperty("providerId")]
-        public string ProviderId { get; set; }
     }
 }
