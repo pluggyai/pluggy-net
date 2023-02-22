@@ -7,8 +7,8 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public IdentityRelationType Type { get; set; }
 
-        [JsonProperty("value")]
-        public string Value { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         [JsonProperty("document")]
         public string Document { get; set; }

@@ -12,6 +12,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("itemId")]
         public Guid ItemId { get; set; }
 
+        [JsonProperty("isin")]
+        public string ISIN { get; set; }
+
         [JsonProperty("type")]
         public InvestmentType Type { get; set; }
 
@@ -98,5 +101,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }
+
+        [JsonProperty("metadata")]
+        public InvestmentMetadata Metadata { get; set; }
     }
 }

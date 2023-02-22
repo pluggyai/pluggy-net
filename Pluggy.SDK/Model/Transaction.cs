@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
 {
-
     public class Transaction
     {
         [JsonProperty("id")]
@@ -38,5 +37,11 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("paymentData")]
         public TransactionPaymentData PaymentData { get; set; }
+
+        [JsonProperty("status")]
+        public TransactionStatus? Status { get; set; }
+
+        [JsonProperty("merchant")]
+        public TransactionMerchant Merchant { get; set; }
     }
 }

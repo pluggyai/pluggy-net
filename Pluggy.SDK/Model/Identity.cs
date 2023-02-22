@@ -27,6 +27,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("jobTitle")]
         public string JobTitle { get; set; }
 
+        [JsonProperty("companyName")]
+        public string CompanyName { get; set; }
+
         [JsonProperty("fullName")]
         public string FullName { get; set; }
 
@@ -41,5 +44,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("addresses")]
         public List<Address> Addresses { get; set; }
+
+        [JsonProperty("investorProfile")]
+        public InvestorProfile? InvestorProfile { get; set; }
     }
 }

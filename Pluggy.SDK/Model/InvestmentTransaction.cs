@@ -14,6 +14,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("investmentId")]
+        public string InvestmentId { get; set; }
+
         [JsonProperty("quantity")]
         public double? Quantity { get; set; }
 
@@ -28,5 +31,14 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("tradeDate")]
         public DateTime TradeDate { get; set; }
+
+        [JsonProperty("brokerageNumber")]
+        public string BrokerageNumber { get; set; }
+
+        [JsonProperty("netAmount")]
+        public double? NetAmount { get; set; }
+
+        [JsonProperty("expenses")]
+        public InvestmentTransactionExpenses Expenses { get; set; }
     }
 }
