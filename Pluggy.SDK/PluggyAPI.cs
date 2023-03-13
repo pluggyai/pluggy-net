@@ -240,6 +240,15 @@ namespace Pluggy.SDK
             return await httpService.GetAsync<Investment>(URL_INVESTMENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
         }
 
+        /// <summary>
+        /// Fetch the list of investment transactions
+        /// </summary>
+        /// <param name="id">Investment Id</param>
+        public async Task<PageResults<InvestmentTransaction>> FetchInvestmentTransactions(Guid id, InvestmentTransactionParameters pageParams = null)
+        {
+            var queryStrings = pageParams != null ? pageParams.ToQueryStrings() : new Dictionary<string, string>();
+            return await httpService.GetAsync<PageResults<InvestmentTransaction>>(URL_INVESTMENTS + "/{id}/transactions", HTTP.Utils.GetSegment(id.ToString()), queryStrings);
+        }
 
         /// <summary>
         /// Fetch the Identity

@@ -176,6 +176,12 @@ namespace Pluggy.Client
             {
                 Console.WriteLine("Investment #{0}, Code {1} has a balance of ${2}", investment.Id, investment.Code, investment.Balance);
                 Helpers.WriteJson(investment);
+                var txSearchParams = new TransactionParameters() { DateFrom = DateTime.Now.AddYears(-1), DateTo = DateTime.Now };
+                var transactions = await sdk.FetchInvestmentTransactions(investment.Id, txSearchParams);
+                foreach (var tx in transactions.Results)
+                {
+                    Console.WriteLine("  Investment Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
+                }
             }
 
             var identity = await sdk.FetchIdentityByItemId(item.Id);
