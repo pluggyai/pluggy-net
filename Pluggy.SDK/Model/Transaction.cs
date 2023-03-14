@@ -11,6 +11,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("descriptionRaw")]
+        public string DescriptionRaw { get; set; }
+
         [JsonProperty("currencyCode")]
         public CurrencyCode CurrencyCode { get; set; }
 
