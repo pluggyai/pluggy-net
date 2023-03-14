@@ -11,6 +11,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("descriptionRaw")]
+        public string DescriptionRaw { get; set; }
+
         [JsonProperty("currencyCode")]
         public CurrencyCode CurrencyCode { get; set; }
 
@@ -40,6 +43,9 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("status")]
         public TransactionStatus? Status { get; set; }
+
+        [JsonProperty("creditCardMetadata")]
+        public TransactionCreditCardMetadata CreditCardMetadata { get; set; }
 
         [JsonProperty("merchant")]
         public TransactionMerchant Merchant { get; set; }
