@@ -99,7 +99,7 @@ namespace Pluggy.SDK.Model
         [JsonProperty("institution")]
         public InvestmentInstitution Institution { get; set; }
 
-        [Obsolete("Transactions is deprecated, this is going to stop working on 15th April 2023, use sdk.FetchInvestmentTransactions instead.")]
+        [Obsolete("Transactions is deprecated, this is null unless the application was created before 2020-03-20")]
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }
 
