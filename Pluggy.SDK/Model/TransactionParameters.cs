@@ -21,8 +21,8 @@ namespace Pluggy.SDK.Model
         [JsonProperty("page")]
         public double? Page { get; set; }
 
-        [JsonProperty("size")]
-        public double? Size { get; set; }
+        [JsonProperty("pageSize")]
+        public double? PageSize { get; set; }
 
         public IDictionary<string, string> ToQueryStrings()
         {
@@ -31,7 +31,7 @@ namespace Pluggy.SDK.Model
                 { "to", DateTo.ToString("yyyy-MM-dd") },
                 { "from", DateFrom.ToString("yyyy-MM-dd") },
                 { "page", Page?.ToString() },
-                { "size", Size?.ToString() },
+                { "pageSize", PageSize?.ToString() },
             };
         }
     }
