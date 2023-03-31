@@ -64,6 +64,9 @@ namespace Pluggy.Client
                     ConnectorType.PERSONAL_BANK,
                     ConnectorType.BUSINESS_BANK,
                     ConnectorType.INVESTMENT
+                    ConnectorType.INVOICE,
+                    ConnectorType.TELECOMMUNICATION,
+                    ConnectorType.OTHER,
                 },
                 Name = "",
                 Sandbox = true
