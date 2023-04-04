@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Pluggy.SDK" Version="0.13.0" />
+    <ProjectReference Include="..\Pluggy.SDK\Pluggy.SDK.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
