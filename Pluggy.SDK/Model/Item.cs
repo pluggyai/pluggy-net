@@ -42,7 +42,7 @@ namespace Pluggy.SDK.Model
         public ItemStatusDetail StatusDetail { get; set; }
 
         [JsonProperty("consecutiveFailedLoginAttempts")]
-        public int? ConsecutiveFailedLoginAttempts { get; set; }
+        public int ConsecutiveFailedLoginAttempts { get; set; }
 
         public bool HasFinished()
         {
