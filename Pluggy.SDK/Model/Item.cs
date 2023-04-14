@@ -41,6 +41,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("statusDetail")]
         public ItemStatusDetail StatusDetail { get; set; }
 
+        [JsonProperty("consecutiveFailedLoginAttempts")]
+        public int? ConsecutiveFailedLoginAttempts { get; set; }
+
         public bool HasFinished()
         {
             return Status == ItemStatus.UPDATED || Status == ItemStatus.OUTDATED || Status == ItemStatus.LOGIN_ERROR;
