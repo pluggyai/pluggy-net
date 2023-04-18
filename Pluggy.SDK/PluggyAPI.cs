@@ -24,6 +24,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_IDENTITY = "/identity";
         protected static readonly string URL_ITEMS_MFA = "/items/{id}/mfa";
         protected static readonly string URL_CONNECT_TOKEN = "/connect_token";
+        protected static readonly string URL_INCOME_REPORT = "/income-reports";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -365,6 +366,20 @@ namespace Pluggy.SDK
         public async Task DeleteWebhook(Guid id)
         {
             await httpService.DeleteAsync<dynamic>(URL_WEBHOOKS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
+        }
+
+        /// <summary>
+        /// Fetch Income Reports of an specific Item 
+        /// </summary>
+        /// <param name="itemId">Item id</param>
+        /// <returns>Paginated Income reports</returns>
+        public async Task<PageResults<IncomeReport>> FetchIncomeReports(Guid itemId)
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "itemId", itemId.ToString() }
+            };
+            return await httpService.GetAsync<PageResults<IncomeReport>>(URL_INCOME_REPORT, null, queryStrings);
         }
 
         /// <summary>
