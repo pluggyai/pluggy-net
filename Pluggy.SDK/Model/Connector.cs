@@ -30,7 +30,7 @@ namespace Pluggy.SDK.Model
         public IList<ConnectorParameter> Credentials { get; set; }
 
         [JsonProperty("oauth")]
-        public string Oauth { get; set; }
+        public bool? Oauth { get; set; }
 
         [JsonProperty("resetPasswordUrl")]
         public string ResetPasswordUrl { get; set; }
