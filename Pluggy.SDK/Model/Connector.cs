@@ -28,5 +28,11 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("credentials")]
         public IList<ConnectorParameter> Credentials { get; set; }
+
+        [JsonProperty("oauth")]
+        public string Oauth { get; set; }
+
+        [JsonProperty("resetPasswordUrl")]
+        public string ResetPasswordUrl { get; set; }
     }
 }
