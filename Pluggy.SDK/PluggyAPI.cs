@@ -25,6 +25,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_ITEMS_MFA = "/items/{id}/mfa";
         protected static readonly string URL_CONNECT_TOKEN = "/connect_token";
         protected static readonly string URL_INCOME_REPORT = "/income-reports";
+        protected static readonly string URL_INVESTMENT_TRANSACTIONS = "/investments/{id}/transactions";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -380,6 +381,17 @@ namespace Pluggy.SDK
                 { "itemId", itemId.ToString() }
             };
             return await httpService.GetAsync<PageResults<IncomeReport>>(URL_INCOME_REPORT, null, queryStrings);
+        }
+
+        /// <summary>
+        /// Fetch the list of investment transactions
+        /// </summary>
+        /// <param name="id">Investment Id</param>
+        /// <returns>InvestmentTrasnsactions results list</returns>
+        public async Task<PageResults<InvestmentTransaction>> FetchInvestmentTransactions(Guid id, TransactionParameters pageParams = null)
+        {
+            var queryStrings = pageParams != null ? pageParams.ToQueryStrings() : new Dictionary<string, string>();
+            return await httpService.GetAsync<PageResults<InvestmentTransaction>>(URL_INVESTMENT_TRANSACTIONS, HTTP.Utils.GetSegment(id.ToString()), queryStrings);
         }
 
         /// <summary>
