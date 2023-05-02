@@ -51,7 +51,7 @@ namespace Pluggy.SDK.Model
 
     public class WebhookEventPayload
     {
-        [Obsolete("Use EventId instead", true)]
+        [Obsolete("Use EventId instead", false)]
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
