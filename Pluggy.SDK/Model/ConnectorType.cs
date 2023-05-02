@@ -8,6 +8,9 @@ namespace Pluggy.SDK.Model
     {
         PERSONAL_BANK,
         BUSINESS_BANK,
-        INVESTMENT
+        INVESTMENT,
+        INVOICE,
+        TELECOMMUNICATION,
+        OTHER,
     }
 }

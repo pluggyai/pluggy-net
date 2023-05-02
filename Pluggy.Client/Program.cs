@@ -63,7 +63,10 @@ namespace Pluggy.Client
                 Types = new List<ConnectorType> {
                     ConnectorType.PERSONAL_BANK,
                     ConnectorType.BUSINESS_BANK,
-                    ConnectorType.INVESTMENT
+                    ConnectorType.INVESTMENT,
+                    ConnectorType.INVOICE,
+                    ConnectorType.TELECOMMUNICATION,
+                    ConnectorType.OTHER
                 },
                 Name = "",
                 Sandbox = true
