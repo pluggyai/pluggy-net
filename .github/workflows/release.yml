@@ -25,15 +25,17 @@ jobs:
         id: release
         uses: cycjimmy/semantic-release-action@v3
         with:
+          semantic_version: 19
           working_directory: ./Pluggy.SDK
           extra_plugins: |
             @semantic-release/commit-analyzer
-            @semantic-release/release-notes-generator
+            @semantic-release/release-notes-generator@10
             @semantic-release/github
-            @semantic-release/git
-            @semantic-release/exec
+            @semantic-release/git@10
+            @semantic-release/exec@6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_DEBUG: 1
           
       - name: 'Pack & Publish project'
         if: ${{ steps.release.outputs.new_release_version }}
