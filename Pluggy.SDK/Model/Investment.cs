@@ -99,6 +99,7 @@ namespace Pluggy.SDK.Model
         [JsonProperty("institution")]
         public InvestmentInstitution Institution { get; set; }
 
+        [Obsolete("Use method client.FetchInvestmentTransactions(investmentId, TransactionParameters) instead, this field is null unless the application was created before 2023-03-21", false)]
         [JsonProperty("transactions")]
         public List<InvestmentTransaction> Transactions { get; set; }
 
