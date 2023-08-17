@@ -8,6 +8,7 @@ namespace Pluggy.SDK.Model
     {
         BUY,
         SELL,
-        TRANSFER
+        TRANSFER,
+        TAX
     }
 }
