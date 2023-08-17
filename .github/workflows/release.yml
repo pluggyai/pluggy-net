@@ -28,7 +28,7 @@ jobs:
           semantic_version: 19
           working_directory: ./Pluggy.SDK
           extra_plugins: |
-            @semantic-release/commit-analyzer
+            @semantic-release/commit-analyzer@9
             @semantic-release/release-notes-generator@10
             @semantic-release/github
             @semantic-release/git@10
