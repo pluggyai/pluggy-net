@@ -16,8 +16,11 @@ namespace Pluggy.SDK.Errors
         [JsonProperty("error")]
         public string Error { get; set; }
 
-        [JsonProperty("errors")]
-        public IList<ParameterError> Errors { get; set; }
+        /// <summary>
+        /// When there are item validations, it will include the reason for each param
+        /// </summary>
+        [JsonProperty("details")]
+        public IList<ParameterError> Details { get; set; }
 
         /// <summary>
         /// The error code returned by the API

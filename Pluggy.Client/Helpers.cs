@@ -132,9 +132,9 @@ namespace Pluggy.Client
             catch (ValidationException e)
             {
                 Console.WriteLine("Execution not started, reason {0} ", e.Message);
-                if (e.ApiError.Errors != null && e.ApiError.Errors.Count > 0)
+                if (e.ApiError.Details != null && e.ApiError.Details.Count > 0)
                 {
-                    foreach (var error in e.ApiError.Errors)
+                    foreach (var error in e.ApiError.Details)
                     {
                         Console.WriteLine("[X] {0} ", error.Message);
                     }

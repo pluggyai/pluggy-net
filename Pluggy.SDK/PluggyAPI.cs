@@ -67,22 +67,12 @@ namespace Pluggy.SDK
         /// <returns>an object with the info of which parameters are wrong</returns>
         public async Task<ValidationResult> ValidateCredentials(long id, List<ItemParameter> credentials)
         {
-            try
-            {
-                return await httpService.PostAsync<ValidationResult>(
-                    URL_CONNECTORS + "/{id}/validate",
-                    credentials?.ToDictionary(x => x.Name, x => x.Value),
-                    null,
-                    HTTP.Utils.GetSegment(id.ToString())
-                );
-            }
-            catch (ApiException e)
-            {
-                if (e.ApiError != null && e.ApiError.Errors != null)
-                    throw new ValidationException(e.StatusCode, e.ApiError);
-
-                throw e;
-            }
+            return await httpService.PostAsync<ValidationResult>(
+                URL_CONNECTORS + "/{id}/validate",
+                credentials?.ToDictionary(x => x.Name, x => x.Value),
+                null,
+                HTTP.Utils.GetSegment(id.ToString())
+            );
         }
 
         /// <summary>
@@ -98,7 +88,7 @@ namespace Pluggy.SDK
             }
             catch (ApiException e)
             {
-                if (e.ApiError != null && e.ApiError.Errors != null)
+                if (e.ApiError != null && e.ApiError.Details != null)
                     throw new ValidationException(e.StatusCode, e.ApiError);
 
                 throw e;
@@ -128,7 +118,7 @@ namespace Pluggy.SDK
             }
             catch (ApiException e)
             {
-                if (e.ApiError != null && e.ApiError.Errors != null)
+                if (e.ApiError != null && e.ApiError.Details != null)
                     throw new ValidationException(e.StatusCode, e.ApiError);
 
                 throw e;
@@ -151,7 +141,7 @@ namespace Pluggy.SDK
             }
             catch (ApiException e)
             {
-                if (e.ApiError != null && e.ApiError.Errors != null)
+                if (e.ApiError != null && e.ApiError.Details != null)
                     throw new ValidationException(e.StatusCode, e.ApiError);
 
                 throw e;
@@ -314,22 +304,12 @@ namespace Pluggy.SDK
         /// <returns></returns>
         public async Task<Webhook> CreateWebhook(string url, WebhookEvent _event)
         {
-            try
+            var body = new Dictionary<string, string>
             {
-                var body = new Dictionary<string, string>
-                {
-                    { "url", url },
-                    { "event", _event.Value }
-                };
-                return await httpService.PostAsync<Webhook>(URL_WEBHOOKS, body);
-            }
-            catch (ApiException e)
-            {
-                if (e.ApiError != null && e.ApiError.Errors != null)
-                    throw new ValidationException(e.StatusCode, e.ApiError);
-
-                throw e;
-            }
+                { "url", url },
+                { "event", _event.Value }
+            };
+            return await httpService.PostAsync<Webhook>(URL_WEBHOOKS, body);
         }
 
         /// <summary>
@@ -341,22 +321,13 @@ namespace Pluggy.SDK
         /// <returns></returns>
         public async Task<Webhook> UpdateWebhook(Guid id, string url, WebhookEvent _event)
         {
-            try
+            var body = new Dictionary<string, string>
             {
-                var body = new Dictionary<string, string>
-                {
-                    { "url", url },
-                    { "event", _event.Value }
-                };
-                return await httpService.PatchAsync<Webhook>(URL_WEBHOOKS + "/{id}", body, null, HTTP.Utils.GetSegment(id.ToString()));
-            }
-            catch (ApiException e)
-            {
-                if (e.ApiError != null && e.ApiError.Errors != null)
-                    throw new ValidationException(e.StatusCode, e.ApiError);
+                { "url", url },
+                { "event", _event.Value }
+            };
+            return await httpService.PatchAsync<Webhook>(URL_WEBHOOKS + "/{id}", body, null, HTTP.Utils.GetSegment(id.ToString()));
 
-                throw e;
-            }
         }
 
         /// <summary>
@@ -400,22 +371,12 @@ namespace Pluggy.SDK
         /// <returns>An object containing an accessToken</returns>
         public async Task<ConnectTokenResponse> CreateConnectToken(Guid? itemId = null, ItemOptions options = null)
         {
-            try
+            var body = new Dictionary<string, object>
             {
-                var body = new Dictionary<string, object>
-                {
-                    { "itemId", itemId?.ToString() },
-                    { "options", options }
-                }.RemoveNulls();
-                return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
-            }
-            catch (ApiException e)
-            {
-                if (e.ApiError != null && e.ApiError.Errors != null)
-                    throw new ValidationException(e.StatusCode, e.ApiError);
-
-                throw e;
-            }
+                { "itemId", itemId?.ToString() },
+                { "options", options }
+            }.RemoveNulls();
+            return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
         }
 
         
@@ -445,7 +406,7 @@ namespace Pluggy.SDK
             }
             catch (ApiException e)
             {
-                if (e.ApiError != null && e.ApiError.Errors != null)
+                if (e.ApiError != null && e.ApiError.Details != null)
                     throw new ValidationException(e.StatusCode, e.ApiError);
 
                 throw e;
