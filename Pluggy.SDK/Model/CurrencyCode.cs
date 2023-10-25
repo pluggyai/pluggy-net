@@ -12,5 +12,6 @@
         UYU,
         PYG,
         PEN,
+        GBP
     }
 }
