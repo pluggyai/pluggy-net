@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -31,5 +32,20 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("lastUpdatedAt")]
         public DateTime? LastUpdatedAt { get; set; }
+
+        [JsonProperty("warnings")]
+        public List<ItemStatusProductDetailWarning> Warnings { get; set; }
+    }
+
+    public class ItemStatusProductDetailWarning
+    {
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("providerMessage")]
+        public string ProviderMessage { get; set; }
     }
 }
