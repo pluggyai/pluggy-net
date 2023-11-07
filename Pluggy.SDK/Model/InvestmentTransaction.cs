@@ -11,6 +11,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public InvestmentTransactionType Type { get; set; }
 
+        [JsonProperty("movementType")]
+        public InvestmentTransactionMovementType MovementType { get; set; }
+
         [JsonProperty("description")]
         public string Description { get; set; }
 
