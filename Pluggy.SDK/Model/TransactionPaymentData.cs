@@ -16,6 +16,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("referenceNumber")]
         public string ReferenceNumber { get; set; }
 
+        [JsonProperty("receiverReferenceId")]
+        public string ReceiverReferenceId { get; set; }
+
         [JsonProperty("reason")]
         public string Reason { get; set; }
     }
