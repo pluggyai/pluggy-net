@@ -20,6 +20,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("amount")]
         public double Amount { get; set; }
 
+        [JsonProperty("amountInAccountCurrency")]
+        public double? AmountInAccountCurrency { get; set; }
+
         [JsonProperty("date")]
         public DateTime Date { get; set; }
 

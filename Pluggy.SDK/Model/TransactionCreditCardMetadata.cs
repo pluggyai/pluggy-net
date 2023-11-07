@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -12,6 +13,12 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("totalAmount")]
         public double? TotalAmount { get; set; }
+        
+        [JsonProperty("payeeMCC")]
+        public string PayeeMCC { get; set; }
+
+        [JsonProperty("purchaseDate")]
+        public DateTime PurchaseDate { get; set; }
     }
 }
 

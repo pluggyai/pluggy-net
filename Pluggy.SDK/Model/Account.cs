@@ -58,6 +58,9 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("closingBalance")]
         public double? ClosingBalance { get; set; }
+
+        [JsonProperty("automaticallyInvestedBalance")]
+        public double? AutomaticallyInvestedBalance { get; set; }
     }
 
     public class CreditAccount
