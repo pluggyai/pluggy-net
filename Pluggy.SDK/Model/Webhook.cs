@@ -12,6 +12,7 @@ namespace Pluggy.SDK.Model
         public static WebhookEvent ITEM_LOGIN_SUCCEEDED { get { return new WebhookEvent("item/login_succeeded"); } }
         public static WebhookEvent ITEM_WAITING_USER_INPUT { get { return new WebhookEvent("item/waiting_user_input"); } }
         public static WebhookEvent CONNECTOR_STATUS_UPDATED { get { return new WebhookEvent("connector/status_updated"); } }
+        public static WebhookEvent TRANSACTIONS_DELETED { get { return new WebhookEvent("transactions/deleted"); } }
         public static WebhookEvent ITEM_ALL { get { return new WebhookEvent("all"); } }
 
         public string Value { get; set; }
