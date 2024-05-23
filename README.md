@@ -39,3 +39,4 @@ This project can be built on Windows, Linux or macOS. Ensure you have the [.NET 
 ## Documentation
 
 For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.
+
