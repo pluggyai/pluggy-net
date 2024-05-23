@@ -21,6 +21,8 @@ namespace Pluggy.SDK.Model
 
         /*! SECURITY */
         RETIREMENT,
+        VGBL,
+        PGBL,
 
         /*! EQUITY */
         STOCK,
