@@ -5,7 +5,7 @@ namespace Pluggy.SDK.Model
     public class Address
     {
         [JsonProperty("type")]
-        public AddressType Type { get; set; }
+        public AddressType? Type { get; set; }
 
         [JsonProperty("fullAddress")]
         public string FullAddress { get; set; }
