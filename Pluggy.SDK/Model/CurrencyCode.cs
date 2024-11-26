@@ -181,6 +181,7 @@
         YER,
         ZAR,
         ZMW,
-        ZWL
+        ZWL,
+        RCE
     }
 }
