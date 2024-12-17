@@ -301,14 +301,16 @@ namespace Pluggy.SDK
         /// </summary>
         /// <param name="url">Webhook url</param>
         /// <param name="event">Webhook event</param>
+        /// <param name="headers">Optional headers for webhook notifications</param>
         /// <returns></returns>
-        public async Task<Webhook> CreateWebhook(string url, WebhookEvent _event)
+        public async Task<Webhook> CreateWebhook(string url, WebhookEvent _event, Dictionary<string, string> headers = null)
         {
-            var body = new Dictionary<string, string>
+            var body = new Dictionary<string, object>
             {
                 { "url", url },
-                { "event", _event.Value }
-            };
+                { "event", _event.Value },
+                { "headers", headers }
+            }.RemoveNulls();
             return await httpService.PostAsync<Webhook>(URL_WEBHOOKS, body);
         }
 
