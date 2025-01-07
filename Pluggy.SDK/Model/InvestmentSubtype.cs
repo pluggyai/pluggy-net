@@ -28,6 +28,7 @@ namespace Pluggy.SDK.Model
         STOCK,
         ETF,
         REAL_ESTATE_FUND,
+
         /*! BRAZILIAN_DEPOSITARY_RECEIPT */
         BDR,
         DERIVATIVES,
@@ -49,5 +50,10 @@ namespace Pluggy.SDK.Model
         /*! BILL_OF_EXCHANGE */
         LC,
         DEBENTURES,
+        LIG,
+        LF,
+
+        /*! Unknown */
+        OTHER,
     }
 }
