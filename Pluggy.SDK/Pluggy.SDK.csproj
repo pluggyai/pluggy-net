@@ -13,9 +13,10 @@
     <PackageProjectUrl>https://docs.pluggy.ai</PackageProjectUrl>
     <PackageTags>open-banking bank api open finances</PackageTags>
     <Title>Pluggy's SDK </Title>
-    <Copyright>Copyright 2020-2022</Copyright>
+    <Copyright>Copyright 2020-2025</Copyright>
     <Summary>Pluggy SDK to connect with our API services</Summary>
     <PackageIconUrl>https://raw.githubusercontent.com/pluggyai/pluggy-net/master/logo.png</PackageIconUrl>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>
