@@ -61,6 +61,12 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("automaticallyInvestedBalance")]
         public double? AutomaticallyInvestedBalance { get; set; }
+
+        [JsonProperty("overdraftContractedLimit")]
+        public double? OverdraftContractedLimit { get; set; }
+
+        [JsonProperty("unarrangedOverdraftAmount")]
+        public double? UnarrangedOverdraftAmount { get; set; }
     }
 
     public class CreditAccount
@@ -88,6 +94,15 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("minimumPayment")]
         public double? MinimumPayment { get; set; }
+
+        [JsonProperty("isLimitFlexible")]
+        public bool? IsLimitFlexible { get; set; }
+
+        [JsonProperty("holderType")]
+        public string HolderType { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
 
     }
 }
