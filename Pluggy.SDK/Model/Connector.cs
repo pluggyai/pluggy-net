@@ -34,5 +34,28 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("resetPasswordUrl")]
         public string ResetPasswordUrl { get; set; }
+
+        [JsonProperty("isSandbox")]
+        public bool IsSandbox { get; set; }
+
+        [JsonProperty("isOpenFinance")]
+        public bool IsOpenFinance { get; set; }
+
+        [JsonProperty("createdAt")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonProperty("updatedAt")]
+        public DateTime UpdatedAt { get; set; }
+
+        [JsonProperty("supportsPaymentInitiation")]
+        public bool SupportsPaymentInitiation { get; set; }
+
+        [JsonProperty("supportsScheduledPayments")]
+        public bool SupportsScheduledPayments { get; set; }
+
+        [JsonProperty("supportsSmartTransfers")]
+        public bool SupportsSmartTransfers { get; set; }
     }
+
+    
 }
