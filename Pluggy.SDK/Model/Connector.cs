@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -55,7 +56,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("supportsSmartTransfers")]
         public bool SupportsSmartTransfers { get; set; }
-    }
 
-    
+        [JsonProperty("products")]
+        public IList<ProductType> Products { get; set; }
+    }
 }

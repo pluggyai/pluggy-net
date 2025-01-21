@@ -17,6 +17,12 @@ namespace Pluggy.SDK.Model
         [JsonProperty("sandbox")]
         public bool Sandbox { get; set; }
 
+        [JsonProperty("isOpenFinance")]
+        public bool IsOpenFinance { get; set; }
+
+        [JsonProperty("supportsPaymentInitiation")]
+        public bool SupportsPaymentInitiation { get; set; }
+
         public IDictionary<string, string> ToQueryStrings()
         {
             var queryStrings = new Dictionary<string, string>()
@@ -41,6 +47,16 @@ namespace Pluggy.SDK.Model
                 {
                     queryStrings.Add($"countries[{i}]", Countries[i].ToString());
                 }
+            }
+
+            if (this.IsOpenFinance)
+            {
+                queryStrings.Add("isOpenFinance", "true");
+            }
+
+            if (this.SupportsPaymentInitiation)
+            {
+                queryStrings.Add("supportsPaymentInitiation", "true");
             }
 
             return queryStrings;
