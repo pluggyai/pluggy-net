@@ -36,5 +36,23 @@ namespace Pluggy.SDK.Model
         
         [EnumMember(Value = "IDENTITY")]
         Identity,
+
+        [EnumMember(Value = "OPPORTUNITIES")]
+        Opportunities,
+
+        [EnumMember(Value = "PORTFOLIO")]
+        Portfolio,
+
+        [EnumMember(Value = "INCOME_REPORTS")]
+        IncomeReports,
+
+        [EnumMember(Value = "MOVE_SECURITY")]
+        MoveSecurity,
+
+        [EnumMember(Value = "ACQUIRER_OPERATIONS")]
+        AcquirerOperations,
+
+        [EnumMember(Value = "BENEFITS")]
+        Benefits,
     }
 } 
