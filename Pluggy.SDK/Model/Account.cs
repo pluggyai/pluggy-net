@@ -37,7 +37,7 @@ namespace Pluggy.SDK.Model
         [JsonProperty("type")]
         public AccountType Type { get; set; }
 
-        [JsonProperty("accountSubtype")]
+        [JsonProperty("subtype")]
         public AccountSubtype Subtype { get; set; }
 
         [JsonProperty("creditData", DefaultValueHandling = DefaultValueHandling.Ignore)]
