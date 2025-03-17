@@ -182,6 +182,7 @@
         ZAR,
         ZMW,
         ZWL,
-        RCE
+        RCE,
+        FPE
     }
 }
