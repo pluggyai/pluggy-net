@@ -1,6 +1,6 @@
 # .NET client library for the Pluggy API
 
-__Welcome to Pluggy Dotnet SDK__. This repository contains Pluggy's Dotnet SDK and samples to execute all the endpoints available for aggregation.
+**Welcome to Pluggy Dotnet SDK**. This repository contains Pluggy's Dotnet SDK and samples to execute all the endpoints available for aggregation.
 Also there is a small Client created to review the flow to get the execution result of a specific robot.
 
 ### Installation
@@ -11,7 +11,7 @@ Install-Package Pluggy.SDK
 
 ### Usage
 
-Request a API KEY token that will be used for all API calls you wish to make. 
+Request a API KEY token that will be used for all API calls you wish to make.
 Create an instance of the `PluggyAPI` class with the token and the API URL:
 
 ```csharp
@@ -39,4 +39,3 @@ This project can be built on Windows, Linux or macOS. Ensure you have the [.NET 
 ## Documentation
 
 For most up-to-date and accurate documentation, please see our [API Reference](https://docs.pluggy.ai) page.
-
