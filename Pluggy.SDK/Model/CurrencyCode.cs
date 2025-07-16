@@ -44,6 +44,7 @@
         CZK,
         DJF,
         DKK,
+        DOL,
         DOP,
         DZD,
         EGP,
