@@ -1,10 +1,10 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Pluggy.SDK.Utils;
 
 namespace Pluggy.SDK.Model
 {
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(TolerantEnumConverter))]
     public enum ProductType
     {
         [EnumMember(Value = "ACCOUNTS")]
