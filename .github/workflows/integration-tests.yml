@@ -1,0 +1,47 @@
+name: SDK Integration Tests
+
+on:
+  schedule:
+    # Run daily at 18:00 UTC
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Integration Tests
+        env:
+          PLUGGY_CLIENT_ID: ${{ secrets.PLUGGY_CLIENT_ID }}
+          PLUGGY_CLIENT_SECRET: ${{ secrets.PLUGGY_CLIENT_SECRET }}
+        run: dotnet test Pluggy.IntegrationTests/ --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: '**/test-results.trx'
+
+      - name: Test Report Summary
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Integration Tests Report
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
