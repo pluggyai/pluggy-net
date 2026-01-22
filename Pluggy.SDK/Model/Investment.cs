@@ -84,6 +84,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("issuer")]
         public string Issuer { get; set; }
 
+        [JsonProperty("issuerCNPJ")]
+        public string IssuerCNPJ { get; set; }
+
         [JsonProperty("rate")]
         public string Rate { get; set; }
 

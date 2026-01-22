@@ -25,6 +25,12 @@ namespace Pluggy.SDK
         protected static readonly string URL_ITEMS_MFA = "/items/{id}/mfa";
         protected static readonly string URL_CONNECT_TOKEN = "/connect_token";
         protected static readonly string URL_INVESTMENT_TRANSACTIONS = "/investments/{id}/transactions";
+        protected static readonly string URL_CONSENTS = "/consents";
+        protected static readonly string URL_LOANS = "/loans";
+        protected static readonly string URL_PAYMENT_RECIPIENTS = "/payments/recipients";
+        protected static readonly string URL_PAYMENT_REQUESTS = "/payments/requests";
+        protected static readonly string URL_PAYMENT_INTENTS = "/payments/intents";
+        protected static readonly string URL_PAYMENT_CUSTOMERS = "/payments/customers";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -353,6 +359,69 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Fetch the list of consents for an item
+        /// </summary>
+        /// <param name="itemId">Item Id</param>
+        /// <returns>Consent results list</returns>
+        public async Task<PageResults<Consent>> FetchConsents(Guid itemId)
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "itemId", itemId.ToString() }
+            };
+            return await httpService.GetAsync<PageResults<Consent>>(URL_CONSENTS, null, queryStrings);
+        }
+
+        /// <summary>
+        /// Fetch a consent by its ID
+        /// </summary>
+        /// <param name="id">Consent Id</param>
+        /// <returns>Consent details</returns>
+        public async Task<Consent> FetchConsent(Guid id)
+        {
+            return await httpService.GetAsync<Consent>(URL_CONSENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch the list of loans for an item
+        /// </summary>
+        /// <param name="itemId">Item Id</param>
+        /// <returns>Loan results list</returns>
+        public async Task<PageResults<Loan>> FetchLoans(Guid itemId)
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "itemId", itemId.ToString() }
+            };
+            return await httpService.GetAsync<PageResults<Loan>>(URL_LOANS, null, queryStrings);
+        }
+
+        /// <summary>
+        /// Fetch a loan by its ID
+        /// </summary>
+        /// <param name="id">Loan Id</param>
+        /// <returns>Loan details</returns>
+        public async Task<Loan> FetchLoan(Guid id)
+        {
+            return await httpService.GetAsync<Loan>(URL_LOANS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Update a transaction's category
+        /// </summary>
+        /// <param name="id">Transaction Id</param>
+        /// <param name="categoryId">Category Id to assign</param>
+        /// <returns>Updated transaction</returns>
+        public async Task<Transaction> UpdateTransaction(Guid id, string categoryId)
+        {
+            var body = new Dictionary<string, string>
+            {
+                { "categoryId", categoryId }
+            };
+            return await httpService.PatchAsync<Transaction>(URL_TRANSACTIONS + "/{id}", body, null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
         /// Creates a "ConnectToken" that provides an "AccessToken" for client-side communication.
         /// </summary>
         /// <returns>An object containing an accessToken</returns>
@@ -365,6 +434,187 @@ namespace Pluggy.SDK
             }.RemoveNulls();
             return await httpService.PostAsync<ConnectTokenResponse>(URL_CONNECT_TOKEN, body);
         }
+
+        #region Payment Recipients
+
+        /// <summary>
+        /// Create a payment recipient
+        /// </summary>
+        /// <param name="request">Payment recipient creation request</param>
+        /// <returns>Created payment recipient</returns>
+        public async Task<PaymentRecipient> CreatePaymentRecipient(CreatePaymentRecipientRequest request)
+        {
+            return await httpService.PostAsync<PaymentRecipient>(URL_PAYMENT_RECIPIENTS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch all payment recipients
+        /// </summary>
+        /// <returns>Payment recipients list</returns>
+        public async Task<PageResults<PaymentRecipient>> FetchPaymentRecipients()
+        {
+            return await httpService.GetAsync<PageResults<PaymentRecipient>>(URL_PAYMENT_RECIPIENTS);
+        }
+
+        /// <summary>
+        /// Fetch a payment recipient by ID
+        /// </summary>
+        /// <param name="id">Payment recipient ID</param>
+        /// <returns>Payment recipient details</returns>
+        public async Task<PaymentRecipient> FetchPaymentRecipient(Guid id)
+        {
+            return await httpService.GetAsync<PaymentRecipient>(URL_PAYMENT_RECIPIENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Update a payment recipient
+        /// </summary>
+        /// <param name="id">Payment recipient ID</param>
+        /// <param name="request">Payment recipient update request</param>
+        /// <returns>Updated payment recipient</returns>
+        public async Task<PaymentRecipient> UpdatePaymentRecipient(Guid id, CreatePaymentRecipientRequest request)
+        {
+            return await httpService.PatchAsync<PaymentRecipient>(URL_PAYMENT_RECIPIENTS + "/{id}", request.ToBody(), null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Delete a payment recipient
+        /// </summary>
+        /// <param name="id">Payment recipient ID</param>
+        public async Task DeletePaymentRecipient(Guid id)
+        {
+            await httpService.DeleteAsync<dynamic>(URL_PAYMENT_RECIPIENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
+        }
+
+        #endregion
+
+        #region Payment Requests
+
+        /// <summary>
+        /// Create a payment request
+        /// </summary>
+        /// <param name="request">Payment request creation request</param>
+        /// <returns>Created payment request with paymentUrl</returns>
+        public async Task<PaymentRequest> CreatePaymentRequest(CreatePaymentRequestRequest request)
+        {
+            return await httpService.PostAsync<PaymentRequest>(URL_PAYMENT_REQUESTS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch all payment requests
+        /// </summary>
+        /// <returns>Payment requests list</returns>
+        public async Task<PageResults<PaymentRequest>> FetchPaymentRequests()
+        {
+            return await httpService.GetAsync<PageResults<PaymentRequest>>(URL_PAYMENT_REQUESTS);
+        }
+
+        /// <summary>
+        /// Fetch a payment request by ID
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <returns>Payment request details</returns>
+        public async Task<PaymentRequest> FetchPaymentRequest(Guid id)
+        {
+            return await httpService.GetAsync<PaymentRequest>(URL_PAYMENT_REQUESTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Delete a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        public async Task DeletePaymentRequest(Guid id)
+        {
+            await httpService.DeleteAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
+        }
+
+        #endregion
+
+        #region Payment Intents
+
+        /// <summary>
+        /// Create a payment intent to initiate a payment
+        /// </summary>
+        /// <param name="request">Payment intent creation request</param>
+        /// <returns>Created payment intent with consentUrl</returns>
+        public async Task<PaymentIntent> CreatePaymentIntent(CreatePaymentIntentRequest request)
+        {
+            return await httpService.PostAsync<PaymentIntent>(URL_PAYMENT_INTENTS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch all payment intents
+        /// </summary>
+        /// <returns>Payment intents list</returns>
+        public async Task<PageResults<PaymentIntent>> FetchPaymentIntents()
+        {
+            return await httpService.GetAsync<PageResults<PaymentIntent>>(URL_PAYMENT_INTENTS);
+        }
+
+        /// <summary>
+        /// Fetch a payment intent by ID
+        /// </summary>
+        /// <param name="id">Payment intent ID</param>
+        /// <returns>Payment intent details</returns>
+        public async Task<PaymentIntent> FetchPaymentIntent(Guid id)
+        {
+            return await httpService.GetAsync<PaymentIntent>(URL_PAYMENT_INTENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        #endregion
+
+        #region Payment Customers
+
+        /// <summary>
+        /// Create a payment customer
+        /// </summary>
+        /// <param name="request">Payment customer creation request</param>
+        /// <returns>Created payment customer</returns>
+        public async Task<PaymentCustomer> CreatePaymentCustomer(CreatePaymentCustomerRequest request)
+        {
+            return await httpService.PostAsync<PaymentCustomer>(URL_PAYMENT_CUSTOMERS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch all payment customers
+        /// </summary>
+        /// <returns>Payment customers list</returns>
+        public async Task<PageResults<PaymentCustomer>> FetchPaymentCustomers()
+        {
+            return await httpService.GetAsync<PageResults<PaymentCustomer>>(URL_PAYMENT_CUSTOMERS);
+        }
+
+        /// <summary>
+        /// Fetch a payment customer by ID
+        /// </summary>
+        /// <param name="id">Payment customer ID</param>
+        /// <returns>Payment customer details</returns>
+        public async Task<PaymentCustomer> FetchPaymentCustomer(Guid id)
+        {
+            return await httpService.GetAsync<PaymentCustomer>(URL_PAYMENT_CUSTOMERS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Update a payment customer
+        /// </summary>
+        /// <param name="id">Payment customer ID</param>
+        /// <param name="request">Payment customer update request</param>
+        /// <returns>Updated payment customer</returns>
+        public async Task<PaymentCustomer> UpdatePaymentCustomer(Guid id, CreatePaymentCustomerRequest request)
+        {
+            return await httpService.PatchAsync<PaymentCustomer>(URL_PAYMENT_CUSTOMERS + "/{id}", request.ToBody(), null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Delete a payment customer
+        /// </summary>
+        /// <param name="id">Payment customer ID</param>
+        public async Task DeletePaymentCustomer(Guid id)
+        {
+            await httpService.DeleteAsync<dynamic>(URL_PAYMENT_CUSTOMERS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
+        }
+
+        #endregion
 
         
         /*

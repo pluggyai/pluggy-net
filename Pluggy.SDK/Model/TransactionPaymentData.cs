@@ -21,5 +21,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("reason")]
         public string Reason { get; set; }
+
+        [JsonProperty("boletoMetadata")]
+        public BoletoMetadata BoletoMetadata { get; set; }
     }
 }

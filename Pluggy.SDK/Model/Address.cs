@@ -24,6 +24,9 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("postalCode")]
         public string PostalCode { get; set; }
+
+        [JsonProperty("additionalInfo")]
+        public string AdditionalInfo { get; set; }
     }
 
     public enum AddressType

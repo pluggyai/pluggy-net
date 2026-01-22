@@ -18,5 +18,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("routingNumber")]
         public string RoutingNumber { get; set; }
+
+        [JsonProperty("routingNumberISPB")]
+        public string RoutingNumberISPB { get; set; }
     }
 }
