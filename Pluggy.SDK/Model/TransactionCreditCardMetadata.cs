@@ -18,7 +18,13 @@ namespace Pluggy.SDK.Model
         public string PayeeMCC { get; set; }
 
         [JsonProperty("purchaseDate")]
-        public DateTime PurchaseDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
+
+        [JsonProperty("billId")]
+        public string BillId { get; set; }
+
+        [JsonProperty("cardNumber")]
+        public string CardNumber { get; set; }
     }
 }
 

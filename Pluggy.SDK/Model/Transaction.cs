@@ -52,5 +52,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("merchant")]
         public TransactionMerchant Merchant { get; set; }
+
+        [JsonProperty("operationType")]
+        public string OperationType { get; set; }
     }
 }

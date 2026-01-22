@@ -43,5 +43,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("expenses")]
         public InvestmentTransactionExpenses Expenses { get; set; }
+
+        [JsonProperty("agreedRate")]
+        public double? AgreedRate { get; set; }
     }
 }
