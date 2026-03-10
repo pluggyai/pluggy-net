@@ -165,6 +165,16 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Fetch all items
+        /// </summary>
+        /// <param name="requestParams">Optional pagination parameters</param>
+        /// <returns>A paginated list of items</returns>
+        public async Task<PageResults<Item>> FetchItems(ItemListParameters requestParams = null)
+        {
+            return await httpService.GetAsync<PageResults<Item>>(URL_ITEMS, null, requestParams?.ToQueryStrings());
+        }
+
+        /// <summary>
         /// Fetch the list of accounts
         /// </summary>
         /// <param name="id">Item Id</param>
