@@ -36,7 +36,10 @@ namespace Pluggy.SDK.HTTP
             _clientId = clientId ?? throw new ArgumentNullException(nameof(clientId), "ClientId is required to execute");
             _clientSecret = clientSecret ?? throw new ArgumentNullException(nameof(clientSecret), "ClientSecret is required to execute");
             _baseUrl = baseUrl;
-            _httpClient = httpClient ?? new HttpClient(new HttpClientHandler());
+            _httpClient = httpClient ?? new HttpClient(new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            });
             _ownHttpClient = httpClient == null;
         }
 
