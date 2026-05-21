@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -59,5 +59,47 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("establishmentName")]
         public string EstablishmentName { get; set; }
+
+        /// <summary>Social name of the natural person (PF-only).</summary>
+        [JsonProperty("socialName")]
+        public string SocialName { get; set; }
+
+        /// <summary>Sex of the natural person (PF-only).</summary>
+        [JsonProperty("sex")]
+        public Sex? Sex { get; set; }
+
+        /// <summary>Marital status of the natural person (PF-only).</summary>
+        [JsonProperty("maritalStatus")]
+        public MaritalStatus MaritalStatus { get; set; }
+
+        /// <summary>Nationality of the natural person (PF-only).</summary>
+        [JsonProperty("nationality")]
+        public Nationality Nationality { get; set; }
+
+        /// <summary>Other identification documents the natural person holds (PF-only).</summary>
+        [JsonProperty("otherDocuments")]
+        public List<OtherDocument> OtherDocuments { get; set; }
+
+        /// <summary>Passport metadata for the natural person (PF-only).</summary>
+        [JsonProperty("passport")]
+        public Passport Passport { get; set; }
+
+        /// <summary>Date the business was incorporated (PJ-only).</summary>
+        [JsonProperty("incorporationDate")]
+        public DateTime? IncorporationDate { get; set; }
+
+        /// <summary>Partners and administrators of the business (PJ-only).</summary>
+        [JsonProperty("parties")]
+        public List<BusinessParty> Parties { get; set; }
+
+        /// <summary>
+        /// Additional documents for businesses headquartered abroad and not required to register a CNPJ (PJ-only).
+        /// </summary>
+        [JsonProperty("businessOtherDocuments")]
+        public List<BusinessOtherDocument> BusinessOtherDocuments { get; set; }
+
+        /// <summary>CNPJs of the financial institutions responsible for the customer cadastro.</summary>
+        [JsonProperty("companiesCnpj")]
+        public List<string> CompaniesCnpj { get; set; }
     }
 }
