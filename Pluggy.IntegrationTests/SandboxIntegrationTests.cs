@@ -145,6 +145,7 @@ public class SandboxIntegrationTests : IAsyncLifetime
         Assert.NotEmpty(accounts.Results);
 
         var account = accounts.Results.First();
+#pragma warning disable CS0618
         var txParams = new TransactionParameters
         {
             DateFrom = DateTime.Now.AddYears(-1),
@@ -152,6 +153,7 @@ public class SandboxIntegrationTests : IAsyncLifetime
         };
 
         var transactions = await _sdk.FetchTransactions(account.Id, txParams);
+#pragma warning restore CS0618
 
         Assert.NotNull(transactions);
         _output.WriteLine($"Found {transactions.Total} transactions for account {account.Id}");
@@ -165,6 +167,61 @@ public class SandboxIntegrationTests : IAsyncLifetime
             var fetchedTx = await _sdk.FetchTransaction(tx.Id);
             Assert.NotNull(fetchedTx);
             Assert.Equal(tx.Id, fetchedTx.Id);
+        }
+    }
+
+    [Fact]
+    public async Task FetchTransactionsCursor_ReturnsFirstPage()
+    {
+        Assert.NotNull(_item);
+
+        var accounts = await _sdk.FetchAccounts(_item.Id);
+        Assert.NotEmpty(accounts.Results);
+
+        var account = accounts.Results.First();
+        var cursorParams = new TransactionCursorParameters
+        {
+            DateFrom = DateTime.Now.AddYears(-1),
+            DateTo = DateTime.Now
+        };
+
+        var page = await _sdk.FetchTransactionsCursor(account.Id, cursorParams);
+
+        Assert.NotNull(page);
+        Assert.NotNull(page.Results);
+        _output.WriteLine($"Cursor page returned {page.Results.Count} transactions, next: {page.Next ?? "null (last page)"}");
+
+        if (page.Results.Any())
+        {
+            var tx = page.Results.First();
+            _output.WriteLine($"Transaction: {tx.Id}, Date: {tx.Date}, Amount: {tx.Amount}");
+        }
+    }
+
+    [Fact]
+    public async Task FetchAllTransactions_ReturnsAllTransactions()
+    {
+        Assert.NotNull(_item);
+
+        var accounts = await _sdk.FetchAccounts(_item.Id);
+        Assert.NotEmpty(accounts.Results);
+
+        var account = accounts.Results.First();
+        var cursorParams = new TransactionCursorParameters
+        {
+            DateFrom = DateTime.Now.AddYears(-1),
+            DateTo = DateTime.Now
+        };
+
+        var allTransactions = await _sdk.FetchAllTransactions(account.Id, cursorParams);
+
+        Assert.NotNull(allTransactions);
+        _output.WriteLine($"FetchAllTransactions returned {allTransactions.Count} total transactions for account {account.Id}");
+
+        if (allTransactions.Any())
+        {
+            var tx = allTransactions.First();
+            _output.WriteLine($"First transaction: {tx.Id}, Date: {tx.Date}, Amount: {tx.Amount}");
         }
     }
 
