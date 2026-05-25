@@ -159,9 +159,9 @@ namespace Pluggy.Client
             foreach (var account in accounts.Results)
             {
                 Console.WriteLine("Account # {0}, Number {1} has a balance of ${2}", account.Id, account.Number, account.Balance);
-                var txSearchParams = new TransactionParameters() { DateFrom = DateTime.Now.AddYears(-1), DateTo = DateTime.Now };
-                var transactions = await sdk.FetchTransactions(account.Id, txSearchParams);
-                foreach (var tx in transactions.Results)
+                var txSearchParams = new TransactionCursorParameters() { DateFrom = DateTime.Now.AddYears(-1), DateTo = DateTime.Now };
+                var transactions = await sdk.FetchAllTransactions(account.Id, txSearchParams);
+                foreach (var tx in transactions)
                 {
                     Console.WriteLine("  Transaction # {0} made at {1}, description: {2}, amount: {3}", tx.Id, tx.Date.ToLongDateString(), tx.Description, tx.Amount);
                     if (tx.PaymentData != null)
