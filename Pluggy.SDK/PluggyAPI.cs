@@ -18,6 +18,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_ITEMS = "/items";
         protected static readonly string URL_ACCOUNTS = "/accounts";
         protected static readonly string URL_TRANSACTIONS = "/transactions";
+        protected static readonly string URL_TRANSACTIONS_V2 = "/v2/transactions";
         protected static readonly string URL_INVESTMENTS = "/investments";
         protected static readonly string URL_CATEGORIES = "/categories";
         protected static readonly string URL_WEBHOOKS = "/webhooks";
@@ -190,10 +191,12 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
-        /// Fetch the list of transactions
+        /// Fetch the list of transactions using page-based pagination.
         /// </summary>
-        /// <param name="id">Account Id</param>
-        /// <returns>Transacion results list</returns>
+        /// <param name="accountId">Account Id</param>
+        /// <param name="pageParams">Optional page-based filter parameters</param>
+        /// <returns>Transaction results list with paging data</returns>
+        [Obsolete("Use FetchTransactionsCursor (single page) or FetchAllTransactions (full sweep) instead. Both use the GET /v2/transactions cursor-based endpoint, which is more stable and supports the full filter set. This page-based method is kept for backward compatibility and will be removed in a future major release.")]
         public async Task<PageResults<Transaction>> FetchTransactions(Guid accountId, TransactionParameters pageParams = null)
         {
             var queryStrings = pageParams != null ? pageParams.ToQueryStrings() : new Dictionary<string, string>();
@@ -201,12 +204,75 @@ namespace Pluggy.SDK
             return await httpService.GetAsync<PageResults<Transaction>>(URL_TRANSACTIONS, null, queryStrings);
         }
 
+        /// <summary>
+        /// Fetch a single page of transactions using cursor-based pagination.
+        /// </summary>
+        /// <param name="accountId">Account Id</param>
+        /// <param name="cursorParams">Optional cursor filter parameters (DateFrom, DateTo, CreatedAtFrom, After, Ids)</param>
+        /// <returns>CursorPageResults with the transactions list and the next cursor link</returns>
+        public async Task<CursorPageResults<Transaction>> FetchTransactionsCursor(Guid accountId, TransactionCursorParameters cursorParams = null)
+        {
+            var queryStrings = cursorParams != null ? cursorParams.ToQueryStrings() : new Dictionary<string, string>();
+            queryStrings.Add("accountId", accountId.ToString());
+            return await httpService.GetAsync<CursorPageResults<Transaction>>(URL_TRANSACTIONS_V2, null, queryStrings);
+        }
 
         /// <summary>
-        /// Fetch the list of transactions
+        /// Fetch all transactions from an account by sweeping all cursor pages.
         /// </summary>
-        /// <param name="id">Account Id</param>
-        /// <returns>Transacion results list</returns>
+        /// <param name="accountId">Account Id</param>
+        /// <param name="cursorParams">Optional filters (DateFrom, DateTo, CreatedAtFrom, Ids). The After cursor is managed internally.</param>
+        /// <returns>Complete list of all transactions</returns>
+        public async Task<IList<Transaction>> FetchAllTransactions(Guid accountId, TransactionCursorParameters cursorParams = null)
+        {
+            var firstPage = await FetchTransactionsCursor(accountId, cursorParams);
+            var transactions = new List<Transaction>(firstPage.Results);
+
+            var next = firstPage.Next;
+
+            while (next != null)
+            {
+                var afterParam = ParseAfterFromNext(next);
+                if (afterParam == null) break;
+
+                var pageParams = cursorParams != null
+                    ? new TransactionCursorParameters
+                    {
+                        DateFrom = cursorParams.DateFrom,
+                        DateTo = cursorParams.DateTo,
+                        CreatedAtFrom = cursorParams.CreatedAtFrom,
+                        Ids = cursorParams.Ids,
+                        After = afterParam
+                    }
+                    : new TransactionCursorParameters { After = afterParam };
+
+                var page = await FetchTransactionsCursor(accountId, pageParams);
+                transactions.AddRange(page.Results);
+                next = page.Next;
+            }
+
+            return transactions;
+        }
+
+        private static string ParseAfterFromNext(string next)
+        {
+            if (string.IsNullOrEmpty(next)) return null;
+
+            var query = next.TrimStart('?');
+            foreach (var pair in query.Split('&'))
+            {
+                var kv = pair.Split(new[] { '=' }, 2);
+                if (kv.Length == 2 && Uri.UnescapeDataString(kv[0]) == "after")
+                    return Uri.UnescapeDataString(kv[1]);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Fetch a single transaction by its ID.
+        /// </summary>
+        /// <param name="id">Transaction Id</param>
+        /// <returns>Transaction details</returns>
         public async Task<Transaction> FetchTransaction(Guid id)
         {
             return await httpService.GetAsync<Transaction>(URL_TRANSACTIONS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
