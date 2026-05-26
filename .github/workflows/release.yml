@@ -14,19 +14,33 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_SECRET }}
 
-      - name: Setup .NET Core SDK 
-        uses: actions/setup-dotnet@v4
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v5.2.0
         with:
           dotnet-version: 6.0.x
 
       - name: Semantic Release
         id: release
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v6.0.0
         with:
           semantic_version: 19
           working_directory: ./Pluggy.SDK
@@ -37,7 +51,7 @@ jobs:
             @semantic-release/git@10
             @semantic-release/exec@6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           RUNNER_DEBUG: 1
           
       - name: 'Pack & Publish project'
