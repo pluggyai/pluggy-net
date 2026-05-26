@@ -145,6 +145,8 @@ public class SandboxIntegrationTests : IAsyncLifetime
         Assert.NotEmpty(accounts.Results);
 
         var account = accounts.Results.First();
+        // FetchTransactions is [Obsolete] — suppress the warning intentionally here since
+        // this test exists specifically to verify backward compatibility of the deprecated method.
 #pragma warning disable CS0618
         var txParams = new TransactionParameters
         {
