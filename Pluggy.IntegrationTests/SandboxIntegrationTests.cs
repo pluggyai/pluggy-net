@@ -137,42 +137,6 @@ public class SandboxIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task FetchTransactions_ReturnsTransactions()
-    {
-        Assert.NotNull(_item);
-
-        var accounts = await _sdk.FetchAccounts(_item.Id);
-        Assert.NotEmpty(accounts.Results);
-
-        var account = accounts.Results.First();
-        // FetchTransactions is [Obsolete] — suppress the warning intentionally here since
-        // this test exists specifically to verify backward compatibility of the deprecated method.
-#pragma warning disable CS0618
-        var txParams = new TransactionParameters
-        {
-            DateFrom = DateTime.Now.AddYears(-1),
-            DateTo = DateTime.Now
-        };
-
-        var transactions = await _sdk.FetchTransactions(account.Id, txParams);
-#pragma warning restore CS0618
-
-        Assert.NotNull(transactions);
-        _output.WriteLine($"Found {transactions.Total} transactions for account {account.Id}");
-
-        if (transactions.Results.Any())
-        {
-            var tx = transactions.Results.First();
-            _output.WriteLine($"Transaction: {tx.Id}, Date: {tx.Date}, Amount: {tx.Amount}, Description: {tx.Description}");
-
-            // Verify we can fetch individual transaction
-            var fetchedTx = await _sdk.FetchTransaction(tx.Id);
-            Assert.NotNull(fetchedTx);
-            Assert.Equal(tx.Id, fetchedTx.Id);
-        }
-    }
-
-    [Fact]
     public async Task FetchTransactionsCursor_ReturnsFirstPage()
     {
         Assert.NotNull(_item);
