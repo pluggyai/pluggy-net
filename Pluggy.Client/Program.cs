@@ -22,7 +22,9 @@ namespace Pluggy.Client
             // Fetching keys from appsettings.json
             var (CLIENT_ID, CLIENT_SECRET, URL_BASE) = Configuration();
 
-            var sdk = new PluggyAPI(CLIENT_ID, CLIENT_SECRET, URL_BASE);
+            var sdk = string.IsNullOrWhiteSpace(URL_BASE)
+                ? new PluggyAPI(CLIENT_ID, CLIENT_SECRET)
+                : new PluggyAPI(CLIENT_ID, CLIENT_SECRET, URL_BASE);
 
             Console.WriteLine("Please select an operation to walkthrough");
             Console.WriteLine("1. Create an Item");
