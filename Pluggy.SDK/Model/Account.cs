@@ -67,6 +67,12 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("unarrangedOverdraftAmount")]
         public double? UnarrangedOverdraftAmount { get; set; }
+
+        [JsonProperty("hasReservedBalance")]
+        public bool? HasReservedBalance { get; set; }
+
+        [JsonProperty("reservedBalances")]
+        public ICollection<ReservedBalance> ReservedBalances { get; set; }
     }
 
     public class CreditAccount
