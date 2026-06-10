@@ -101,5 +101,19 @@ namespace Pluggy.SDK.Model
         /// <summary>CNPJs of the financial institutions responsible for the customer cadastro.</summary>
         [JsonProperty("companiesCnpj")]
         public List<string> CompaniesCnpj { get; set; }
+
+        /// <summary>
+        /// Information that allows institutions to assess and classify the client's risk profile
+        /// and economic-financial capacity (Open Finance).
+        /// </summary>
+        [JsonProperty("financialRelationships")]
+        public IdentityFinancialRelationships FinancialRelationships { get; set; }
+
+        /// <summary>
+        /// Information about since when the person has been a client of the institution and the
+        /// products/services they consume, plus income/patrimony data (Open Finance).
+        /// </summary>
+        [JsonProperty("qualifications")]
+        public IdentityQualifications Qualifications { get; set; }
     }
 }

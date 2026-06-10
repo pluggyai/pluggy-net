@@ -41,6 +41,15 @@ namespace Pluggy.SDK.Model
         [JsonProperty("category")]
         public string Category { get; set; }
 
+        [JsonProperty("categoryId")]
+        public string CategoryId { get; set; }
+
+        [JsonProperty("providerId")]
+        public string ProviderId { get; set; }
+
+        [JsonProperty("order")]
+        public int? Order { get; set; }
+
         [JsonProperty("paymentData")]
         public TransactionPaymentData PaymentData { get; set; }
 
@@ -55,5 +64,11 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("operationType")]
         public string OperationType { get; set; }
+
+        [JsonProperty("createdAt")]
+        public DateTime? CreatedAt { get; set; }
+
+        [JsonProperty("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
     }
 }

@@ -81,6 +81,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("issueDate")]
         public DateTime? IssueDate { get; set; }
 
+        [JsonProperty("purchaseDate")]
+        public DateTime? PurchaseDate { get; set; }
+
         [JsonProperty("issuer")]
         public string Issuer { get; set; }
 

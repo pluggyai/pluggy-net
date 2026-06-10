@@ -49,14 +49,28 @@ namespace Pluggy.SDK.Model
         [JsonProperty("dueDate")]
         public DateTime? DueDate { get; set; }
 
-        [JsonProperty("instalmentPeriodicity")]
+        // The current API/OAS spells these with "installment" (double L). Older payloads
+        // used the British "instalment" (single L), still accepted via the *Legacy aliases below.
+        [JsonProperty("installmentPeriodicity")]
         public LoanInstalmentPeriodicity? InstalmentPeriodicity { get; set; }
 
-        [JsonProperty("instalmentPeriodicityAdditionalInfo")]
+        [JsonProperty("instalmentPeriodicity")]
+        private LoanInstalmentPeriodicity? InstalmentPeriodicityLegacy { set { InstalmentPeriodicity = value; } }
+
+        [JsonProperty("installmentPeriodicityAdditionalInfo")]
         public string InstalmentPeriodicityAdditionalInfo { get; set; }
 
-        [JsonProperty("firstInstalmentDueDate")]
+        [JsonProperty("instalmentPeriodicityAdditionalInfo")]
+        private string InstalmentPeriodicityAdditionalInfoLegacy { set { InstalmentPeriodicityAdditionalInfo = value; } }
+
+        [JsonProperty("firstInstallmentDueDate")]
         public DateTime? FirstInstalmentDueDate { get; set; }
+
+        [JsonProperty("firstInstalmentDueDate")]
+        private DateTime? FirstInstalmentDueDateLegacy { set { FirstInstalmentDueDate = value; } }
+
+        [JsonProperty("kind")]
+        public LoanKind? Kind { get; set; }
 
         [JsonProperty("CET")]
         public double? CET { get; set; }
@@ -282,6 +296,15 @@ namespace Pluggy.SDK.Model
     }
 
     #region Loan Enums
+
+    [JsonConverter(typeof(TolerantEnumConverter))]
+    public enum LoanKind
+    {
+        LOAN,
+        FINANCING,
+        INVOICE_FINANCING,
+        UNARRANGED_ACCOUNT_OVERDRAFT
+    }
 
     [JsonConverter(typeof(TolerantEnumConverter))]
     public enum LoanInstalmentPeriodicity

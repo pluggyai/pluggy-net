@@ -175,20 +175,49 @@ public async Task DeleteModel(Guid id)
 }
 ```
 
-## Current SDK Gap Summary (Last Updated: 2026-01-22)
+## Current SDK Gap Summary (Last Updated: 2026-06-09, OAS v1.0.0)
 
-### Missing Endpoints
-- Boleto Management: All /boletos/* endpoints (beta, intentionally not added)
+### Missing Endpoints (not yet implemented)
+- **Automatic Pix** (large feature): POST /payments/requests/automatic-pix + all /automatic-pix/schedules/* (schedule, cancel, retry, list)
+- **Smart Transfers** (large feature): /smart-transfers/payments, /smart-transfers/preauthorizations (+ /payments)
+- **Bills**: GET /bills, GET /bills/{id}
+- **Merchants**: GET /merchants
+- **Category Rules**: GET, POST /categories/rules
+- **Payment Recipient Institutions**: GET /payments/recipients/institutions(/{id}) — model PaymentInstitution exists, fetch methods missing
+- **UpdatePaymentRequest**: PATCH /payments/requests/{id}
+- **Pix QR**: POST /payments/requests/pix-qr
+- GET /accounts/{id}/balance (likely internal)
+- Boleto Management: /boletos/*, /boleto-connections/* (beta, intentionally not added)
 
 Note: Account Statements and Item Disable Auto Sync are private/internal endpoints.
 
 ### Missing Model Fields
-All model fields are now up to date.
+Core model fields are up to date as of the 2026-06-09 sync (see "Recently Added — Phase 1 sync" below).
+Pending fields belong to the unimplemented endpoints above (Automatic Pix, Smart Transfers, Bills, Merchants).
 
 ### Missing Models
-None - SDK is up to date with production API.
+Only those backing the unimplemented endpoints above (Automatic Pix, Smart Transfers, Bills, Merchants, Category Rules).
 
-### Recently Added (Phase 1, 2 & 3)
+### Recently Added (2026-06-09 sync — Phase 1: fields + Loan fix)
+**Currency robustness:**
+- `TolerantEnumConverter` now accepts a configurable fallback value via constructor arg.
+- `CurrencyCode` uses `[JsonConverter(typeof(TolerantEnumConverter), "BRL")]` — unknown/non-ISO codes (e.g. "GHA") fall back to BRL instead of throwing. (Property kept non-nullable; no breaking change.)
+
+**Model fields:**
+- Account.createdAt/updatedAt
+- Transaction.categoryId/providerId/order/createdAt/updatedAt
+- Investment.purchaseDate
+- Connector.oauthUrl/supportsAutomaticPix/supportsBoletoManagement/hasMFA/health (→ ConnectorHealth, ConnectorHealthDetails)
+- Item.consentExpiresAt/products/userAction (→ ConnectorUserAction)
+- Category.descriptionTranslated
+- Loan.kind (→ LoanKind enum)
+- Identity.financialRelationships (→ IdentityFinancialRelationships + IdentityProcurator, FinancialRelationshipAccount, PortabilityReceived, PaycheckBankLink, IdentityProcuratorType)
+- Identity.qualifications (→ IdentityQualifications + IdentityInformedIncome, IdentityInformedPatrimony, EconomicActivity, InformedRevenue, IdentityOccupationCode, InformedRevenueFrequency)
+
+**Bug fix:**
+- Loan installment fields realigned to OAS spelling (`installmentPeriodicity`, `installmentPeriodicityAdditionalInfo`, `firstInstallmentDueDate` — double "L"). The previous single-"L" "instalment" JSON keys did not bind to the current API. Legacy single-"L" spelling still accepted via private deserialization aliases.
+
+### Earlier Additions (Phases 1, 2 & 3)
 **Phase 1 - Model Fields:**
 - Transaction.operationType
 - TransactionCreditCardMetadata.billId/cardNumber

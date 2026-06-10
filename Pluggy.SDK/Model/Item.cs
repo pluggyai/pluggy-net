@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -47,9 +48,30 @@ namespace Pluggy.SDK.Model
         [JsonProperty("nextAutoSyncAt")]
         public DateTime? NextAutoSyncAt { get; set; }
 
+        [JsonProperty("consentExpiresAt")]
+        public DateTime? ConsentExpiresAt { get; set; }
+
+        [JsonProperty("products")]
+        public IList<ProductType> Products { get; set; }
+
+        [JsonProperty("userAction")]
+        public ConnectorUserAction UserAction { get; set; }
+
         public bool HasFinished()
         {
             return Status == ItemStatus.UPDATED || Status == ItemStatus.OUTDATED || Status == ItemStatus.LOGIN_ERROR;
         }
+    }
+
+    public class ConnectorUserAction
+    {
+        [JsonProperty("instructions")]
+        public string Instructions { get; set; }
+
+        [JsonProperty("attributes")]
+        public IDictionary<string, object> Attributes { get; set; }
+
+        [JsonProperty("expiresAt")]
+        public DateTime? ExpiresAt { get; set; }
     }
 }
