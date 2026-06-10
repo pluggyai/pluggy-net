@@ -175,74 +175,16 @@ public async Task DeleteModel(Guid id)
 }
 ```
 
-## Current SDK Gap Summary (Last Updated: 2026-06-09, OAS v1.0.0)
+## Current SDK Gap Summary (Last Updated: 2026-06-10, OAS v1.0.0)
 
-### Missing Endpoints (not yet implemented)
-- **Automatic Pix** (large feature): POST /payments/requests/automatic-pix + all /automatic-pix/schedules/* (schedule, cancel, retry, list)
-- **Smart Transfers** (large feature): /smart-transfers/payments, /smart-transfers/preauthorizations (+ /payments)
-- **Bills**: GET /bills, GET /bills/{id}
-- **Merchants**: GET /merchants
-- **Category Rules**: GET, POST /categories/rules
-- **Payment Recipient Institutions**: GET /payments/recipients/institutions(/{id}) — model PaymentInstitution exists, fetch methods missing
-- **UpdatePaymentRequest**: PATCH /payments/requests/{id}
-- **Pix QR**: POST /payments/requests/pix-qr
-- GET /accounts/{id}/balance (likely internal)
-- Boleto Management: /boletos/*, /boleto-connections/* (beta, intentionally not added)
+The SDK now covers every public (CLIENT-secured) endpoint in the OAS.
 
-Note: Account Statements and Item Disable Auto Sync are private/internal endpoints.
+### Intentionally not implemented
+- **GET /accounts/{id}/statements** and **PATCH /items/{id}/disable-auto-sync** — kept out by our own judgment (low-value / effectively internal for SDK consumers). They are CLIENT-secured in the OAS, so they could be added if needed.
+- **INTERNAL-secured endpoints** (e.g. PATCH /merchants/sync-missing) are not in the OAS at all and are out of scope.
 
-### Missing Model Fields
-Core model fields are up to date as of the 2026-06-09 sync (see "Recently Added — Phase 1 sync" below).
-Pending fields belong to the unimplemented endpoints above (Automatic Pix, Smart Transfers, Bills, Merchants).
-
-### Missing Models
-Only those backing the unimplemented endpoints above (Automatic Pix, Smart Transfers, Bills, Merchants, Category Rules).
-
-### Recently Added (2026-06-09 sync — Phase 1: fields + Loan fix)
-**Currency robustness:**
-- `TolerantEnumConverter` now accepts a configurable fallback value via constructor arg.
-- `CurrencyCode` uses `[JsonConverter(typeof(TolerantEnumConverter), "BRL")]` — unknown/non-ISO codes (e.g. "GHA") fall back to BRL instead of throwing. (Property kept non-nullable; no breaking change.)
-
-**Model fields:**
-- Account.createdAt/updatedAt
-- Transaction.categoryId/providerId/order/createdAt/updatedAt
-- Investment.purchaseDate
-- Connector.oauthUrl/supportsAutomaticPix/supportsBoletoManagement/hasMFA/health (→ ConnectorHealth, ConnectorHealthDetails)
-- Item.consentExpiresAt/products/userAction (→ ConnectorUserAction)
-- Category.descriptionTranslated
-- Loan.kind (→ LoanKind enum)
-- Identity.financialRelationships (→ IdentityFinancialRelationships + IdentityProcurator, FinancialRelationshipAccount, PortabilityReceived, PaycheckBankLink, IdentityProcuratorType)
-- Identity.qualifications (→ IdentityQualifications + IdentityInformedIncome, IdentityInformedPatrimony, EconomicActivity, InformedRevenue, IdentityOccupationCode, InformedRevenueFrequency)
-
-**Bug fix:**
-- Loan installment fields realigned to OAS spelling (`installmentPeriodicity`, `installmentPeriodicityAdditionalInfo`, `firstInstallmentDueDate` — double "L"). The previous single-"L" "instalment" JSON keys did not bind to the current API. Legacy single-"L" spelling still accepted via private deserialization aliases.
-
-### Earlier Additions (Phases 1, 2 & 3)
-**Phase 1 - Model Fields:**
-- Transaction.operationType
-- TransactionCreditCardMetadata.billId/cardNumber
-- Identity.createdAt/updatedAt/establishmentCode/establishmentName
-- InvestmentTransaction.agreedRate
-- Investment.issuerCNPJ
-- Address.additionalInfo
-
-**Phase 2 - Core Endpoints:**
-- Consent model and endpoints (FetchConsents, FetchConsent)
-- Loan model with all nested types and endpoints (FetchLoans, FetchLoan)
-- UpdateTransaction method for category updates
-
-**Phase 3 - Payment Initiation:**
-- PaymentRecipient model + CRUD endpoints (Create, Fetch, FetchAll, Update, Delete)
-- PaymentRequest model + endpoints (Create, Fetch, FetchAll, Delete)
-- PaymentIntent model + endpoints (Create, Fetch, FetchAll)
-- PaymentCustomer model + CRUD endpoints (Create, Fetch, FetchAll, Update, Delete)
-- PaymentInstitution, PaymentCallbackUrls nested models
-- PaymentAccountType, PaymentRequestStatus, PaymentIntentStatus, PaymentCustomerType enums
-- Request classes: CreatePaymentRecipientRequest, CreatePaymentRequestRequest, CreatePaymentIntentRequest, CreatePaymentCustomerRequest
-
-**Additional Fixes:**
-- BoletoMetadata model added to TransactionPaymentData
-- TransactionPaymentParticipant.routingNumberISPB field added
+### Beta
+- **Boleto Management** (`/boletos/*`, `/boleto-connections/*`) is implemented but marked beta in code (BETA comments on the models and API methods). Shapes may change upstream.
 
 ## Build and Test
 
