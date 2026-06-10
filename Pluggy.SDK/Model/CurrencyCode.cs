@@ -1,6 +1,12 @@
-﻿namespace Pluggy.SDK.Model
+﻿using Newtonsoft.Json;
+using Pluggy.SDK.Utils;
+
+namespace Pluggy.SDK.Model
 {
     // Based on https://en.wikipedia.org/wiki/ISO_4217
+    // Uses TolerantEnumConverter so unknown/non-ISO codes returned by the API
+    // (e.g. "GHA") fall back to BRL instead of throwing a JsonSerializationException.
+    [JsonConverter(typeof(TolerantEnumConverter), "BRL")]
     public enum CurrencyCode
     {
         AED,

@@ -6,6 +6,19 @@ namespace Pluggy.SDK.Utils
 {
     class TolerantEnumConverter : JsonConverter
     {
+        private readonly string _defaultValue;
+
+        public TolerantEnumConverter()
+        {
+        }
+
+        // Allows configuring an explicit fallback value (e.g. "BRL" for CurrencyCode)
+        // via [JsonConverter(typeof(TolerantEnumConverter), "BRL")].
+        public TolerantEnumConverter(string defaultValue)
+        {
+            _defaultValue = defaultValue;
+        }
+
         public override bool CanConvert(Type objectType)
         {
             Type type = IsNullableType(objectType) ? Nullable.GetUnderlyingType(objectType) : objectType;
@@ -47,9 +60,21 @@ namespace Pluggy.SDK.Utils
 
             if (!isNullable)
             {
-                string defaultName = names
-                    .Where(n => string.Equals(n, "Unknown", StringComparison.OrdinalIgnoreCase))
-                    .FirstOrDefault();
+                string defaultName = null;
+
+                if (!string.IsNullOrEmpty(_defaultValue))
+                {
+                    defaultName = names
+                        .Where(n => string.Equals(n, _defaultValue, StringComparison.OrdinalIgnoreCase))
+                        .FirstOrDefault();
+                }
+
+                if (defaultName == null)
+                {
+                    defaultName = names
+                        .Where(n => string.Equals(n, "Unknown", StringComparison.OrdinalIgnoreCase))
+                        .FirstOrDefault();
+                }
 
                 if (defaultName == null)
                 {
