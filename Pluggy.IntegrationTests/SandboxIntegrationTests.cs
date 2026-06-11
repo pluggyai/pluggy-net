@@ -296,6 +296,79 @@ public class SandboxIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task FetchAccountBalance_ReturnsBalance()
+    {
+        Assert.NotNull(_item);
+
+        var accounts = await _sdk.FetchAccounts(_item.Id);
+        Assert.NotEmpty(accounts.Results);
+
+        foreach (var account in accounts.Results)
+        {
+            var balance = await _sdk.FetchAccountBalance(account.Id);
+            Assert.NotNull(balance);
+            _output.WriteLine($"Account {account.Id} balance: {balance.Balance} {balance.CurrencyCode} (updated {balance.UpdateDateTime})");
+        }
+    }
+
+    [Fact]
+    public async Task FetchBills_ReturnsBillsForAccounts()
+    {
+        Assert.NotNull(_item);
+
+        var accounts = await _sdk.FetchAccounts(_item.Id);
+        Assert.NotEmpty(accounts.Results);
+
+        foreach (var account in accounts.Results)
+        {
+            // Bills only exist for credit card accounts; for others the list is simply empty.
+            var bills = await _sdk.FetchBills(account.Id);
+            Assert.NotNull(bills);
+            _output.WriteLine($"Account {account.Id}: {bills.Total} bills");
+
+            var bill = bills.Results.FirstOrDefault();
+            if (bill != null)
+            {
+                _output.WriteLine($"  Bill {bill.Id}: due {bill.DueDate}, total {bill.TotalAmount} {bill.TotalAmountCurrencyCode}");
+
+                var fetched = await _sdk.FetchBill(bill.Id);
+                Assert.NotNull(fetched);
+                Assert.Equal(bill.Id, fetched.Id);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task FetchCategoryRules_ReturnsRules()
+    {
+        // Client-scoped: returns the rules configured for this client (may be empty).
+        var rules = await _sdk.FetchCategoryRules();
+
+        Assert.NotNull(rules);
+        Assert.NotNull(rules.Results);
+        _output.WriteLine($"Found {rules.Total} category rules");
+
+        var rule = rules.Results.FirstOrDefault();
+        if (rule != null)
+        {
+            _output.WriteLine($"Rule: {rule.Description} -> {rule.Category} ({rule.CategoryId})");
+        }
+    }
+
+    [Fact]
+    public async Task FetchMerchants_ReturnsLookupResult()
+    {
+        // Batch CNPJ lookup. Mixes a real CNPJ with an invalid one to exercise all buckets.
+        var result = await _sdk.FetchMerchants(new[] { "00000000000191", "invalid-cnpj" });
+
+        Assert.NotNull(result);
+        Assert.NotNull(result.FoundMerchants);
+        Assert.NotNull(result.NotFoundMerchants);
+        Assert.NotNull(result.InvalidCnpjs);
+        _output.WriteLine($"Merchants — found: {result.FoundMerchants.Count}, notFound: {result.NotFoundMerchants.Count}, invalid: {result.InvalidCnpjs.Count}");
+    }
+
+    [Fact]
     public async Task WebhookOperations_WorkCorrectly()
     {
         // Create webhook
