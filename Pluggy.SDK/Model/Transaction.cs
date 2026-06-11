@@ -55,5 +55,8 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("operationType")]
         public string OperationType { get; set; }
+
+        [JsonProperty("operationTypeAdditionalInfo")]
+        public string OperationTypeAdditionalInfo { get; set; }
     }
 }
