@@ -177,11 +177,7 @@ public async Task DeleteModel(Guid id)
 
 ## Current SDK Gap Summary (Last Updated: 2026-06-10, OAS v1.0.0)
 
-The SDK now covers every public (CLIENT-secured) endpoint in the OAS.
-
-### Intentionally not implemented
-- **GET /accounts/{id}/statements** and **PATCH /items/{id}/disable-auto-sync** — kept out by our own judgment (low-value / effectively internal for SDK consumers). They are CLIENT-secured in the OAS, so they could be added if needed.
-- **INTERNAL-secured endpoints** (e.g. PATCH /merchants/sync-missing) are not in the OAS at all and are out of scope.
+The SDK covers the public API surface of the OAS.
 
 ### Beta
 - **Boleto Management** (`/boletos/*`, `/boleto-connections/*`) is implemented but marked beta in code (BETA comments on the models and API methods). Shapes may change upstream.
