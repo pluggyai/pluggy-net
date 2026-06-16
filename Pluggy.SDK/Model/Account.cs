@@ -83,6 +83,10 @@ namespace Pluggy.SDK.Model
         [JsonProperty("brand")]
         public string Brand { get; set; }
 
+        // Free text to specify the brand category when brand is marked as "OTHER".
+        [JsonProperty("brandAdditionalInfo")]
+        public string BrandAdditionalInfo { get; set; }
+
         [JsonProperty("balanceCloseDate")]
         public DateTime? BalanceCloseDate { get; set; }
 
@@ -110,6 +114,60 @@ namespace Pluggy.SDK.Model
         [JsonProperty("status")]
         public string Status { get; set; }
 
+        [JsonProperty("disaggregatedCreditLimits")]
+        public ICollection<DisaggregatedCreditLimit> DisaggregatedCreditLimits { get; set; }
+
+    }
+
+    public class DisaggregatedCreditLimit
+    {
+        [JsonProperty("creditLineLimitType")]
+        public string CreditLineLimitType { get; set; }
+
+        [JsonProperty("consolidationType")]
+        public string ConsolidationType { get; set; }
+
+        [JsonProperty("identificationNumber")]
+        public string IdentificationNumber { get; set; }
+
+        [JsonProperty("isLimitFlexible")]
+        public bool? IsLimitFlexible { get; set; }
+
+        [JsonProperty("lineName")]
+        public CreditCardLimitLineName LineName { get; set; }
+
+        [JsonProperty("lineNameAdditionalInfo")]
+        public string LineNameAdditionalInfo { get; set; }
+
+        [JsonProperty("limitAmount")]
+        public double? LimitAmount { get; set; }
+
+        [JsonProperty("limitAmountCurrencyCode")]
+        public CurrencyCode? LimitAmountCurrencyCode { get; set; }
+
+        // Reason why the reported total limit amount is equal to zero.
+        [JsonProperty("limitAmountReason")]
+        public string LimitAmountReason { get; set; }
+
+        [JsonProperty("usedAmount")]
+        public double? UsedAmount { get; set; }
+
+        [JsonProperty("usedAmountCurrencyCode")]
+        public CurrencyCode? UsedAmountCurrencyCode { get; set; }
+
+        [JsonProperty("availableAmount")]
+        public double? AvailableAmount { get; set; }
+
+        [JsonProperty("availableAmountCurrencyCode")]
+        public CurrencyCode? AvailableAmountCurrencyCode { get; set; }
+
+        // Total limit amount customized by the customer through the institution's electronic channels.
+        [JsonProperty("customizedLimitAmount")]
+        public double? CustomizedLimitAmount { get; set; }
+
+        // Currency of the reported customized limit amount.
+        [JsonProperty("customizedLimitAmountCurrencyCode")]
+        public CurrencyCode? CustomizedLimitAmountCurrencyCode { get; set; }
     }
 }
 
