@@ -25,6 +25,22 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("cardNumber")]
         public string CardNumber { get; set; }
+
+        // Type of fee charged. Present when the operation is a fee (TARIFA).
+        [JsonProperty("feeType")]
+        public CreditCardAccountFeeType? FeeType { get; set; }
+
+        // Free text describing the fee type when feeType is "OTHER".
+        [JsonProperty("feeTypeAdditionalInfo")]
+        public string FeeTypeAdditionalInfo { get; set; }
+
+        // Other type of credit contracted on the card. Present when the operation is a contracted credit operation.
+        [JsonProperty("otherCreditsType")]
+        public CreditCardAccountOtherCreditType? OtherCreditsType { get; set; }
+
+        // Free text describing the other credit type when otherCreditsType is "OTHER".
+        [JsonProperty("otherCreditsAdditionalInfo")]
+        public string OtherCreditsAdditionalInfo { get; set; }
     }
 }
 
