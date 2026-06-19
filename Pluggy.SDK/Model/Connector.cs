@@ -33,6 +33,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("oauth")]
         public bool? Oauth { get; set; }
 
+        [JsonProperty("oauthUrl")]
+        public string OauthUrl { get; set; }
+
         [JsonProperty("resetPasswordUrl")]
         public string ResetPasswordUrl { get; set; }
 
@@ -57,7 +60,40 @@ namespace Pluggy.SDK.Model
         [JsonProperty("supportsSmartTransfers")]
         public bool SupportsSmartTransfers { get; set; }
 
+        [JsonProperty("supportsAutomaticPix")]
+        public bool SupportsAutomaticPix { get; set; }
+
+        [JsonProperty("supportsBoletoManagement")]
+        public bool SupportsBoletoManagement { get; set; }
+
+        [JsonProperty("hasMFA")]
+        public bool HasMFA { get; set; }
+
+        [JsonProperty("health")]
+        public ConnectorHealth Health { get; set; }
+
         [JsonProperty("products")]
         public IList<ProductType> Products { get; set; }
+    }
+
+    public class ConnectorHealth
+    {
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("stage")]
+        public string Stage { get; set; }
+
+        [JsonProperty("details")]
+        public ConnectorHealthDetails Details { get; set; }
+    }
+
+    public class ConnectorHealthDetails
+    {
+        [JsonProperty("connectionRateLast6Hours")]
+        public double? ConnectionRateLast6Hours { get; set; }
+
+        [JsonProperty("connectionsLast6Hours")]
+        public double? ConnectionsLast6Hours { get; set; }
     }
 }

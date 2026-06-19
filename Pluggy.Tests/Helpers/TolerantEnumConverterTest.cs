@@ -58,5 +58,50 @@ namespace Pluggy.Tests
             Assert.AreEqual(result.NullableTypeWithValidStringValue, InvestmentType.SECURITY);
 
         }
+
+        [Test]
+        public void CurrencyCode_ShouldFallBackToBRL_ForUnknownCode()
+        {
+            // "GHA" is not a valid ISO 4217 code (Ghana's currency is GHS) and is not
+            // present in the CurrencyCode enum. It must not throw; it falls back to BRL.
+            var account = JsonConvert.DeserializeObject<Account>(@"{ ""currencyCode"": ""GHA"" }");
+            Assert.AreEqual(CurrencyCode.BRL, account.CurrencyCode);
+        }
+
+        [Test]
+        public void CurrencyCode_ShouldParseKnownCode()
+        {
+            var account = JsonConvert.DeserializeObject<Account>(@"{ ""currencyCode"": ""USD"" }");
+            Assert.AreEqual(CurrencyCode.USD, account.CurrencyCode);
+        }
+
+        [Test]
+        public void Loan_ShouldParseInstallmentFields_OasSpelling()
+        {
+            var loan = JsonConvert.DeserializeObject<Loan>(@"
+            {
+                ""installmentPeriodicity"": ""MONTHLY"",
+                ""installmentPeriodicityAdditionalInfo"": ""info"",
+                ""firstInstallmentDueDate"": ""2024-01-15T00:00:00.000Z""
+            }");
+            Assert.AreEqual(LoanInstalmentPeriodicity.MONTHLY, loan.InstalmentPeriodicity);
+            Assert.AreEqual("info", loan.InstalmentPeriodicityAdditionalInfo);
+            Assert.IsNotNull(loan.FirstInstalmentDueDate);
+        }
+
+        [Test]
+        public void Loan_ShouldParseInstallmentFields_LegacySpelling()
+        {
+            // Older payloads used the British "instalment" (single L). Must still bind.
+            var loan = JsonConvert.DeserializeObject<Loan>(@"
+            {
+                ""instalmentPeriodicity"": ""MONTHLY"",
+                ""instalmentPeriodicityAdditionalInfo"": ""info"",
+                ""firstInstalmentDueDate"": ""2024-01-15T00:00:00.000Z""
+            }");
+            Assert.AreEqual(LoanInstalmentPeriodicity.MONTHLY, loan.InstalmentPeriodicity);
+            Assert.AreEqual("info", loan.InstalmentPeriodicityAdditionalInfo);
+            Assert.IsNotNull(loan.FirstInstalmentDueDate);
+        }
     }
 }

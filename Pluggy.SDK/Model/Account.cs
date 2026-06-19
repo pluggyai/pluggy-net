@@ -49,6 +49,12 @@ namespace Pluggy.SDK.Model
         [JsonProperty("transactions")]
         public ICollection<Transaction> Transactions { get; set; }
 
+        [JsonProperty("createdAt")]
+        public DateTime? CreatedAt { get; set; }
+
+        [JsonProperty("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
+
     }
 
     public class BankAccount

@@ -10,6 +10,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("descriptionTranslated")]
+        public string DescriptionTranslated { get; set; }
+
         [JsonProperty("parentId")]
         public string ParentId { get; set; }
 

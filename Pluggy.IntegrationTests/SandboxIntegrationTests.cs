@@ -296,6 +296,122 @@ public class SandboxIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task FetchBills_ReturnsBillsForAccounts()
+    {
+        Assert.NotNull(_item);
+
+        var accounts = await _sdk.FetchAccounts(_item.Id);
+        Assert.NotEmpty(accounts.Results);
+
+        foreach (var account in accounts.Results)
+        {
+            // Bills only exist for credit card accounts; for others the list is simply empty.
+            var bills = await _sdk.FetchBills(account.Id);
+            Assert.NotNull(bills);
+            _output.WriteLine($"Account {account.Id}: {bills.Total} bills");
+
+            var bill = bills.Results.FirstOrDefault();
+            if (bill != null)
+            {
+                _output.WriteLine($"  Bill {bill.Id}: due {bill.DueDate}, total {bill.TotalAmount} {bill.TotalAmountCurrencyCode}");
+
+                var fetched = await _sdk.FetchBill(bill.Id);
+                Assert.NotNull(fetched);
+                Assert.Equal(bill.Id, fetched.Id);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task FetchCategoryRules_ReturnsRules()
+    {
+        // Client-scoped: returns the rules configured for this client (may be empty).
+        var rules = await _sdk.FetchCategoryRules();
+
+        Assert.NotNull(rules);
+        Assert.NotNull(rules.Results);
+        _output.WriteLine($"Found {rules.Total} category rules");
+
+        var rule = rules.Results.FirstOrDefault();
+        if (rule != null)
+        {
+            _output.WriteLine($"Rule: {rule.Description} -> {rule.Category} ({rule.CategoryId})");
+        }
+    }
+
+    [Fact]
+    public async Task FetchMerchants_ReturnsLookupResult()
+    {
+        // Batch CNPJ lookup. Mixes a real CNPJ with an invalid one to exercise all buckets.
+        var result = await _sdk.FetchMerchants(new[] { "00000000000191", "invalid-cnpj" });
+
+        Assert.NotNull(result);
+        Assert.NotNull(result.FoundMerchants);
+        Assert.NotNull(result.NotFoundMerchants);
+        Assert.NotNull(result.InvalidCnpjs);
+        _output.WriteLine($"Merchants — found: {result.FoundMerchants.Count}, notFound: {result.NotFoundMerchants.Count}, invalid: {result.InvalidCnpjs.Count}");
+    }
+
+    [Fact]
+    public async Task PaymentRequest_CreateAndCleanup()
+    {
+        // A payment request needs a recipient, which needs a payment institution.
+        var institutions = await _sdk.FetchPaymentRecipientInstitutions();
+        Assert.NotNull(institutions);
+        Assert.NotEmpty(institutions.Results);
+        var institution = institutions.Results.First();
+        _output.WriteLine($"Using institution {institution.Id} ({institution.Name})");
+
+        PaymentRecipient? recipient = null;
+        PaymentRequest? request = null;
+        try
+        {
+            recipient = await _sdk.CreatePaymentRecipient(new CreatePaymentRecipientRequest
+            {
+                Name = "Integration Test Recipient",
+                TaxNumber = "92539355030", // valid test CPF
+                PaymentInstitutionId = institution.Id,
+                Account = new CreatePaymentRecipientAccountRequest
+                {
+                    Branch = "0001",
+                    Number = "1234567",
+                    Type = PaymentAccountType.CHECKING_ACCOUNT
+                }
+            });
+            Assert.NotNull(recipient);
+            _output.WriteLine($"Recipient created: {recipient.Id}");
+
+            request = await _sdk.CreatePaymentRequest(new CreatePaymentRequestRequest
+            {
+                Amount = 100.50,
+                Description = "Integration test payment",
+                RecipientId = recipient.Id
+            });
+            Assert.NotNull(request);
+            Assert.NotEqual(Guid.Empty, request.Id);
+            _output.WriteLine($"Payment request created: {request.Id}, status {request.Status}");
+
+            var fetched = await _sdk.FetchPaymentRequest(request.Id);
+            Assert.NotNull(fetched);
+            Assert.Equal(request.Id, fetched.Id);
+        }
+        finally
+        {
+            // Clean up everything we created, in reverse order.
+            if (request != null)
+            {
+                await _sdk.DeletePaymentRequest(request.Id);
+                _output.WriteLine($"Payment request deleted: {request.Id}");
+            }
+            if (recipient != null)
+            {
+                await _sdk.DeletePaymentRecipient(recipient.Id);
+                _output.WriteLine($"Recipient deleted: {recipient.Id}");
+            }
+        }
+    }
+
+    [Fact]
     public async Task WebhookOperations_WorkCorrectly()
     {
         // Create webhook

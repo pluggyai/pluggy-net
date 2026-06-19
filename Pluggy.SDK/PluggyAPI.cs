@@ -29,9 +29,17 @@ namespace Pluggy.SDK
         protected static readonly string URL_CONSENTS = "/consents";
         protected static readonly string URL_LOANS = "/loans";
         protected static readonly string URL_PAYMENT_RECIPIENTS = "/payments/recipients";
+        protected static readonly string URL_PAYMENT_RECIPIENT_INSTITUTIONS = "/payments/recipients/institutions";
         protected static readonly string URL_PAYMENT_REQUESTS = "/payments/requests";
         protected static readonly string URL_PAYMENT_INTENTS = "/payments/intents";
         protected static readonly string URL_PAYMENT_CUSTOMERS = "/payments/customers";
+        protected static readonly string URL_CATEGORY_RULES = "/categories/rules";
+        protected static readonly string URL_BILLS = "/bills";
+        protected static readonly string URL_MERCHANTS = "/merchants";
+        protected static readonly string URL_SMART_TRANSFER_PAYMENTS = "/smart-transfers/payments";
+        protected static readonly string URL_SMART_TRANSFER_PREAUTHORIZATIONS = "/smart-transfers/preauthorizations";
+        protected static readonly string URL_BOLETOS = "/boletos";
+        protected static readonly string URL_BOLETO_CONNECTIONS = "/boleto-connections";
 
         public static readonly int STATUS_POLL_INTERVAL = 3000;
 
@@ -188,6 +196,16 @@ namespace Pluggy.SDK
         public async Task<Account> FetchAccount(Guid id)
         {
             return await httpService.GetAsync<Account>(URL_ACCOUNTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch the point-in-time balance of an account
+        /// </summary>
+        /// <param name="id">Account Id</param>
+        /// <returns>Account balance</returns>
+        public async Task<AccountBalance> FetchAccountBalance(Guid id)
+        {
+            return await httpService.GetAsync<AccountBalance>(URL_ACCOUNTS + "/{id}/balance", HTTP.Utils.GetSegment(id.ToString()));
         }
 
         /// <summary>
@@ -594,6 +612,136 @@ namespace Pluggy.SDK
             await httpService.DeleteAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
         }
 
+        /// <summary>
+        /// Update a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <param name="request">Fields to update</param>
+        /// <returns>Updated payment request</returns>
+        public async Task<PaymentRequest> UpdatePaymentRequest(Guid id, UpdatePaymentRequestRequest request)
+        {
+            return await httpService.PatchAsync<PaymentRequest>(URL_PAYMENT_REQUESTS + "/{id}", request.ToBody(), null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Create a payment request from a Pix QR code
+        /// </summary>
+        /// <param name="request">Pix QR payment request</param>
+        /// <returns>Created payment request</returns>
+        public async Task<PaymentRequest> CreatePixQrPaymentRequest(CreatePixQrPaymentRequest request)
+        {
+            return await httpService.PostAsync<PaymentRequest>(URL_PAYMENT_REQUESTS + "/pix-qr", request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch the scheduled payments of a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <returns>Scheduled payments list</returns>
+        public async Task<PageResults<SchedulePayment>> FetchPaymentRequestSchedules(Guid id)
+        {
+            return await httpService.GetAsync<PageResults<SchedulePayment>>(URL_PAYMENT_REQUESTS + "/{id}/schedules", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Cancel all scheduled payments of a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        public async Task CancelPaymentRequestSchedules(Guid id)
+        {
+            await httpService.PostAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}/schedules/cancel", null, null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Cancel a specific scheduled payment of a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <param name="scheduleId">Scheduled payment ID</param>
+        public async Task CancelPaymentRequestSchedule(Guid id, Guid scheduleId)
+        {
+            await httpService.PostAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}/schedules/{scheduleId}/cancel", null, null,
+                new Dictionary<string, string> { { "id", id.ToString() }, { "scheduleId", scheduleId.ToString() } });
+        }
+
+        #endregion
+
+        #region Automatic Pix
+
+        /// <summary>
+        /// Create an Automatic Pix payment request (recurring Pix consent)
+        /// </summary>
+        /// <param name="request">Automatic Pix creation request</param>
+        /// <returns>Created payment request with paymentUrl</returns>
+        public async Task<PaymentRequest> CreateAutomaticPixPaymentRequest(CreateAutomaticPixPaymentRequest request)
+        {
+            return await httpService.PostAsync<PaymentRequest>(URL_PAYMENT_REQUESTS + "/automatic-pix", request.ToBody());
+        }
+
+        /// <summary>
+        /// Cancel an Automatic Pix consent
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        public async Task CancelAutomaticPixConsent(Guid id)
+        {
+            await httpService.PostAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}/automatic-pix/cancel", null, null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Schedule an Automatic Pix payment under an existing consent
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <param name="request">Schedule request</param>
+        /// <returns>Scheduled Automatic Pix payment</returns>
+        public async Task<AutomaticPixPayment> ScheduleAutomaticPixPayment(Guid id, ScheduleAutomaticPixPaymentRequest request)
+        {
+            return await httpService.PostAsync<AutomaticPixPayment>(URL_PAYMENT_REQUESTS + "/{id}/automatic-pix/schedule", request.ToBody(), null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch the Automatic Pix scheduled payments of a payment request
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <returns>Automatic Pix payments list</returns>
+        public async Task<PageResults<AutomaticPixPayment>> FetchAutomaticPixSchedules(Guid id)
+        {
+            return await httpService.GetAsync<PageResults<AutomaticPixPayment>>(URL_PAYMENT_REQUESTS + "/{id}/automatic-pix/schedules", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch a single Automatic Pix scheduled payment
+        /// </summary>
+        /// <param name="requestId">Payment request ID</param>
+        /// <param name="paymentId">Automatic Pix payment ID</param>
+        /// <returns>Automatic Pix payment detail</returns>
+        public async Task<AutomaticPixPayment> FetchAutomaticPixSchedule(Guid requestId, string paymentId)
+        {
+            return await httpService.GetAsync<AutomaticPixPayment>(URL_PAYMENT_REQUESTS + "/{requestId}/automatic-pix/schedules/{paymentId}",
+                new Dictionary<string, string> { { "requestId", requestId.ToString() }, { "paymentId", paymentId } });
+        }
+
+        /// <summary>
+        /// Cancel an Automatic Pix scheduled payment
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <param name="scheduleId">Automatic Pix payment ID</param>
+        public async Task CancelAutomaticPixSchedule(Guid id, string scheduleId)
+        {
+            await httpService.PostAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}/automatic-pix/schedules/{scheduleId}/cancel", null, null,
+                new Dictionary<string, string> { { "id", id.ToString() }, { "scheduleId", scheduleId } });
+        }
+
+        /// <summary>
+        /// Retry an Automatic Pix scheduled payment
+        /// </summary>
+        /// <param name="id">Payment request ID</param>
+        /// <param name="scheduleId">Automatic Pix payment ID</param>
+        /// <param name="request">Retry request (target date)</param>
+        public async Task RetryAutomaticPixSchedule(Guid id, string scheduleId, RetryAutomaticPixPaymentRequest request)
+        {
+            await httpService.PostAsync<dynamic>(URL_PAYMENT_REQUESTS + "/{id}/automatic-pix/schedules/{scheduleId}/retry", request.ToBody(), null,
+                new Dictionary<string, string> { { "id", id.ToString() }, { "scheduleId", scheduleId } });
+        }
+
         #endregion
 
         #region Payment Intents
@@ -682,7 +830,210 @@ namespace Pluggy.SDK
 
         #endregion
 
-        
+        #region Payment Recipient Institutions
+
+        /// <summary>
+        /// Fetch the list of payment recipient institutions
+        /// </summary>
+        /// <returns>Payment institutions list</returns>
+        public async Task<PageResults<PaymentInstitution>> FetchPaymentRecipientInstitutions()
+        {
+            return await httpService.GetAsync<PageResults<PaymentInstitution>>(URL_PAYMENT_RECIPIENT_INSTITUTIONS);
+        }
+
+        /// <summary>
+        /// Fetch a payment recipient institution by ID
+        /// </summary>
+        /// <param name="id">Institution ID</param>
+        /// <returns>Payment institution details</returns>
+        public async Task<PaymentInstitution> FetchPaymentRecipientInstitution(Guid id)
+        {
+            return await httpService.GetAsync<PaymentInstitution>(URL_PAYMENT_RECIPIENT_INSTITUTIONS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        #endregion
+
+        #region Smart Transfers
+
+        /// <summary>
+        /// Create a Smart Transfer payment under an existing preauthorization
+        /// </summary>
+        /// <param name="request">Smart Transfer payment request</param>
+        /// <returns>Created Smart Transfer payment</returns>
+        public async Task<SmartTransferPayment> CreateSmartTransferPayment(CreateSmartTransferPayment request)
+        {
+            return await httpService.PostAsync<SmartTransferPayment>(URL_SMART_TRANSFER_PAYMENTS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch a Smart Transfer payment by ID
+        /// </summary>
+        /// <param name="id">Smart Transfer payment ID</param>
+        /// <returns>Smart Transfer payment details</returns>
+        public async Task<SmartTransferPayment> FetchSmartTransferPayment(string id)
+        {
+            return await httpService.GetAsync<SmartTransferPayment>(URL_SMART_TRANSFER_PAYMENTS + "/{id}", HTTP.Utils.GetSegment(id));
+        }
+
+        /// <summary>
+        /// Create a Smart Transfer preauthorization (recurring transfer consent)
+        /// </summary>
+        /// <param name="request">Preauthorization request</param>
+        /// <returns>Created Smart Transfer preauthorization with consentUrl</returns>
+        public async Task<SmartTransferPreauthorization> CreateSmartTransferPreauthorization(CreateSmartTransferPreauthorization request)
+        {
+            return await httpService.PostAsync<SmartTransferPreauthorization>(URL_SMART_TRANSFER_PREAUTHORIZATIONS, request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch all Smart Transfer preauthorizations
+        /// </summary>
+        /// <returns>Preauthorizations list</returns>
+        public async Task<PageResults<SmartTransferPreauthorization>> FetchSmartTransferPreauthorizations()
+        {
+            return await httpService.GetAsync<PageResults<SmartTransferPreauthorization>>(URL_SMART_TRANSFER_PREAUTHORIZATIONS);
+        }
+
+        /// <summary>
+        /// Fetch a Smart Transfer preauthorization by ID
+        /// </summary>
+        /// <param name="id">Preauthorization ID</param>
+        /// <returns>Preauthorization details</returns>
+        public async Task<SmartTransferPreauthorization> FetchSmartTransferPreauthorization(string id)
+        {
+            return await httpService.GetAsync<SmartTransferPreauthorization>(URL_SMART_TRANSFER_PREAUTHORIZATIONS + "/{id}", HTTP.Utils.GetSegment(id));
+        }
+
+        /// <summary>
+        /// Fetch the payments of a Smart Transfer preauthorization
+        /// </summary>
+        /// <param name="id">Preauthorization ID</param>
+        /// <returns>Smart Transfer payments list</returns>
+        public async Task<PageResults<SmartTransferPayment>> FetchSmartTransferPreauthorizationPayments(string id)
+        {
+            return await httpService.GetAsync<PageResults<SmartTransferPayment>>(URL_SMART_TRANSFER_PREAUTHORIZATIONS + "/{id}/payments", HTTP.Utils.GetSegment(id));
+        }
+
+        #endregion
+
+        #region Category Rules
+
+        /// <summary>
+        /// Fetch the list of client category rules
+        /// </summary>
+        /// <returns>Category rules paged results list</returns>
+        public async Task<PageResults<ClientCategoryRule>> FetchCategoryRules()
+        {
+            return await httpService.GetAsync<PageResults<ClientCategoryRule>>(URL_CATEGORY_RULES);
+        }
+
+        /// <summary>
+        /// Create a client category rule
+        /// </summary>
+        /// <param name="request">Category rule creation request</param>
+        /// <returns>Created category rule</returns>
+        public async Task<ClientCategoryRule> CreateCategoryRule(CreateClientCategoryRule request)
+        {
+            return await httpService.PostAsync<ClientCategoryRule>(URL_CATEGORY_RULES, request.ToBody());
+        }
+
+        #endregion
+
+        #region Bills
+
+        /// <summary>
+        /// Fetch the list of credit card bills for an account
+        /// </summary>
+        /// <param name="accountId">Account ID</param>
+        /// <returns>Bills paged results list</returns>
+        public async Task<PageResults<Bill>> FetchBills(Guid accountId)
+        {
+            var queryStrings = new Dictionary<string, string> { { "accountId", accountId.ToString() } };
+            return await httpService.GetAsync<PageResults<Bill>>(URL_BILLS, null, queryStrings);
+        }
+
+        /// <summary>
+        /// Fetch a bill by ID
+        /// </summary>
+        /// <param name="id">Bill ID</param>
+        /// <returns>Bill details</returns>
+        public async Task<Bill> FetchBill(string id)
+        {
+            return await httpService.GetAsync<Bill>(URL_BILLS + "/{id}", HTTP.Utils.GetSegment(id));
+        }
+
+        #endregion
+
+        #region Merchants
+
+        /// <summary>
+        /// Look up merchants by CNPJ list
+        /// </summary>
+        /// <param name="cnpjs">List of CNPJs to look up</param>
+        /// <returns>Found merchants, plus valid-but-not-found and invalid CNPJs</returns>
+        public async Task<GetMerchantsResponse> FetchMerchants(IEnumerable<string> cnpjs)
+        {
+            var queryStrings = new Dictionary<string, string> { { "cnpjs", string.Join(",", cnpjs) } };
+            return await httpService.GetAsync<GetMerchantsResponse>(URL_MERCHANTS, null, queryStrings);
+        }
+
+        #endregion
+
+        #region Boleto Management (Beta)
+
+        /// <summary>
+        /// BETA. Create a boleto connection from credentials.
+        /// </summary>
+        /// <param name="request">Boleto connection request</param>
+        /// <returns>Created boleto connection</returns>
+        public async Task<BoletoConnection> CreateBoletoConnection(CreateBoletoConnection request)
+        {
+            return await httpService.PostAsync<BoletoConnection>(URL_BOLETO_CONNECTIONS, request.ToBody());
+        }
+
+        /// <summary>
+        /// BETA. Create a boleto connection from an existing item.
+        /// </summary>
+        /// <param name="request">Boleto connection from item request</param>
+        /// <returns>Created boleto connection</returns>
+        public async Task<BoletoConnection> CreateBoletoConnectionFromItem(CreateBoletoConnectionFromItem request)
+        {
+            return await httpService.PostAsync<BoletoConnection>(URL_BOLETO_CONNECTIONS + "/from-item", request.ToBody());
+        }
+
+        /// <summary>
+        /// BETA. Issue a boleto.
+        /// </summary>
+        /// <param name="request">Boleto creation request</param>
+        /// <returns>Issued boleto</returns>
+        public async Task<IssuedBoleto> CreateBoleto(CreateBoleto request)
+        {
+            return await httpService.PostAsync<IssuedBoleto>(URL_BOLETOS, request.ToBody());
+        }
+
+        /// <summary>
+        /// BETA. Fetch a boleto by ID.
+        /// </summary>
+        /// <param name="id">Boleto ID</param>
+        /// <returns>Issued boleto</returns>
+        public async Task<IssuedBoleto> FetchBoleto(string id)
+        {
+            return await httpService.GetAsync<IssuedBoleto>(URL_BOLETOS + "/{id}", HTTP.Utils.GetSegment(id));
+        }
+
+        /// <summary>
+        /// BETA. Cancel a boleto.
+        /// </summary>
+        /// <param name="id">Boleto ID</param>
+        /// <returns>Issued boleto with updated status</returns>
+        public async Task<IssuedBoleto> CancelBoleto(string id)
+        {
+            return await httpService.PostAsync<IssuedBoleto>(URL_BOLETOS + "/{id}/cancel", null, null, HTTP.Utils.GetSegment(id));
+        }
+
+        #endregion
+
+
         /*
          * Execution Helpers
          */

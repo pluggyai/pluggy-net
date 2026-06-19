@@ -175,45 +175,12 @@ public async Task DeleteModel(Guid id)
 }
 ```
 
-## Current SDK Gap Summary (Last Updated: 2026-01-22)
+## Current SDK Gap Summary (Last Updated: 2026-06-10, OAS v1.0.0)
 
-### Missing Endpoints
-- Boleto Management: All /boletos/* endpoints (beta, intentionally not added)
+The SDK covers the public API surface of the OAS.
 
-Note: Account Statements and Item Disable Auto Sync are private/internal endpoints.
-
-### Missing Model Fields
-All model fields are now up to date.
-
-### Missing Models
-None - SDK is up to date with production API.
-
-### Recently Added (Phase 1, 2 & 3)
-**Phase 1 - Model Fields:**
-- Transaction.operationType
-- TransactionCreditCardMetadata.billId/cardNumber
-- Identity.createdAt/updatedAt/establishmentCode/establishmentName
-- InvestmentTransaction.agreedRate
-- Investment.issuerCNPJ
-- Address.additionalInfo
-
-**Phase 2 - Core Endpoints:**
-- Consent model and endpoints (FetchConsents, FetchConsent)
-- Loan model with all nested types and endpoints (FetchLoans, FetchLoan)
-- UpdateTransaction method for category updates
-
-**Phase 3 - Payment Initiation:**
-- PaymentRecipient model + CRUD endpoints (Create, Fetch, FetchAll, Update, Delete)
-- PaymentRequest model + endpoints (Create, Fetch, FetchAll, Delete)
-- PaymentIntent model + endpoints (Create, Fetch, FetchAll)
-- PaymentCustomer model + CRUD endpoints (Create, Fetch, FetchAll, Update, Delete)
-- PaymentInstitution, PaymentCallbackUrls nested models
-- PaymentAccountType, PaymentRequestStatus, PaymentIntentStatus, PaymentCustomerType enums
-- Request classes: CreatePaymentRecipientRequest, CreatePaymentRequestRequest, CreatePaymentIntentRequest, CreatePaymentCustomerRequest
-
-**Additional Fixes:**
-- BoletoMetadata model added to TransactionPaymentData
-- TransactionPaymentParticipant.routingNumberISPB field added
+### Beta
+- **Boleto Management** (`/boletos/*`, `/boleto-connections/*`) is implemented but marked beta in code (BETA comments on the models and API methods). Shapes may change upstream.
 
 ## Build and Test
 
