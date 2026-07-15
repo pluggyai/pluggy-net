@@ -41,6 +41,11 @@ namespace Pluggy.SDK.Model
         // Free text describing the other credit type when otherCreditsType is "OTHER".
         [JsonProperty("otherCreditsAdditionalInfo")]
         public string OtherCreditsAdditionalInfo { get; set; }
+
+        // Forecasted bill period (formatted as YYYY-MM) in which this transaction is expected to be charged.
+        // Unlike BillId, it is provided for pending and future transactions too. Only returned for Open Finance connectors.
+        [JsonProperty("billForecastDate")]
+        public string BillForecastDate { get; set; }
     }
 }
 
