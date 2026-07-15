@@ -19,6 +19,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("dueDate")]
         public DateTime? DueDate { get; set; }
 
+        [JsonProperty("billClosingDate")]
+        public DateTime? BillClosingDate { get; set; }
+
         [JsonProperty("totalAmount")]
         public double? TotalAmount { get; set; }
 
