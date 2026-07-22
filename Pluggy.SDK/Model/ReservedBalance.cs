@@ -11,8 +11,8 @@ namespace Pluggy.SDK.Model
         [JsonProperty("identification")]
         public string Identification { get; set; }
 
-        [JsonProperty("amounts")]
-        public ICollection<ReservedBalanceAmount> Amounts { get; set; }
+        [JsonProperty("availableAmounts")]
+        public ICollection<ReservedBalanceAmount> AvailableAmounts { get; set; }
     }
 
     public class ReservedBalanceAmount
