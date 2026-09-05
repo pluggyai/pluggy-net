@@ -84,8 +84,72 @@ namespace Pluggy.SDK.Model
         [JsonProperty("stage")]
         public string Stage { get; set; }
 
+        /// <summary>
+        /// Incidents affecting this connector right now, worst first. Null when
+        /// there are none, so its presence is the signal.
+        ///
+        /// It describes the institution, not your own connections — that is
+        /// <see cref="Details"/>. Status answers "can I connect at all";
+        /// this answers "what is wrong". A bank can be perfectly reachable and
+        /// still be failing to return instalments.
+        /// </summary>
+        [JsonProperty("incidents")]
+        public IList<ConnectorIncident> Incidents { get; set; }
+
         [JsonProperty("details")]
         public ConnectorHealthDetails Details { get; set; }
+    }
+
+    /// <summary>
+    /// An incident affecting a connector right now, as published on
+    /// https://status.pluggy.ai. Only incidents active at this moment are
+    /// listed: a scheduled maintenance appears once its window opens, not when
+    /// it is announced.
+    /// </summary>
+    public class ConnectorIncident
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>Short, customer-facing summary. Safe to show to your own users.</summary>
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("type")]
+        public ConnectorIncidentType Type { get; set; }
+
+        /// <summary>
+        /// Affected product line: dados, pis, pis-agendado, pixauto, smart or
+        /// infra. A string rather than an enum because those values are not
+        /// valid identifiers.
+        /// </summary>
+        [JsonProperty("product")]
+        public string Product { get; set; }
+
+        /// <summary>INCIDENT for an unplanned problem, MAINTENANCE for a planned window.</summary>
+        [JsonProperty("kind")]
+        public string Kind { get; set; }
+
+        /// <summary>DEGRADED, PARTIAL_OUTAGE, MAJOR_OUTAGE or MAINTENANCE.</summary>
+        [JsonProperty("severity")]
+        public string Severity { get; set; }
+
+        /// <summary>INVESTIGATING, IDENTIFIED, MONITORING or SCHEDULED. Resolved incidents are not listed.</summary>
+        [JsonProperty("state")]
+        public string State { get; set; }
+
+        [JsonProperty("startedAt")]
+        public DateTime StartedAt { get; set; }
+
+        [JsonProperty("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
+
+        /// <summary>Permalink to the full timeline and postmortem on the status page.</summary>
+        [JsonProperty("url")]
+        public string Url { get; set; }
     }
 
     public class ConnectorHealthDetails
