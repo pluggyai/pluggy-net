@@ -51,6 +51,22 @@ namespace Pluggy.SDK.Model
         [JsonProperty("consentExpiresAt")]
         public DateTime? ConsentExpiresAt { get; set; }
 
+        /// <summary>
+        /// Open Finance only. When the institution's resource list was last read for this
+        /// item, or null if it never was. An empty page from FetchItemResources means the
+        /// institution shared nothing only when this is set.
+        /// </summary>
+        [JsonProperty("resourcesCollectedAt")]
+        public DateTime? ResourcesCollectedAt { get; set; }
+
+        /// <summary>
+        /// True when the institution declares at least one of this item's resources
+        /// PENDING_AUTHORISATION: the user still has to approve it at their bank.
+        /// Always false for connectors other than Open Finance.
+        /// </summary>
+        [JsonProperty("hasResourcesPendingAuthorization")]
+        public bool HasResourcesPendingAuthorization { get; set; }
+
         [JsonProperty("products")]
         public IList<ProductType> Products { get; set; }
 

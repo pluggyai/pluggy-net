@@ -280,6 +280,23 @@ public class SandboxIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task FetchItemResources_ReturnsResources()
+    {
+        Assert.NotNull(_item);
+
+        var resources = await _sdk.FetchItemResources(_item.Id);
+
+        Assert.NotNull(resources);
+        Assert.NotNull(resources.Results);
+        _output.WriteLine($"Found {resources.Total} resources for item (collected at: {_item.ResourcesCollectedAt}, pending authorization: {_item.HasResourcesPendingAuthorization})");
+
+        foreach (var resource in resources.Results)
+        {
+            _output.WriteLine($"Resource: {resource.ResourceId}, Type: {resource.Type}, Status: {resource.Status}");
+        }
+    }
+
+    [Fact]
     public async Task FetchLoans_ReturnsLoans()
     {
         Assert.NotNull(_item);
