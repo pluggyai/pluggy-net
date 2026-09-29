@@ -107,11 +107,11 @@ namespace Pluggy.Tests.Items
             }");
 
             Assert.AreEqual(new DateTime(2026, 9, 1, 12, 0, 0, DateTimeKind.Utc), item.ResourcesCollectedAt.Value.ToUniversalTime());
-            Assert.IsTrue(item.HasResourcesPendingAuthorization);
+            Assert.AreEqual(true, item.HasResourcesPendingAuthorization);
         }
 
         [Test]
-        public void Item_ResourceFieldsDefaultWhenNullOrAbsent()
+        public void Item_ResourceFieldsNullWhenNullOrAbsent()
         {
             var item = JsonConvert.DeserializeObject<Item>(@"{
                 ""id"": ""d0e8448e-0156-4b4a-ae6c-3e2a6d9bff5c"",
@@ -119,7 +119,7 @@ namespace Pluggy.Tests.Items
             }");
 
             Assert.IsNull(item.ResourcesCollectedAt);
-            Assert.IsFalse(item.HasResourcesPendingAuthorization);
+            Assert.IsNull(item.HasResourcesPendingAuthorization);
         }
     }
 }

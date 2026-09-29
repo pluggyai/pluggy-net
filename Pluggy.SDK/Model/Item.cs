@@ -60,12 +60,13 @@ namespace Pluggy.SDK.Model
         public DateTime? ResourcesCollectedAt { get; set; }
 
         /// <summary>
-        /// True when the institution declares at least one of this item's resources
-        /// PENDING_AUTHORISATION: the user still has to approve it at their bank.
-        /// Always false for connectors other than Open Finance.
+        /// Open Finance only. True when the institution declares at least one of this item's
+        /// resources PENDING_AUTHORISATION: the user still has to approve it at their bank.
+        /// False when the resource list was read and none is; null for connectors other than
+        /// Open Finance, and while the resource list has not been read yet (ResourcesCollectedAt is null).
         /// </summary>
         [JsonProperty("hasResourcesPendingAuthorization")]
-        public bool HasResourcesPendingAuthorization { get; set; }
+        public bool? HasResourcesPendingAuthorization { get; set; }
 
         [JsonProperty("products")]
         public IList<ProductType> Products { get; set; }
