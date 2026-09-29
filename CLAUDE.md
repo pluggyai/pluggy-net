@@ -47,6 +47,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Connector Validation | `ValidateCredentials()` | POST /connectors/{id}/validate |
 | Items | `CreateItem()`, `FetchItem()`, `UpdateItem()`, `DeleteItem()` | /items |
 | Item MFA | `UpdateItemMFA()` | POST /items/{id}/mfa |
+| Item Resources | `FetchItemResources()` | GET /items/{id}/resources |
 | Accounts | `FetchAccounts()`, `FetchAccount()` | /accounts |
 | Transactions | `FetchTransactions()`, `FetchTransaction()` | /transactions |
 | Investments | `FetchInvestments()`, `FetchInvestment()` | /investments |
@@ -61,7 +62,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 #### Core Data Endpoints
 - GET /connectors, GET /connectors/{id}, POST /connectors/{id}/validate
 - POST /items, GET /items/{id}, PATCH /items/{id}, DELETE /items/{id}
-- POST /items/{id}/mfa, PATCH /items/{id}/disable-auto-sync
+- POST /items/{id}/mfa, PATCH /items/{id}/disable-auto-sync, GET /items/{id}/resources
 - GET /accounts, GET /accounts/{id}, GET /accounts/{id}/statements
 - GET /transactions, GET /transactions/{id}, PATCH /transactions/{id}
 - GET /investments, GET /investments/{id}, GET /investments/{id}/transactions

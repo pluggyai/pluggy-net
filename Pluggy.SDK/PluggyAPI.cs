@@ -174,6 +174,18 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Fetch the resources the financial institution declared for an item's Open Finance consent.
+        /// Items on connectors other than Open Finance return an empty page.
+        /// </summary>
+        /// <param name="id">Item id</param>
+        /// <param name="requestParams">Optional paging and status filter</param>
+        /// <returns>Item resources paged results list</returns>
+        public async Task<PageResults<ItemResource>> FetchItemResources(Guid id, ItemResourceParameters requestParams = null)
+        {
+            return await httpService.GetAsync<PageResults<ItemResource>>(URL_ITEMS + "/{id}/resources", HTTP.Utils.GetSegment(id.ToString()), requestParams?.ToQueryStrings());
+        }
+
+        /// <summary>
         /// Fetch the list of accounts
         /// </summary>
         /// <param name="id">Item Id</param>
