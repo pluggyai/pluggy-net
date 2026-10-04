@@ -46,6 +46,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Connectors | `FetchConnectors()`, `FetchConnector()` | GET /connectors |
 | Connector Validation | `ValidateCredentials()` | POST /connectors/{id}/validate |
 | Items | `CreateItem()`, `FetchItem()`, `UpdateItem()`, `DeleteItem()` | /items |
+| Items (list, opt-in) | `FetchItemsCursor()`, `FetchAllItems()` | GET /v2/items (cursor; filters `clientUserId`, `connectorId`, `after`). **Opt-in, paid plans only**: disabled by default, enabled per team on request to Pluggy support; otherwise 403 `LIST_ITEMS_FEATURE_NOT_ENABLED`. Prefer storing the itemId at creation and `FetchItem(id)`. |
 | Item MFA | `UpdateItemMFA()` | POST /items/{id}/mfa |
 | Item Resources | `FetchItemResources()` | GET /items/{id}/resources |
 | Item SCR (opt-in) | `FetchItemScr()` | GET /items/{id}/scr |
@@ -64,6 +65,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 #### Core Data Endpoints
 - GET /connectors, GET /connectors/{id}, POST /connectors/{id}/validate
 - POST /items, GET /items/{id}, PATCH /items/{id}, DELETE /items/{id}
+- GET /v2/items (cursor-paginated listing; opt-in, paid plans only, 403 LIST_ITEMS_FEATURE_NOT_ENABLED otherwise)
 - POST /items/{id}/mfa, PATCH /items/{id}/disable-auto-sync, GET /items/{id}/resources, GET /items/{id}/scr
 - GET /accounts, GET /accounts/{id}, GET /accounts/{id}/statements
 - GET /transactions, GET /transactions/{id}, PATCH /transactions/{id}
