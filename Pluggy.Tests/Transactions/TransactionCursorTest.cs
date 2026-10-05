@@ -21,6 +21,7 @@ namespace Pluggy.Tests.Transactions
     {
         private readonly Queue<string> _responses;
         public List<Uri> RequestUris { get; } = new List<Uri>();
+        public List<HttpMethod> RequestMethods { get; } = new List<HttpMethod>();
 
         public MockHttpMessageHandler(params string[] jsonResponses)
         {
@@ -30,6 +31,7 @@ namespace Pluggy.Tests.Transactions
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             RequestUris.Add(request.RequestUri);
+            RequestMethods.Add(request.Method);
             var json = _responses.Count > 0 ? _responses.Dequeue() : "{}";
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {

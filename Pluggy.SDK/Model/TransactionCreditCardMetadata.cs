@@ -46,6 +46,22 @@ namespace Pluggy.SDK.Model
         // Unlike BillId, it is provided for pending and future transactions too. Only returned for Open Finance connectors.
         [JsonProperty("billForecastDate")]
         public string BillForecastDate { get; set; }
+
+        // Whether the purchase is charged in full on a single bill (SINGLE) or split into installments (INSTALLMENT).
+        // Only returned for Open Finance connectors.
+        [JsonProperty("paymentType")]
+        public CreditCardAccountPaymentType? PaymentType { get; set; }
+
+        // Date (YYYY-MM-DD) the institution posted the transaction to a bill, as reported by the institution and never
+        // adjusted by Pluggy. Null when the transaction is not posted to a bill yet or the institution does not report it.
+        // Only returned for Open Finance connectors.
+        [JsonProperty("billPostDate")]
+        public string BillPostDate { get; set; }
+
+        // Date and time of the transaction as reported by the institution, normalized to ISO-8601.
+        // Kept as the raw string the institution sent. Only returned for Open Finance connectors.
+        [JsonProperty("transactionDateTime")]
+        public string TransactionDateTime { get; set; }
     }
 }
 

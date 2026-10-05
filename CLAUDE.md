@@ -48,12 +48,14 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Items | `CreateItem()`, `FetchItem()`, `UpdateItem()`, `DeleteItem()` | /items |
 | Item MFA | `UpdateItemMFA()` | POST /items/{id}/mfa |
 | Item Resources | `FetchItemResources()` | GET /items/{id}/resources |
+| Item SCR (opt-in) | `FetchItemScr()` | GET /items/{id}/scr |
 | Accounts | `FetchAccounts()`, `FetchAccount()` | /accounts |
 | Transactions | `FetchTransactions()`, `FetchTransaction()` | /transactions |
 | Investments | `FetchInvestments()`, `FetchInvestment()` | /investments |
 | Investment Transactions | `FetchInvestmentTransactions()` | GET /investments/{id}/transactions |
 | Identity | `FetchIdentity()`, `FetchIdentityByItemId()` | /identity |
 | Categories | `FetchCategories()`, `FetchCategory()` | /categories |
+| Category Rules | `FetchCategoryRules()`, `CreateCategoryRule()`, `DeleteCategoryRule()` | /categories/rules |
 | Webhooks | Full CRUD | /webhooks |
 | Connect Token | `CreateConnectToken()` | POST /connect_token |
 
@@ -62,7 +64,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 #### Core Data Endpoints
 - GET /connectors, GET /connectors/{id}, POST /connectors/{id}/validate
 - POST /items, GET /items/{id}, PATCH /items/{id}, DELETE /items/{id}
-- POST /items/{id}/mfa, PATCH /items/{id}/disable-auto-sync, GET /items/{id}/resources
+- POST /items/{id}/mfa, PATCH /items/{id}/disable-auto-sync, GET /items/{id}/resources, GET /items/{id}/scr
 - GET /accounts, GET /accounts/{id}, GET /accounts/{id}/statements
 - GET /transactions, GET /transactions/{id}, PATCH /transactions/{id}
 - GET /investments, GET /investments/{id}, GET /investments/{id}/transactions
@@ -70,6 +72,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 - GET /consents, GET /consents/{id}
 - GET /loans, GET /loans/{id}
 - GET /categories, GET /categories/{id}
+- GET /categories/rules, POST /categories/rules, DELETE /categories/rules/{id}
 - Full CRUD /webhooks
 - POST /auth, POST /connect_token
 
