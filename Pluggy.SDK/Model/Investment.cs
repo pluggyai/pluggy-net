@@ -111,5 +111,25 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("metadata")]
         public InvestmentMetadata Metadata { get; set; }
+
+        /// <summary>Coupon-payment schedule for coupon-bearing fixed income and Treasury bonds.</summary>
+        [JsonProperty("couponPayment")]
+        public InvestmentCouponPayment CouponPayment { get; set; }
+
+        /// <summary>Underlying debtor of receivables-backed paper (CRI / CRA).</summary>
+        [JsonProperty("debtor")]
+        public InvestmentDebtor Debtor { get; set; }
+
+        /// <summary>Date when the grace period ends (fixed-income investments only).</summary>
+        [JsonProperty("gracePeriodDate")]
+        public DateTime? GracePeriodDate { get; set; }
+
+        /// <summary>B3 lot/price conversion factor (variable income).</summary>
+        [JsonProperty("priceFactor")]
+        public double? PriceFactor { get; set; }
+
+        /// <summary>Whether the product is tax-exempt (LCI, LCA, CRI, CRA, incentivized debentures).</summary>
+        [JsonProperty("taxExempt")]
+        public bool? TaxExempt { get; set; }
     }
 }

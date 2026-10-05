@@ -74,6 +74,15 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("products")]
         public IList<ProductType> Products { get; set; }
+
+        /// <summary>
+        /// Which sub-products the institution serves, in the Open Finance directory's own
+        /// vocabulary (for example INVESTMENTS:TREASURE_TITLES or CREDIT_OPERATIONS:INVOICE_FINANCINGS).
+        /// Where <see cref="Products"/> says whether the connector serves a product at all, this says
+        /// which parts of it. Null for direct (non Open Finance) connectors.
+        /// </summary>
+        [JsonProperty("productCoverage")]
+        public IList<string> ProductCoverage { get; set; }
     }
 
     public class ConnectorHealth

@@ -186,6 +186,34 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Fetch the SCR (Bacen's Sistema de Informacoes de Credito) for the document (CPF/CNPJ) behind an item.
+        /// The response is Bacen's own payload, forwarded unchanged.
+        /// <para>
+        /// Opt-in: requires the SCR feature to be enabled for your team (ask Pluggy support); otherwise
+        /// 403 SCR_FEATURE_NOT_ENABLED. Only available for Open Finance items with a known CPF/CNPJ
+        /// (otherwise 422 SCR_ITEM_NOT_SUPPORTED).
+        /// </para>
+        /// <para>
+        /// Base dates are months (YYYYMM) and Bacen consolidates each one with a few months of delay.
+        /// When <paramref name="from"/> and <paramref name="to"/> are omitted, the last 4 available base
+        /// dates are consulted, ending 2 months before the current one.
+        /// </para>
+        /// </summary>
+        /// <param name="id">Item id</param>
+        /// <param name="from">First base date to consult, as YYYYMM (for example "202604"). Defaults to 3 base dates before <paramref name="to"/>.</param>
+        /// <param name="to">Last base date to consult, as YYYYMM (for example "202607"). Defaults to 2 months before the current one.</param>
+        /// <returns>SCR data for the item's document</returns>
+        public async Task<Scr> FetchItemScr(Guid id, string from = null, string to = null)
+        {
+            var queryStrings = new Dictionary<string, string>
+            {
+                { "from", from },
+                { "to", to },
+            };
+            return await httpService.GetAsync<Scr>(URL_ITEMS + "/{id}/scr", HTTP.Utils.GetSegment(id.ToString()), queryStrings);
+        }
+
+        /// <summary>
         /// Fetch the list of accounts
         /// </summary>
         /// <param name="id">Item Id</param>
@@ -947,6 +975,15 @@ namespace Pluggy.SDK
         public async Task<ClientCategoryRule> CreateCategoryRule(CreateClientCategoryRule request)
         {
             return await httpService.PostAsync<ClientCategoryRule>(URL_CATEGORY_RULES, request.ToBody());
+        }
+
+        /// <summary>
+        /// Delete a client category rule. Only rules created by your own client can be deleted.
+        /// </summary>
+        /// <param name="id">Category rule id</param>
+        public async Task DeleteCategoryRule(Guid id)
+        {
+            await httpService.DeleteAsync<dynamic>(URL_CATEGORY_RULES + "/{id}", HTTP.Utils.GetSegment(id.ToString()), null);
         }
 
         #endregion

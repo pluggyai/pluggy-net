@@ -74,6 +74,10 @@ namespace Pluggy.SDK.Model
         [JsonProperty("unarrangedOverdraftAmount")]
         public double? UnarrangedOverdraftAmount { get; set; }
 
+        /// <summary>Overdraft limit currently in use.</summary>
+        [JsonProperty("overdraftUsedLimit")]
+        public double? OverdraftUsedLimit { get; set; }
+
         [JsonProperty("hasReservedBalance")]
         public bool? HasReservedBalance { get; set; }
 
@@ -122,6 +126,10 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("disaggregatedCreditLimits")]
         public ICollection<DisaggregatedCreditLimit> DisaggregatedCreditLimits { get; set; }
+
+        /// <summary>Additional credit cards associated with the main one.</summary>
+        [JsonProperty("additionalCards")]
+        public ICollection<AdditionalCard> AdditionalCards { get; set; }
 
     }
 

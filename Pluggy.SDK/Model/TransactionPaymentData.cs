@@ -22,6 +22,14 @@ namespace Pluggy.SDK.Model
         [JsonProperty("reason")]
         public string Reason { get; set; }
 
+        /// <summary>
+        /// Authentication code of the payment receipt, as printed by the institution on the proof
+        /// of payment. It identifies the operation rather than the payment instrument, so it can be
+        /// present for any payment method (PIX, TED, DOC, BOLETO).
+        /// </summary>
+        [JsonProperty("authenticationCode")]
+        public string AuthenticationCode { get; set; }
+
         [JsonProperty("boletoMetadata")]
         public BoletoMetadata BoletoMetadata { get; set; }
     }
