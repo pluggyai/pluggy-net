@@ -16,6 +16,7 @@ namespace Pluggy.SDK
 
         protected static readonly string URL_CONNECTORS = "/connectors";
         protected static readonly string URL_ITEMS = "/items";
+        protected static readonly string URL_ITEMS_V2 = "/v2/items";
         protected static readonly string URL_ACCOUNTS = "/accounts";
         protected static readonly string URL_TRANSACTIONS = "/transactions";
         protected static readonly string URL_TRANSACTIONS_V2 = "/v2/transactions";
@@ -211,6 +212,62 @@ namespace Pluggy.SDK
                 { "to", to },
             };
             return await httpService.GetAsync<Scr>(URL_ITEMS + "/{id}/scr", HTTP.Utils.GetSegment(id.ToString()), queryStrings);
+        }
+
+        /// <summary>
+        /// Fetch a single page of the team's items (GET /v2/items), newest first, using cursor-based pagination.
+        /// Opt-in, paid plans only: listing items is disabled by default.
+        /// </summary>
+        /// <remarks>
+        /// Opt-in, paid plans only. Listing items is disabled by default and is only available to paid-plan teams
+        /// that have explicitly requested it from Pluggy support. Teams without it enabled get
+        /// 403 LIST_ITEMS_FEATURE_NOT_ENABLED. For most integrations, store each itemId when it is created
+        /// (Pluggy Connect onSuccess or the item/created webhook) and use FetchItem(id) instead.
+        /// </remarks>
+        /// <param name="cursorParams">Optional filters (ClientUserId, ConnectorId) and the After cursor</param>
+        /// <returns>CursorPageResults with the items list and the next cursor link</returns>
+        public async Task<CursorPageResults<Item>> FetchItemsCursor(ItemCursorParameters cursorParams = null)
+        {
+            return await httpService.GetAsync<CursorPageResults<Item>>(URL_ITEMS_V2, null, cursorParams?.ToQueryStrings());
+        }
+
+        /// <summary>
+        /// Fetch all of the team's items (GET /v2/items), newest first, by sweeping all cursor pages.
+        /// Opt-in, paid plans only: listing items is disabled by default.
+        /// </summary>
+        /// <remarks>
+        /// Opt-in, paid plans only. Listing items is disabled by default and is only available to paid-plan teams
+        /// that have explicitly requested it from Pluggy support. Teams without it enabled get
+        /// 403 LIST_ITEMS_FEATURE_NOT_ENABLED. For most integrations, store each itemId when it is created
+        /// (Pluggy Connect onSuccess or the item/created webhook) and use FetchItem(id) instead.
+        /// </remarks>
+        /// <param name="cursorParams">Optional filters (ClientUserId, ConnectorId). The After cursor is managed internally.</param>
+        /// <returns>Complete list of all matching items</returns>
+        public async Task<IList<Item>> FetchAllItems(ItemCursorParameters cursorParams = null)
+        {
+            var firstPage = await FetchItemsCursor(cursorParams);
+            var items = new List<Item>(firstPage.Results);
+
+            var next = firstPage.Next;
+
+            while (next != null)
+            {
+                var afterParam = ParseAfterFromNext(next);
+                if (afterParam == null) break;
+
+                var pageParams = new ItemCursorParameters
+                {
+                    ClientUserId = cursorParams?.ClientUserId,
+                    ConnectorId = cursorParams?.ConnectorId,
+                    After = afterParam
+                };
+
+                var page = await FetchItemsCursor(pageParams);
+                items.AddRange(page.Results);
+                next = page.Next;
+            }
+
+            return items;
         }
 
         /// <summary>
