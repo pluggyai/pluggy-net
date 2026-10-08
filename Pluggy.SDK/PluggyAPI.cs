@@ -1011,6 +1011,27 @@ namespace Pluggy.SDK
             return await httpService.GetAsync<PageResults<SmartTransferPayment>>(URL_SMART_TRANSFER_PREAUTHORIZATIONS + "/{id}/payments", HTTP.Utils.GetSegment(id));
         }
 
+        /// <summary>
+        /// Fetch the source account balance of a Smart Transfer preauthorization created with LinkedJourney.
+        /// Each call reads the balance from the institution and counts toward its monthly quota.
+        /// </summary>
+        /// <param name="id">Preauthorization ID</param>
+        /// <returns>Source account balance in BRL</returns>
+        public async Task<SmartTransferPreauthorizationBalance> FetchSmartTransferPreauthorizationBalance(string id)
+        {
+            return await httpService.GetAsync<SmartTransferPreauthorizationBalance>(URL_SMART_TRANSFER_PREAUTHORIZATIONS + "/{id}/balance", HTTP.Utils.GetSegment(id));
+        }
+
+        /// <summary>
+        /// Cancel only the balance permission of a Smart Transfer preauthorization. The preauthorization stays active.
+        /// </summary>
+        /// <param name="id">Preauthorization ID</param>
+        /// <returns>The preauthorization with the cancelled permission</returns>
+        public async Task<SmartTransferPreauthorization> CancelSmartTransferPreauthorizationDataConsent(string id)
+        {
+            return await httpService.DeleteAsync<SmartTransferPreauthorization>(URL_SMART_TRANSFER_PREAUTHORIZATIONS + "/{id}/data-consent", HTTP.Utils.GetSegment(id), null);
+        }
+
         #endregion
 
         #region Category Rules

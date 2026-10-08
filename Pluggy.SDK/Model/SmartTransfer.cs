@@ -55,6 +55,9 @@ namespace Pluggy.SDK.Model
 
         public SmartTransferPreauthorizationConfiguration Configuration { get; set; }
 
+        /// <summary>Also ask the user for permission to read the source account balance.</summary>
+        public bool? LinkedJourney { get; set; }
+
         public Dictionary<string, object> ToBody()
         {
             return new Dictionary<string, object>
@@ -74,7 +77,8 @@ namespace Pluggy.SDK.Model
                     }.RemoveNulls() : null
                 },
                 { "clientPreauthorizationId", ClientPreauthorizationId },
-                { "configuration", Configuration != null ? Configuration.ToBody() : null }
+                { "configuration", Configuration != null ? Configuration.ToBody() : null },
+                { "linkedJourney", LinkedJourney }
             }.RemoveNulls();
         }
     }
@@ -156,6 +160,48 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("errorDetail")]
         public SmartTransferErrorDetail ErrorDetail { get; set; }
+
+        [JsonProperty("dataConsent")]
+        public SmartTransferDataConsent DataConsent { get; set; }
+    }
+
+    public class SmartTransferDataConsent
+    {
+        /// <summary>AWAITING_AUTHORISATION, AUTHORISED or REJECTED.</summary>
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("rejectionReason")]
+        public string RejectionReason { get; set; }
+
+        [JsonProperty("updatedAt")]
+        public DateTime? UpdatedAt { get; set; }
+    }
+
+    public class SmartTransferPreauthorizationBalance
+    {
+        /// <summary>Source account balance in BRL.</summary>
+        [JsonProperty("balance")]
+        public decimal Balance { get; set; }
+
+        /// <summary>Overdraft limit of the source account; null when the institution does not share it.</summary>
+        [JsonProperty("overdraft")]
+        public SmartTransferOverdraft Overdraft { get; set; }
+    }
+
+    public class SmartTransferOverdraft
+    {
+        /// <summary>Overdraft limit contracted, in BRL.</summary>
+        [JsonProperty("contracted")]
+        public decimal Contracted { get; set; }
+
+        /// <summary>Part of the overdraft limit in use, in BRL.</summary>
+        [JsonProperty("used")]
+        public decimal Used { get; set; }
+
+        /// <summary>Part of the overdraft limit still available, in BRL.</summary>
+        [JsonProperty("available")]
+        public decimal Available { get; set; }
     }
 
     public class SmartTransferErrorDetail
