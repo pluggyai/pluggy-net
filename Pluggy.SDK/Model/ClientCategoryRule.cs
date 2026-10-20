@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Pluggy.SDK.Helpers;
@@ -9,6 +10,10 @@ namespace Pluggy.SDK.Model
     /// </summary>
     public class ClientCategoryRule
     {
+        /// <summary>Identifier of the rule. Pass it to <c>DeleteCategoryRule</c> to remove the rule.</summary>
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+
         /// <summary>Description of the transaction rule.</summary>
         [JsonProperty("description")]
         public string Description { get; set; }

@@ -111,5 +111,54 @@ namespace Pluggy.Tests.Models
             Assert.IsNull(investment.PriceFactor);
             Assert.IsNull(investment.TaxExempt);
         }
+
+        [Test]
+        public void AccountBalance_Deserializes_Blocked_Invested_And_Closing_Balances()
+        {
+            var balance = JsonConvert.DeserializeObject<AccountBalance>(@"{
+                ""balance"": 1500.5,
+                ""blockedBalance"": 100.25,
+                ""automaticallyInvestedBalance"": 92119.12,
+                ""closingBalance"": 1600.75,
+                ""currencyCode"": ""BRL"",
+                ""updateDateTime"": ""2026-10-20T12:00:00.000Z""
+            }");
+
+            Assert.AreEqual(1500.5, balance.Balance);
+            Assert.AreEqual(100.25, balance.BlockedBalance);
+            Assert.AreEqual(92119.12, balance.AutomaticallyInvestedBalance);
+            Assert.AreEqual(1600.75, balance.ClosingBalance);
+            Assert.AreEqual(CurrencyCode.BRL, balance.CurrencyCode);
+        }
+
+        [Test]
+        public void AccountBalance_Optional_Balances_NullWhenAbsent()
+        {
+            // The API omits these amounts when the institution does not report them.
+            var balance = JsonConvert.DeserializeObject<AccountBalance>(@"{
+                ""balance"": 1500.5,
+                ""currencyCode"": ""BRL"",
+                ""updateDateTime"": ""2026-10-20T12:00:00.000Z""
+            }");
+
+            Assert.AreEqual(1500.5, balance.Balance);
+            Assert.IsNull(balance.BlockedBalance);
+            Assert.IsNull(balance.AutomaticallyInvestedBalance);
+            Assert.IsNull(balance.ClosingBalance);
+        }
+
+        [Test]
+        public void ClientCategoryRule_Deserializes_Id()
+        {
+            var rule = JsonConvert.DeserializeObject<ClientCategoryRule>(@"{
+                ""id"": ""7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f"",
+                ""description"": ""uber payment"",
+                ""category"": ""Taxi and ride-hailing"",
+                ""categoryId"": ""19050000""
+            }");
+
+            Assert.AreEqual(Guid.Parse("7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f"), rule.Id);
+            Assert.AreEqual("uber payment", rule.Description);
+        }
     }
 }
