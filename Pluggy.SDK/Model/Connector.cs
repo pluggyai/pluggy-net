@@ -63,6 +63,10 @@ namespace Pluggy.SDK.Model
         [JsonProperty("supportsAutomaticPix")]
         public bool SupportsAutomaticPix { get; set; }
 
+        /// <summary>Payers can link an account at the institution for Pix por biometria.</summary>
+        [JsonProperty("supportsPixBiometric")]
+        public bool SupportsPixBiometric { get; set; }
+
         [JsonProperty("supportsBoletoManagement")]
         public bool SupportsBoletoManagement { get; set; }
 

@@ -42,6 +42,10 @@ namespace Pluggy.SDK.Model
         [JsonProperty("isSandbox")]
         public bool? IsSandbox { get; set; }
 
+        /// <summary>Pix por biometria details; null on other kinds of payment request.</summary>
+        [JsonProperty("pixBiometric")]
+        public PaymentRequestPixBiometric PixBiometric { get; set; }
+
         [JsonProperty("createdAt")]
         public DateTime? CreatedAt { get; set; }
 

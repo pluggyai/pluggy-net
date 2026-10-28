@@ -39,6 +39,7 @@ namespace Pluggy.SDK
         protected static readonly string URL_MERCHANTS = "/merchants";
         protected static readonly string URL_SMART_TRANSFER_PAYMENTS = "/smart-transfers/payments";
         protected static readonly string URL_SMART_TRANSFER_PREAUTHORIZATIONS = "/smart-transfers/preauthorizations";
+        protected static readonly string URL_PIX_BIOMETRIC_ENROLLMENTS = "/pix-biometric/enrollments";
         protected static readonly string URL_BOLETOS = "/boletos";
         protected static readonly string URL_BOLETO_CONNECTIONS = "/boleto-connections";
 
@@ -863,6 +864,16 @@ namespace Pluggy.SDK
         }
 
         /// <summary>
+        /// Fetch payment intents filtered by payment request and/or Pix por biometria enrollment
+        /// </summary>
+        /// <param name="parameters">Filters</param>
+        /// <returns>Payment intents list</returns>
+        public async Task<PageResults<PaymentIntent>> FetchPaymentIntents(PaymentIntentParameters parameters)
+        {
+            return await httpService.GetAsync<PageResults<PaymentIntent>>(URL_PAYMENT_INTENTS, null, parameters?.ToQueryStrings());
+        }
+
+        /// <summary>
         /// Fetch a payment intent by ID
         /// </summary>
         /// <param name="id">Payment intent ID</param>
@@ -870,6 +881,71 @@ namespace Pluggy.SDK
         public async Task<PaymentIntent> FetchPaymentIntent(Guid id)
         {
             return await httpService.GetAsync<PaymentIntent>(URL_PAYMENT_INTENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        #endregion
+
+        #region Pix por biometria
+
+        /// <summary>
+        /// Create a Pix por biometria payment request
+        /// </summary>
+        /// <param name="request">Pix por biometria payment request</param>
+        /// <returns>Created payment request with paymentUrl</returns>
+        public async Task<PaymentRequest> CreatePaymentRequestPixBiometric(CreatePixBiometricPaymentRequest request)
+        {
+            return await httpService.PostAsync<PaymentRequest>(URL_PAYMENT_REQUESTS + "/pix-biometric", request.ToBody());
+        }
+
+        /// <summary>
+        /// Fetch Pix por biometria enrollments (linked accounts)
+        /// </summary>
+        /// <param name="parameters">Optional filters and pagination</param>
+        /// <returns>Enrollments list</returns>
+        public async Task<PageResults<PixBiometricEnrollment>> FetchPixBiometricEnrollments(PixBiometricEnrollmentParameters parameters = null)
+        {
+            return await httpService.GetAsync<PageResults<PixBiometricEnrollment>>(URL_PIX_BIOMETRIC_ENROLLMENTS, null, parameters?.ToQueryStrings());
+        }
+
+        /// <summary>
+        /// Fetch a Pix por biometria enrollment by ID
+        /// </summary>
+        /// <param name="id">Enrollment ID</param>
+        /// <returns>Enrollment details</returns>
+        public async Task<PixBiometricEnrollment> FetchPixBiometricEnrollment(Guid id)
+        {
+            return await httpService.GetAsync<PixBiometricEnrollment>(URL_PIX_BIOMETRIC_ENROLLMENTS + "/{id}", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Fetch the account balance of an enrollment created with linkedJourney.
+        /// Each call reads the balance from the institution and counts toward its monthly quota.
+        /// </summary>
+        /// <param name="id">Enrollment ID</param>
+        /// <returns>Balance in BRL and overdraft (null when the institution does not share it)</returns>
+        public async Task<PixBiometricBalance> FetchPixBiometricEnrollmentBalance(Guid id)
+        {
+            return await httpService.GetAsync<PixBiometricBalance>(URL_PIX_BIOMETRIC_ENROLLMENTS + "/{id}/balance", HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Revoke an enrollment. This cannot be undone: the payer must link again.
+        /// </summary>
+        /// <param name="id">Enrollment ID</param>
+        /// <returns>The revoked enrollment</returns>
+        public async Task<PixBiometricEnrollment> RevokePixBiometricEnrollment(Guid id)
+        {
+            return await httpService.PostAsync<PixBiometricEnrollment>(URL_PIX_BIOMETRIC_ENROLLMENTS + "/{id}/revoke", null, null, HTTP.Utils.GetSegment(id.ToString()));
+        }
+
+        /// <summary>
+        /// Cancel only the balance permission of an enrollment. The enrollment stays active.
+        /// </summary>
+        /// <param name="id">Enrollment ID</param>
+        /// <returns>The enrollment with the cancelled permission</returns>
+        public async Task<PixBiometricEnrollment> CancelPixBiometricEnrollmentDataConsent(Guid id)
+        {
+            return await httpService.DeleteAsync<PixBiometricEnrollment>(URL_PIX_BIOMETRIC_ENROLLMENTS + "/{id}/data-consent", HTTP.Utils.GetSegment(id.ToString()), null);
         }
 
         #endregion
