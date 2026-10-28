@@ -31,6 +31,14 @@ namespace Pluggy.SDK.Model
         [JsonProperty("parameters")]
         public Dictionary<string, string> Parameters { get; set; }
 
+        /// <summary>How the payment is made.</summary>
+        [JsonProperty("paymentMethod")]
+        public PaymentMethod? PaymentMethod { get; set; }
+
+        /// <summary>Linked account (Pix por biometria) the payment was made with; null otherwise.</summary>
+        [JsonProperty("enrollmentId")]
+        public Guid? EnrollmentId { get; set; }
+
         [JsonProperty("errorMessage")]
         public string ErrorMessage { get; set; }
 

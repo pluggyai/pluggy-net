@@ -23,6 +23,9 @@ namespace Pluggy.SDK.Model
         [JsonProperty("supportsPaymentInitiation")]
         public bool SupportsPaymentInitiation { get; set; }
 
+        [JsonProperty("supportsPixBiometric")]
+        public bool SupportsPixBiometric { get; set; }
+
         public IDictionary<string, string> ToQueryStrings()
         {
             var queryStrings = new Dictionary<string, string>()
@@ -57,6 +60,11 @@ namespace Pluggy.SDK.Model
             if (this.SupportsPaymentInitiation)
             {
                 queryStrings.Add("supportsPaymentInitiation", "true");
+            }
+
+            if (this.SupportsPixBiometric)
+            {
+                queryStrings.Add("supportsPixBiometric", "true");
             }
 
             return queryStrings;

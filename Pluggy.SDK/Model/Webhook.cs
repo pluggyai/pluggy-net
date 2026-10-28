@@ -13,6 +13,9 @@ namespace Pluggy.SDK.Model
         public static WebhookEvent ITEM_WAITING_USER_INPUT { get { return new WebhookEvent("item/waiting_user_input"); } }
         public static WebhookEvent CONNECTOR_STATUS_UPDATED { get { return new WebhookEvent("connector/status_updated"); } }
         public static WebhookEvent TRANSACTIONS_DELETED { get { return new WebhookEvent("transactions/deleted"); } }
+        public static WebhookEvent PIX_BIOMETRIC_ENROLLMENT_AUTHORIZED { get { return new WebhookEvent("pix_biometric_enrollment/authorized"); } }
+        public static WebhookEvent PIX_BIOMETRIC_ENROLLMENT_REVOKED { get { return new WebhookEvent("pix_biometric_enrollment/revoked"); } }
+        public static WebhookEvent PIX_BIOMETRIC_ENROLLMENT_ERROR { get { return new WebhookEvent("pix_biometric_enrollment/error"); } }
         public static WebhookEvent ITEM_ALL { get { return new WebhookEvent("all"); } }
 
         public string Value { get; set; }

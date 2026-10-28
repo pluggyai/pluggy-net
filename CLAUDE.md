@@ -58,6 +58,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Categories | `FetchCategories()`, `FetchCategory()` | /categories |
 | Category Rules | `FetchCategoryRules()`, `CreateCategoryRule()`, `DeleteCategoryRule()` | /categories/rules |
 | Webhooks | Full CRUD | /webhooks |
+| PIX por biometria | `CreatePaymentRequestPixBiometric()`, `FetchPixBiometricEnrollments()`, `FetchPixBiometricEnrollment()`, `FetchPixBiometricEnrollmentBalance()`, `RevokePixBiometricEnrollment()`, `CancelPixBiometricEnrollmentDataConsent()` | POST /payments/requests/pix-biometric, /pix-biometric/enrollments (+ /{id}, /balance, /revoke, /data-consent) |
 | Connect Token | `CreateConnectToken()` | POST /connect_token |
 
 ### 3. Known API Endpoints (for gap analysis)
@@ -84,6 +85,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 - /payments/intents (Create, Get)
 - /payments/customers (CRUD)
 - /payments/schedules
+- POST /payments/requests/pix-biometric, /pix-biometric/enrollments (list, get, balance, revoke, data-consent)
 
 #### Boleto Management (Beta)
 - POST /boletos, GET /boletos/{id}, POST /boletos/{id}/cancel
