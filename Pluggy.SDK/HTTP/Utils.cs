@@ -42,7 +42,14 @@ namespace Pluggy.SDK.HTTP
             {
                 foreach (var urlSegment in urlSegments)
                 {
-                    resource = resource.Replace($"{{{urlSegment.Key}}}", Uri.EscapeDataString(urlSegment.Value ?? String.Empty));
+                    var value = urlSegment.Value;
+
+                    // EscapeDataString leaves dots as they are and new Uri removes dot segments, even when
+                    // written as %2E, so these values would move the request to a different route.
+                    if (string.IsNullOrEmpty(value) || value == "." || value == "..")
+                        throw new ArgumentException($"Invalid value for URL segment '{urlSegment.Key}'.", nameof(urlSegments));
+
+                    resource = resource.Replace($"{{{urlSegment.Key}}}", Uri.EscapeDataString(value));
                 }
 
                 // Remove trailing slash
