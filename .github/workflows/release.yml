@@ -7,8 +7,7 @@ on:
 env:
   PROJECT_PATH: 'Pluggy.SDK/Pluggy.SDK.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
-  NUGET_PUSH_URL: ${{ secrets.NUGET_PUSH_URL }}
-  NUGET_KEY: ${{ secrets.NUGET_KEY }}
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
 jobs:
   release:
@@ -55,9 +54,20 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           RUNNER_DEBUG: 1
           
-      - name: 'Pack & Publish project'
+      - name: Pack project
         if: ${{ steps.release.outputs.new_release_version }}
         run: |
           dotnet clean
           dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-          dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_PUSH_URL }} --skip-duplicate
+
+      - name: NuGet login
+        if: ${{ steps.release.outputs.new_release_version }}
+        id: nuget-login
+        uses: NuGet/login@v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Publish package
+        if: ${{ steps.release.outputs.new_release_version }}
+        run: |
+          dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source ${{ env.NUGET_SOURCE }} --skip-duplicate
