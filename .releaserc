@@ -25,14 +25,14 @@
         [
             "@semantic-release/exec",
             {
-                "prepareCmd": "../updateVersion.sh '${nextRelease.version}' 'Pluggy.SDK.csproj'"
+                "prepareCmd": "./updateVersion.sh '${nextRelease.version}' 'Pluggy.SDK/Pluggy.SDK.csproj'"
             }
         ],
         [
             "@semantic-release/git",
             {
                 "assets": [
-                    "Pluggy.SDK.csproj"
+                    "Pluggy.SDK/Pluggy.SDK.csproj"
                 ],
                 "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }

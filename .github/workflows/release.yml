@@ -54,13 +54,12 @@ jobs:
 
       - name: Semantic Release
         id: release
-        working-directory: ./Pluggy.SDK
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config --local credential.https://github.com.helper \
             "!f() { echo 'username=x-access-token'; echo \"password=\$GITHUB_TOKEN\"; }; f"
-          ../node_modules/.bin/semantic-release
+          ./node_modules/.bin/semantic-release
 
       - name: Pack project
         if: steps.release.outputs.new_release_version != ''
