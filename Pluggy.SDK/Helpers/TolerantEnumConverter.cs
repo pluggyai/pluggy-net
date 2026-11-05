@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Utils
@@ -40,6 +42,9 @@ namespace Pluggy.SDK.Utils
                 {
                     string match = names
                         .Where(n => string.Equals(n, enumText, StringComparison.OrdinalIgnoreCase))
+                        .FirstOrDefault()
+                        ?? names
+                        .Where(n => string.Equals(GetEnumMemberValue(enumType, n), enumText, StringComparison.OrdinalIgnoreCase))
                         .FirstOrDefault();
 
                     if (match != null)
@@ -89,7 +94,14 @@ namespace Pluggy.SDK.Utils
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.ToString());
+            string name = value.ToString();
+            writer.WriteValue(GetEnumMemberValue(value.GetType(), name) ?? name);
+        }
+
+        // The API value declared with [EnumMember], or null when the member has none.
+        private static string GetEnumMemberValue(Type enumType, string name)
+        {
+            return enumType.GetField(name)?.GetCustomAttribute<EnumMemberAttribute>()?.Value;
         }
 
         private bool IsNullableType(Type t)

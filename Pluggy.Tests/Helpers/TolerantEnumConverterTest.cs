@@ -75,6 +75,51 @@ namespace Pluggy.Tests
             Assert.AreEqual(CurrencyCode.USD, account.CurrencyCode);
         }
 
+        [TestCase("ACCOUNTS", ProductType.Accounts)]
+        [TestCase("CREDIT_CARDS", ProductType.CreditCards)]
+        [TestCase("TRANSACTIONS", ProductType.Transactions)]
+        [TestCase("PAYMENT_DATA", ProductType.PaymentData)]
+        [TestCase("INVESTMENTS", ProductType.Investments)]
+        [TestCase("INVESTMENTS_TRANSACTIONS", ProductType.InvestmentsTransactions)]
+        [TestCase("BROKERAGE_NOTE", ProductType.BrokerageNote)]
+        [TestCase("LOANS", ProductType.Loans)]
+        [TestCase("EXCHANGE_OPERATIONS", ProductType.ExchangeOperations)]
+        [TestCase("IDENTITY", ProductType.Identity)]
+        [TestCase("MOVE_SECURITY", ProductType.MoveSecurity)]
+        [TestCase("credit_cards", ProductType.CreditCards)]
+        public void ProductType_ShouldParseWireValue(string wireValue, ProductType expected)
+        {
+            var item = JsonConvert.DeserializeObject<Item>($@"{{ ""products"": [""{wireValue}""] }}");
+            Assert.AreEqual(expected, item.Products[0]);
+        }
+
+        [Test]
+        public void ProductType_ShouldStillParseMemberName()
+        {
+            // Earlier SDK versions wrote the member name, so stored JSON may still contain it.
+            var item = JsonConvert.DeserializeObject<Item>(@"{ ""products"": [""CreditCards""] }");
+            Assert.AreEqual(ProductType.CreditCards, item.Products[0]);
+        }
+
+        [TestCase(ProductType.CreditCards, "CREDIT_CARDS")]
+        [TestCase(ProductType.MoveSecurity, "MOVE_SECURITY")]
+        public void ProductType_ShouldWriteWireValue(ProductType value, string expected)
+        {
+            Assert.AreEqual($"\"{expected}\"", JsonConvert.SerializeObject(value));
+        }
+
+        [Test]
+        public void EnumWithoutEnumMember_ShouldWriteMemberName()
+        {
+            Assert.AreEqual("\"SECURITY\"", JsonConvert.SerializeObject(InvestmentType.SECURITY));
+        }
+
+        [Test]
+        public void UndefinedEnumValue_ShouldWriteItsNumber()
+        {
+            Assert.AreEqual("\"99\"", JsonConvert.SerializeObject((ProductType)99));
+        }
+
         [Test]
         public void Loan_ShouldParseInstallmentFields_OasSpelling()
         {
