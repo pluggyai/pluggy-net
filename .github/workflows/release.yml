@@ -15,59 +15,68 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
       id-token: write
 
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v3.2.0
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_SECRET }}
-
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v5.2.0
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: 6.0.x
 
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.1'
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install release dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Audit release dependencies
+        run: pnpm audit && pnpm audit signatures
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_SECRET }}
+          permission-contents: write
+
       - name: Semantic Release
         id: release
-        uses: cycjimmy/semantic-release-action@v6.0.0
-        with:
-          semantic_version: 19
-          working_directory: ./Pluggy.SDK
-          extra_plugins: |
-            @semantic-release/commit-analyzer@9
-            @semantic-release/release-notes-generator@10
-            @semantic-release/github@8
-            @semantic-release/git@10
-            @semantic-release/exec@6
+        working-directory: ./Pluggy.SDK
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          RUNNER_DEBUG: 1
-          
+        run: |
+          git config --local credential.https://github.com.helper \
+            "!f() { echo 'username=x-access-token'; echo \"password=\$GITHUB_TOKEN\"; }; f"
+          ../node_modules/.bin/semantic-release
+
       - name: Pack project
-        if: ${{ steps.release.outputs.new_release_version }}
+        if: steps.release.outputs.new_release_version != ''
         run: |
           dotnet clean
-          dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --include-symbols --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+          dotnet pack "$PROJECT_PATH" --configuration Release --include-symbols --output "$PACKAGE_OUTPUT_DIRECTORY"
 
       - name: NuGet login
-        if: ${{ steps.release.outputs.new_release_version }}
+        if: steps.release.outputs.new_release_version != ''
         id: nuget-login
-        uses: NuGet/login@v1.2.0
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
         with:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Publish package
-        if: ${{ steps.release.outputs.new_release_version }}
-        run: |
-          dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source ${{ env.NUGET_SOURCE }} --skip-duplicate
+        if: steps.release.outputs.new_release_version != ''
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push "$PACKAGE_OUTPUT_DIRECTORY"/*.nupkg --api-key "$NUGET_API_KEY" --source "$NUGET_SOURCE" --skip-duplicate
