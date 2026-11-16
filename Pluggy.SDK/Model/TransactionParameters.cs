@@ -28,8 +28,9 @@ namespace Pluggy.SDK.Model
         {
             return new Dictionary<string, string>()
             {
-                { "to", DateTo.ToString("yyyy-MM-dd") },
-                { "from", DateFrom.ToString("yyyy-MM-dd") },
+                // An unset DateTime is 0001-01-01: send no filter rather than that date.
+                { "to", DateTo == default ? null : DateTo.ToString("yyyy-MM-dd") },
+                { "from", DateFrom == default ? null : DateFrom.ToString("yyyy-MM-dd") },
                 { "page", Page?.ToString() },
                 { "pageSize", PageSize?.ToString() },
             };
