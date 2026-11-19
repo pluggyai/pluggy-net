@@ -58,6 +58,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Categories | `FetchCategories()`, `FetchCategory()` | /categories |
 | Category Rules | `FetchCategoryRules()`, `CreateCategoryRule()`, `DeleteCategoryRule()` | /categories/rules |
 | Webhooks | Full CRUD | /webhooks |
+| Webhook signature | `WebhookSignature.Verify()`, `WebhookSignature.Validate()` (`Pluggy.SDK.Webhooks`) | n/a (client-side check of `X-Pluggy-Signature`) |
 | PIX por biometria | `CreatePaymentRequestPixBiometric()`, `FetchPixBiometricEnrollments()`, `FetchPixBiometricEnrollment()`, `FetchPixBiometricEnrollmentBalance()`, `RevokePixBiometricEnrollment()`, `CancelPixBiometricEnrollmentDataConsent()` | POST /payments/requests/pix-biometric, /pix-biometric/enrollments (+ /{id}, /balance, /revoke, /data-consent) |
 | Connect Token | `CreateConnectToken()` | POST /connect_token |
 

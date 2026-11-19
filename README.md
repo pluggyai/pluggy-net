@@ -32,6 +32,52 @@ At Pluggy we enforce the use of TLSv1.2 or higher. If you are using .NET < 4.7.2
 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 ```
 
+#### Verifying webhook signatures
+
+When webhook signing is enabled for your application, every notification carries an
+`X-Pluggy-Signature` header (`t=<timestamp>,v1=<signature>`). Verify it against the **raw**
+request body (before any JSON parsing or model binding) with the signing secret shown in the
+Dashboard. Pass more than one secret to keep accepting the old one while you rotate it.
+
+```csharp
+using System.Text.Json;
+using Pluggy.SDK.Webhooks;
+
+app.MapPost("/webhooks/pluggy", async (HttpRequest request) =>
+{
+    // Read the raw body: do not bind it to a model before verifying it.
+    using var buffer = new MemoryStream();
+    await request.Body.CopyToAsync(buffer);
+    byte[] payload = buffer.ToArray();
+
+    bool valid = WebhookSignature.Verify(
+        payload,
+        request.Headers[WebhookSignature.HeaderName].ToString(),
+        // null and empty entries are skipped, so the old secret can simply be unset after the rotation
+        Environment.GetEnvironmentVariable("PLUGGY_WEBHOOK_SECRET"),
+        Environment.GetEnvironmentVariable("PLUGGY_WEBHOOK_SECRET_OLD"));
+    if (!valid)
+    {
+        return Results.Unauthorized();
+    }
+
+    using var notification = JsonDocument.Parse(payload);
+    // handle the event...
+    return Results.Ok();
+});
+```
+
+`WebhookSignature.Verify` returns `true` only when the header parses, its timestamp is within the
+tolerance (5 minutes by default, in either direction) and the signature matches one of the
+secrets; it never throws. Use `WebhookSignature.Validate` instead to get the reason of a failure
+for your logs (`result.Reason`, or `result.ReasonCode`: `missing_header`, `malformed_header`,
+`timestamp_out_of_tolerance`, `signature_mismatch`, `no_secret`, `invalid_payload`). Both accept
+the body as `byte[]` or `string`, and an overload takes a list of secrets, a custom tolerance in
+seconds and the current time.
+
+See the [webhook security guide](https://docs.pluggy.ai/docs/developer-tools/webhook-security)
+for details.
+
 ## Building
 
 This project can be built on Windows, Linux or macOS. Ensure you have the [.NET Core SDK](https://www.microsoft.com/net/download) installed.
