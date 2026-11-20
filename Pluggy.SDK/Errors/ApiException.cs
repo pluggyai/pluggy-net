@@ -49,5 +49,20 @@ namespace Pluggy.SDK.Errors
             StatusCode = statusCode;
             ApiError = apiError;
         }
+
+        /// <summary>
+        /// The error code returned by the API (for example <see cref="ApiErrorCode.CLIENT_IP_NOT_ALLOWED"/>),
+        /// or null when the response did not include one.
+        /// </summary>
+        public string ErrorCode => ApiError?.CodeDescription ?? ApiError?.ErrorCode;
+
+        /// <summary>
+        /// Whether the API returned the given error code (see <see cref="ApiErrorCode"/>).
+        /// </summary>
+        /// <param name="code">The error code, for example <see cref="ApiErrorCode.CLIENT_IP_NOT_ALLOWED"/>.</param>
+        public bool HasErrorCode(string code)
+        {
+            return ApiError != null && ApiError.IsCode(code);
+        }
     }
 }

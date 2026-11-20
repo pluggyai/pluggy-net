@@ -32,6 +32,34 @@ At Pluggy we enforce the use of TLSv1.2 or higher. If you are using .NET < 4.7.2
 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 ```
 
+#### Handling API errors
+
+Every API error is thrown as an `ApiException` (`NotFoundException` for 404, `ValidationException`
+when the item parameters are invalid). `StatusCode` holds the HTTP status, `ErrorCode` the error code
+the API returned in `codeDescription`, and `Message` its description; the full body is in `ApiError`.
+Known codes are listed in `ApiErrorCode`, and the full list is in the
+[error reference](https://docs.pluggy.ai/reference/error-codes).
+
+```csharp
+using Pluggy.SDK.Errors;
+
+try
+{
+    var connectToken = await client.CreateConnectToken();
+}
+catch (ApiException e) when (e.HasErrorCode(ApiErrorCode.CLIENT_IP_NOT_ALLOWED))
+{
+    // 403: this server's IP is not in the application's "Allowed IPs" list (Dashboard).
+    // Retrying will not help: add the IP to the list or call the API from an allowed server.
+    logger.LogError("Pluggy rejected the request IP: {Message}", e.Message);
+}
+```
+
+When the application has an IP allowlist, `CLIENT_IP_NOT_ALLOWED` is returned by the
+authentication (the first call the client makes) and by every request made with the application's
+API key, including `CreateConnectToken`. See the
+[IP allowlist guide](https://docs.pluggy.ai/docs/security/ip-allowlist).
+
 #### Verifying webhook signatures
 
 When webhook signing is enabled for your application, every notification carries an
