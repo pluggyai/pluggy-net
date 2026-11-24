@@ -29,6 +29,13 @@ namespace Pluggy.SDK.Errors
         public string ErrorCode { get; set; }
 
         /// <summary>
+        /// Machine-readable error identifier, e.g. WEBHOOKS_API_FEATURE_NOT_ENABLED or CLIENT_IP_NOT_ALLOWED.
+        /// Null when the API does not send one.
+        /// </summary>
+        [JsonProperty("codeDescription")]
+        public string CodeDescription { get; set; }
+
+        /// <summary>
         /// The desription for the error.
         /// </summary>
         [JsonProperty("message")]

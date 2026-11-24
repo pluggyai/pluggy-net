@@ -468,9 +468,9 @@ namespace Pluggy.SDK
         /// Fetch the list of webhooks
         /// </summary>
         /// <remarks>
-        /// For teams without API management of webhooks enabled (opt-in), the header values configured on each
-        /// webhook are returned masked as "****" (header names are kept). Notifications are still delivered with
-        /// the real header values.
+        /// For teams without API management of webhooks enabled (opt-in), the header values in
+        /// <see cref="Webhook.Headers"/> are returned masked as "****" (header names are kept). Notifications
+        /// are still delivered with the real header values.
         /// </remarks>
         /// <returns>Webhooks results list</returns>
         public async Task<PageResults<Webhook>> FetchWebhooks()
@@ -482,9 +482,9 @@ namespace Pluggy.SDK
         /// Fetch the webhook
         /// </summary>
         /// <remarks>
-        /// For teams without API management of webhooks enabled (opt-in), the header values configured on each
-        /// webhook are returned masked as "****" (header names are kept). Notifications are still delivered with
-        /// the real header values.
+        /// For teams without API management of webhooks enabled (opt-in), the header values in
+        /// <see cref="Webhook.Headers"/> are returned masked as "****" (header names are kept). Notifications
+        /// are still delivered with the real header values.
         /// </remarks>
         /// <param name="id">Webhook id</param>
         /// <returns>Webhook details</returns>
@@ -500,12 +500,13 @@ namespace Pluggy.SDK
         /// Opt-in per team. Creating, updating or deleting webhooks with an API key is disabled unless
         /// API management of webhooks has been enabled for your team, so a leaked client secret cannot
         /// redirect or delete your webhooks. Teams without it get an <see cref="Errors.ApiException"/> with
-        /// status 403 and code WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
+        /// status 403 whose <see cref="Errors.ApiException.ApiError"/>.<see cref="Errors.ApiError.CodeDescription"/>
+        /// is WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
         /// (Applications, Configure, Webhooks) instead, or ask Pluggy support to enable API management.
         /// The webhookUrl parameter of item, connect token and payment request creation is not affected.
         /// </remarks>
         /// <param name="url">Webhook url</param>
-        /// <param name="event">Webhook event</param>
+        /// <param name="_event">Webhook event</param>
         /// <param name="headers">Optional headers for webhook notifications</param>
         /// <returns></returns>
         public async Task<Webhook> CreateWebhook(string url, WebhookEvent _event, Dictionary<string, string> headers = null)
@@ -526,13 +527,14 @@ namespace Pluggy.SDK
         /// Opt-in per team. Creating, updating or deleting webhooks with an API key is disabled unless
         /// API management of webhooks has been enabled for your team, so a leaked client secret cannot
         /// redirect or delete your webhooks. Teams without it get an <see cref="Errors.ApiException"/> with
-        /// status 403 and code WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
+        /// status 403 whose <see cref="Errors.ApiException.ApiError"/>.<see cref="Errors.ApiError.CodeDescription"/>
+        /// is WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
         /// (Applications, Configure, Webhooks) instead, or ask Pluggy support to enable API management.
         /// The webhookUrl parameter of item, connect token and payment request creation is not affected.
         /// </remarks>
         /// <param name="id">Webhook id</param>
         /// <param name="url">Webhook url</param>
-        /// <param name="event">Webhook event</param>
+        /// <param name="_event">Webhook event</param>
         /// <returns></returns>
         public async Task<Webhook> UpdateWebhook(Guid id, string url, WebhookEvent _event)
         {
@@ -552,7 +554,8 @@ namespace Pluggy.SDK
         /// Opt-in per team. Creating, updating or deleting webhooks with an API key is disabled unless
         /// API management of webhooks has been enabled for your team, so a leaked client secret cannot
         /// redirect or delete your webhooks. Teams without it get an <see cref="Errors.ApiException"/> with
-        /// status 403 and code WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
+        /// status 403 whose <see cref="Errors.ApiException.ApiError"/>.<see cref="Errors.ApiError.CodeDescription"/>
+        /// is WEBHOOKS_API_FEATURE_NOT_ENABLED. Configure webhooks in the Pluggy Dashboard
         /// (Applications, Configure, Webhooks) instead, or ask Pluggy support to enable API management.
         /// The webhookUrl parameter of item, connect token and payment request creation is not affected.
         /// </remarks>
