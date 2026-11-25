@@ -57,7 +57,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 | Identity | `FetchIdentity()`, `FetchIdentityByItemId()` | /identity |
 | Categories | `FetchCategories()`, `FetchCategory()` | /categories |
 | Category Rules | `FetchCategoryRules()`, `CreateCategoryRule()`, `DeleteCategoryRule()` | /categories/rules |
-| Webhooks | Full CRUD | /webhooks |
+| Webhooks | Full CRUD (create/update/delete opt-in per team, else 403 with `ApiException.ApiError.CodeDescription` = `WEBHOOKS_API_FEATURE_NOT_ENABLED`; without it, GET masks `Webhook.Headers` values as `****`) | /webhooks |
 | Webhook signature | `WebhookSignature.Verify()`, `WebhookSignature.Validate()` (`Pluggy.SDK.Webhooks`) | n/a (client-side check of `X-Pluggy-Signature`) |
 | PIX por biometria | `CreatePaymentRequestPixBiometric()`, `FetchPixBiometricEnrollments()`, `FetchPixBiometricEnrollment()`, `FetchPixBiometricEnrollmentBalance()`, `RevokePixBiometricEnrollment()`, `CancelPixBiometricEnrollmentDataConsent()` | POST /payments/requests/pix-biometric, /pix-biometric/enrollments (+ /{id}, /balance, /revoke, /data-consent) |
 | Connect Token | `CreateConnectToken()` | POST /connect_token |
@@ -77,7 +77,7 @@ Current SDK endpoints in `PluggyAPI.cs`:
 - GET /loans, GET /loans/{id}
 - GET /categories, GET /categories/{id}
 - GET /categories/rules, POST /categories/rules, DELETE /categories/rules/{id}
-- Full CRUD /webhooks
+- Full CRUD /webhooks (POST/PATCH/DELETE opt-in per team, 403 WEBHOOKS_API_FEATURE_NOT_ENABLED otherwise)
 - POST /auth, POST /connect_token
 
 #### Payment Initiation Endpoints
