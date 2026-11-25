@@ -3,8 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackOnBuild>true</PackOnBuild>
-    <Version>0.48.0</Version>
-    <PackageVersion>0.48.0</PackageVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <Version>0.49.0</Version>
+    <PackageVersion>0.49.0</PackageVersion>
     <Authors>Pluggy</Authors>
     <Description>Pluggy SDK to connect with our aggregation service API</Description>
     <NeutralLanguage>en-US</NeutralLanguage>

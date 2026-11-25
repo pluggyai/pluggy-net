@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Pluggy.SDK.Model
@@ -51,6 +52,13 @@ namespace Pluggy.SDK.Model
 
         [JsonProperty("disabledAt")]
         public DateTime? DisabledAt { get; set; }
+
+        /// <summary>
+        /// Headers sent with each notification. Values come back masked as "****" when API management
+        /// of webhooks is not enabled for the team. Null when none are configured.
+        /// </summary>
+        [JsonProperty("headers")]
+        public IDictionary<string, string> Headers { get; set; }
     }
 
     public class WebhookEventPayload
