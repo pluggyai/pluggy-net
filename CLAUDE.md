@@ -204,6 +204,10 @@ dotnet test
 dotnet pack -c Release
 ```
 
+## CI and required checks
+
+Pull requests to `master` run `Build & Test` (`.github/workflows/build.yml`) and `PR title` (`.github/workflows/pr-title.yml`, Conventional Commits). The `main` ruleset requires the `build (6.0.x)` status check to merge. The check is matched by name, and the name comes from the job plus the `dotnet-version` matrix value: changing either one renames the check and leaves every PR blocked until the ruleset is updated in the same change. Integration tests run only on the daily schedule, since they need secrets that PR runs never get.
+
 ## Version Management
 
 Version is managed in `Pluggy.SDK/Pluggy.SDK.csproj` and follows semantic versioning.

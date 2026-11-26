@@ -1,0 +1,46 @@
+name: PR title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+    branches:
+      - master
+
+jobs:
+  validate:
+    name: Validate Conventional Commits title
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        with:
+          script: |
+            const allowedTypes = new Set([
+              'feat',
+              'fix',
+              'perf',
+              'chore',
+              'docs',
+              'style',
+              'refactor',
+              'test',
+              'build',
+              'ci',
+              'revert',
+            ]);
+            const title = process.env.PR_TITLE ?? '';
+            const match = title.match(/^([a-z]+)(?:\([^()\r\n]+\))?(!)?:\s+\S.*$/);
+
+            if (!match || !allowedTypes.has(match[1])) {
+              core.setFailed(
+                'PR title must use Conventional Commits: ' +
+                  '<type>(optional-scope): description. Allowed types: ' +
+                  [...allowedTypes].join(', '),
+              );
+            }
